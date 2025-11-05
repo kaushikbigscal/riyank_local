@@ -99,7 +99,7 @@ class ProjectTask(models.Model):
             ("sequence", populate.randomize([False] + [i for i in range(1, 101)])),
             ("active", populate.randomize([True, False], [0.8, 0.2])),
             ("color", populate.randomize([False] + [i for i in range(1, 7)])),
-            ("state", populate.randomize(['01_in_progress', '03_approved', '02_changes_requested', '1_done', '1_canceled'])),
+            ("state", populate.randomize(['01_in_progress', '03_approved', '02_changes_requested', '1_done', '1_canceled', '04_waiting_for_customer', '05_not_started'])),
             ("project_id", populate.compute(get_project_id)),
             ("stage_id", populate.compute(get_stage_id)),
             ('partner_id', populate.compute(get_partner_id)),

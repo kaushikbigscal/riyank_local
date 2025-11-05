@@ -16,10 +16,10 @@
                     <div class="oe_edit_only o_row">
                         <field name="street_name" placeholder="Street" style="flex: 3 1 auto"
                                readonly="type == 'contact' and parent_id"/>
-                        <span> </span>
+                        <span></span>
                         <field name="street_number" placeholder="House #" style="flex: 1 1 auto"
                                readonly="type == 'contact' and parent_id"/>
-                        <span> - </span>
+                        <span>-</span>
                         <field name="street_number2" placeholder="Door #" style="flex: 1 1 auto"
                                readonly="type == 'contact' and parent_id"/>
                     </div>
@@ -28,15 +28,17 @@
                     <field name="city_id"
                            placeholder="City"
                            class="o_address_city"
-                           domain="[('country_id', '=', country_id)]"
-                           invisible="not country_enforce_cities"
                            readonly="type == 'contact' and parent_id"
                            context="{'default_country_id': country_id, 'default_state_id': state_id, 'default_zipcode': zip}"/>
+<!--                           invisible="not country_enforce_cities"  -->
+<!--                           domain="[('country_id', '=', country_id)]"-->
+
                     <field name="city"
                            placeholder="City"
                            class="o_address_city"
-                           invisible="country_enforce_cities and (city_id or city in ('', False))"
+                           invisible="1"
                            readonly="type == 'contact' and parent_id"/>
+<!--                    invisible="country_enforce_cities and (city_id or city in ('', False))"-->
                     <field name="state_id"
                            class="o_address_state"
                            placeholder="State"
@@ -61,7 +63,8 @@
         <field name="inherit_id" ref="base.view_partner_form"/>
         <field name="arch" type="xml">
             <field name="city" position="attributes">
-                <attribute name="invisible">country_enforce_cities and (city_id or city in ('', False))</attribute>
+                <attribute name="invisible">1</attribute>
+<!--                country_enforce_cities and (city_id or city in ('', False))-->
                 <attribute name="readonly">type == 'contact' and parent_id</attribute>
             </field>
             <field name="city" position="before">
@@ -69,14 +72,15 @@
                 <field name="city_id"
                        placeholder="City"
                        class="o_address_city"
-                       domain="[('country_id', '=', country_id)]"
-                       invisible="not country_enforce_cities"
+
                        readonly="type == 'contact' and parent_id"
                        context="{'default_country_id': country_id, 'default_state_id': state_id, 'default_zipcode': zip}"/>
+<!--                domain="[('country_id', '=', country_id)]"-->
             </field>
 
             <xpath expr="//field[@name='child_ids']//form//field[@name='city']" position="attributes">
-                <attribute name="invisible">country_enforce_cities and (city_id or city in ('', False))</attribute>
+                <attribute name="invisible">1</attribute>
+<!--                country_enforce_cities and (city_id or city in ('', False))-->
                 <attribute name="readonly">type == 'contact' and parent_id</attribute>
             </xpath>
             <xpath expr="//field[@name='child_ids']//form//field[@name='city']" position="before">
@@ -84,12 +88,14 @@
                 <field name="city_id"
                        placeholder="City"
                        class="o_address_city"
-                       domain="[('country_id', '=', country_id)]"
-                       invisible="not country_enforce_cities"
+
                        readonly="type == 'contact' and parent_id"
                        context="{'default_country_id': country_id, 'default_state_id': state_id, 'default_zipcode': zip}"/>
+<!--                domain="[('country_id', '=', country_id)]"-->
             </xpath>
         </field>
     </record>
 
 </odoo>
+<!--invisible="not country_enforce_cities"-->
+<!--                       invisible="not country_enforce_cities"-->

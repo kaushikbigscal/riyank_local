@@ -20,10 +20,11 @@
                         <button string="Set to In Progress" type="object" name="set_progress" 
                         class="oe_highlight" invisible="sequence_state != 1"/>
                         
-                        <button string="New Project Based On Template" type="object" name="new_project" class="oe_highlight" invisible="sequence_state != 3"/>
+                        <button string="New Project Based On Template" type="object" name="action_open_project_title_wizard" class="oe_highlight" invisible="sequence_state != 3"/>
                         
                         <button string="Reset as Project Template" type="object" name="reset_project" 
                         class="oe_highlight" invisible="sequence_state != 3"/>
+
                     </header>
                     <sheet string="Project">
                         <div class="oe_button_box" name="button_box" groups="base.group_user">
@@ -31,6 +32,7 @@
                                 <div class="ps-4">
                                     <field name="last_update_color" invisible="1"/>
                                     <field name="last_update_status" readonly="1" widget="status_with_color" options="{'color_field': 'last_update_color'}"/>
+
                                 </div>
                             </button>
                             <button class="oe_stat_button o_project_not_clickable" disabled="disabled" groups="!project.group_project_manager">
@@ -62,7 +64,7 @@
                                 <field name="label_tasks" string="Name of the tasks"/>
                                 <field name="partner_id" widget="res_partner_many2one"/>
                                 <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
-                                <field name="project_project_id"/>
+                                
                                 <field name="company_id" groups="base.group_multi_company"/>
                                 <field name="is_project_template" invisible="1"/>
                                 <field name="sequence_state" invisible="1"/>                            
@@ -183,7 +185,7 @@
         <record id="project.open_view_project_all_config_group_stage" model="ir.actions.act_window">
             <field name="name">Projects</field>
             <field name="res_model">project.project</field>
-            <field name="domain">[('is_project_template', '=', False)]</field>
+            <field name="domain">[('is_internal_project', '=', False), ('is_project_template', '=', False), ('is_fsm', '=', False)]</field>
             <field name="view_mode">tree,kanban,form,calendar,activity</field>
             <field name="search_view_id" ref="project.view_project_project_filter"/>
             <field name="context">{'default_is_project_template': 0}</field>
@@ -201,7 +203,7 @@
             <field name="name">Projects</field>
             <field name="res_model">project.project</field>
             <field name="context">{'search_default_groupby_stage': 1, 'default_is_project_template': 0}</field>
-            <field name="domain">[('is_project_template', '=', False)]</field>
+            <field name="domain">[('is_internal_project', '=', False), ('is_project_template', '=', False), ('is_fsm', '=', False)]</field>
             <field name="view_mode">kanban,tree,form,calendar,activity</field>
             <field name="view_id" ref="project.view_project_kanban"/>
             <field name="search_view_id" ref="project.view_project_project_filter"/>
@@ -235,6 +237,56 @@
                 </p>
             </field>
         </record>
+
+          <!--new added code by satayam-->
+        <record id="view_project_project_form_inherit_custom" model="ir.ui.view">
+            <field name="name">project.project.form.inherit.custom</field>
+            <field name="model">project.project</field>
+            <field name="inherit_id" ref="project.project_project_view_form_simplified"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='name']" position="after">
+                    <group>
+                        <field name="project_template_form"/>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="project_project_kanban_view_inherit_custom_button" model="ir.ui.view">
+            <field name="name">project.project.kanban.inherit.custom.button</field>
+            <field name="model">project.project</field>
+            <field name="inherit_id" ref="project.project_project_view_form_simplified_footer"/>
+            <field name="arch" type="xml">
+                <xpath expr="//button[@name='action_view_tasks']" position="replace">
+                    <button string="Create project" name="action_view_tasks" type="object"
+                            class="btn-primary" data-hotkey="q" context="{'open_project_form': True}"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_project_project_form_inherit_from_custom" model="ir.ui.view">
+            <field name="name">project.project.form.inherit.custom</field>
+            <field name="model">project.project</field>
+            <field name="inherit_id" ref="project.edit_project"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='label_tasks']" position="after">
+                    <field name="project_template_form"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_project_form_inherit_add_x_template" model="ir.ui.view">
+            <field name="name">project.project.form.inherit.x.template</field>
+            <field name="model">project.project</field>
+            <field name="inherit_id" ref="project.edit_project"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='tag_ids']" position="after">
+                    <field name="x_template" invisible="1"/>
+                </xpath>
+            </field>
+        </record>
+ 
+        <!-- new added code by satayam-->
 
         <menuitem action="action_project_template_view" 
         		  id="menu_project_template" 

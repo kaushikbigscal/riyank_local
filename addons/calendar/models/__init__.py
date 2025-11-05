@@ -16,3 +16,4 @@ from . import mail_activity_type
 from . import res_users
 from . import onboarding_onboarding
 from . import onboarding_onboarding_step
+from . import calender_rule

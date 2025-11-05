@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+	<record model="ir.module.category" id="module_category_services_hr_resignation">
+            <field name="name">Resignation</field>
+            <field name="parent_id" ref="base.module_category_services"/>
+        </record>
+       
+	<record id="group_hr_resignation_user" model="res.groups">
+            <field name="name">User</field>
+            <field name="category_id" ref="hr_resignation.module_category_services_hr_resignation"/>
+        </record>
+
+        <record id="group_hr_resignation_manager" model="res.groups">
+            <field name="name">Administrator</field>
+            <field name="category_id" ref="hr_resignation.module_category_services_hr_resignation"/>
+            <field name="implied_ids" eval="[(4, ref('hr_resignation.group_hr_resignation_user'))]"/>
+            <field name="users" eval="[(4, ref('base.user_admin'))]"/>
+        </record>
+</odoo>

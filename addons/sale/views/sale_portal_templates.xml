@@ -24,13 +24,13 @@
             <t t-set="portal_alert_category_enable" t-value="True"/>
         </xpath>
         <div id="portal_alert_category" position="inside">
-            <t t-call="portal.portal_docs_entry">
-                <t t-set="bg_color" t-value="'alert alert-primary'"/>
-                <t t-set="placeholder_count" t-value="'quotation_count'"/>
-                <t t-set="title">Quotations to review</t>
-                <t t-set="url" t-value="'/my/quotes'"/>
-                <t t-set="show_count" t-value="True"/>
-            </t>
+<!--            <t t-call="portal.portal_docs_entry">-->
+<!--                <t t-set="bg_color" t-value="'alert alert-primary'"/>-->
+<!--                <t t-set="placeholder_count" t-value="'quotation_count'"/>-->
+<!--                <t t-set="title">Quotations to review</t>-->
+<!--                <t t-set="url" t-value="'/my/quotes'"/>-->
+<!--                <t t-set="show_count" t-value="True"/>-->
+<!--            </t>-->
         </div>
         <div id="portal_client_category" position="inside">
             <t t-call="portal.portal_docs_entry">
@@ -542,6 +542,7 @@
                     <table t-att-data-order-id="sale_order.id" t-att-data-token="sale_order.access_token" class="table table-sm" id="sales_order_table">
                         <thead class="bg-100">
                             <tr>
+                                <th class="text-start">Image</th>
                                 <th class="text-start" id="product_name_header">Products</th>
                                 <th class="text-end" id="product_qty_header">Quantity</th>
                                 <th t-attf-class="text-end {{ 'd-none d-sm-table-cell' if report_type == 'html' else '' }}">
@@ -569,6 +570,16 @@
 
                                 <tr t-att-class="'bg-200 fw-bold o_line_section' if line.display_type == 'line_section' else 'fst-italic o_line_note' if line.display_type == 'line_note' else ''">
                                     <t t-if="not line.display_type">
+                                        <td>
+                                            <t t-if="line.product_id.image_128">
+                                                <t t-set="img_url"
+                                                   t-value="'/web/image/product.product/%s/image_128' % line.product_id.id"/>
+                                                <a t-att-href="img_url" target="_blank">
+                                                    <img t-att-src="img_url"
+                                                         style="max-height: 60px; max-width: 60px;"/>
+                                                </a>
+                                            </t>
+                                        </td>
                                         <td id="product_name">
                                             <span t-field="line.name"/>
                                         </td>

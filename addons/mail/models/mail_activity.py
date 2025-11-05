@@ -674,7 +674,7 @@ class MailActivity(models.Model):
         activity_domain = [('res_model', '=', res_model)]
         is_filtered = domain or limit or offset
         if is_filtered:
-            activity_domain.append(('res_id', 'in', DocModel._search(domain or [], offset, limit) if is_filtered else []))
+            activity_domain.append(('res_id', 'in', DocModel._search(domain or [], offset, limit, DocModel._order) if is_filtered else []))
         all_activities = Activity.with_context(active_test=not fetch_done).search(
             activity_domain, order='date_done DESC, date_deadline ASC')
         all_ongoing = all_activities.filtered('active')
@@ -702,27 +702,27 @@ class MailActivity(models.Model):
             filtered = set(DocModel.search([('id', 'in', [r[0] for r in res_id_type_tuples])]).ids)
             res_id_type_tuples = list(filter(lambda r: r[0] in filtered, res_id_type_tuples))
 
-        # 5. Format data
-        res_id_to_date_done = {}
+        # Initialize dictionaries
         res_id_to_deadline = {}
+        res_id_to_date_done = {}
         grouped_activities = defaultdict(dict)
+
+        # Populate dictionaries and group activities
         for res_id_tuple in res_id_type_tuples:
             res_id, activity_type_id = res_id_tuple
             ongoing = grouped_ongoing.get(res_id_tuple, Activity)
             completed = grouped_completed.get(res_id_tuple, Activity)
             activities = ongoing | completed
 
-            # As completed is sorted on date_done DESC, we take here the max date_done
             date_done = completed and completed[0].date_done
-            # As ongoing is sorted on date_deadline ASC, we take here the min date_deadline
             date_deadline = ongoing and ongoing[0].date_deadline
+
             if date_deadline and (res_id not in res_id_to_deadline or date_deadline < res_id_to_deadline[res_id]):
                 res_id_to_deadline[res_id] = date_deadline
             if date_done and (res_id not in res_id_to_date_done or date_done > res_id_to_date_done[res_id]):
                 res_id_to_date_done[res_id] = date_done
-            # As ongoing is sorted on date_deadline, we get assignees on activity with oldest deadline first
-            user_assigned_ids = ongoing.user_id.ids
-            attachments = [attachments_by_id[attach.id] for attach in completed.attachment_ids]
+
+            # Populate grouped_activities
             grouped_activities[res_id][activity_type_id.id] = {
                 'count_by_state': dict(Counter(
                     self._compute_state_from_date(act.date_deadline, user_tz) if act.active else 'done'
@@ -730,26 +730,25 @@ class MailActivity(models.Model):
                 'ids': activities.ids,
                 'reporting_date': ongoing and date_deadline or date_done or None,
                 'state': self._compute_state_from_date(date_deadline, user_tz) if ongoing else 'done',
-                'user_assigned_ids': user_assigned_ids,
+                'user_assigned_ids': ongoing.user_id.ids,
             }
-            if attachments:
-                most_recent_attachment = max(attachments, key=lambda a: (a['create_date'], a['id']))
-                grouped_activities[res_id][activity_type_id.id]['attachments_info'] = {
-                    'most_recent_id': most_recent_attachment['id'],
-                    'most_recent_name': most_recent_attachment['name'],
-                    'count': len(attachments),
-                }
 
-        # Get record ids ordered by oldest deadline (urgent one first)
+        # Sort ongoing_res_ids
         ongoing_res_ids = sorted(res_id_to_deadline, key=lambda item: res_id_to_deadline[item])
-        # Get record ids with only completed activities ordered by date done reversed (most recently done first)
+
+        # Sort and filter completed_res_ids
         completed_res_ids = [
             res_id for res_id in sorted(
                 res_id_to_date_done, key=lambda item: res_id_to_date_done[item], reverse=True
             ) if res_id not in res_id_to_deadline
         ]
+
+        # Combine and reverse for descending order
+        activity_res_ids = list(reversed(ongoing_res_ids + completed_res_ids))
+
+        # Return the result
         return {
-            'activity_res_ids': ongoing_res_ids + completed_res_ids,
+            'activity_res_ids': activity_res_ids,
             'activity_types': [
                 {
                     'id': activity_type.id,
@@ -763,7 +762,9 @@ class MailActivity(models.Model):
                 for activity_type in activity_types
             ],
             'grouped_activities': grouped_activities,
+
         }
+
 
     # ----------------------------------------------------------------------
     # TOOLS

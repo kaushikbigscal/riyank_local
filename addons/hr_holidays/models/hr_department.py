@@ -16,7 +16,7 @@ class Department(models.Model):
     absence_of_today = fields.Integer(
         compute='_compute_leave_count', string='Absence by Today')
     leave_to_approve_count = fields.Integer(
-        compute='_compute_leave_count', string='Time Off to Approve')
+        compute='_compute_leave_count', string='Leave to Approve')
     allocation_to_approve_count = fields.Integer(
         compute='_compute_leave_count', string='Allocation to Approve')
 

@@ -1,0 +1,47 @@
+<odoo>
+    <record id="view_company_form_field_visit" model="ir.ui.view">
+        <field name="name">res.company.form.inherit.field.visit</field>
+        <field name="model">res.company</field>
+        <field name="inherit_id" ref="base.view_company_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='branches']" position="after">
+                <page name="field_visit" string="Field Visit">
+                    <group>
+                        <group string="Plan Types" col="2">
+                            <field name="enable_city_wise"/>
+                            <field name="enable_customer_wise"/>
+                            <field name="enable_route_wise"/>
+                            <field name="enable_official_work"/>
+                        </group>
+                        <group string="Plan Lock Period">
+                            <field name="plan_lock_period"/>
+                            <field name="month" widget="radio" invisible="not plan_lock_period"/>
+                            <field name="plan_open_date" invisible="not plan_lock_period"/>
+                            <field name="plan_close_date" invisible="not plan_lock_period"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Plan Approval">
+                            <field name="enable_planned_approval"/>
+                        </group>
+                        <group string="Joint Visit">
+                            <field name="joint_visit_hierarchy"/>
+                        </group>
+                    </group>
+                    <group string="Check In">
+                        <field name="check_in_with_plan"/>
+                        <field name="check_in_without_plan"/>
+                                                <field name="allow_unplanned_work"/>
+<!--                        <field name="unplanned_activity_types" widget="many2many_tags" options="{'no_create': False}"/>-->
+                        <field name="checkin_out_difference"/>
+                        <field name="enforce_geofencing_checkin"/>
+                        <field name="enforce_geofencing_checkout"/>
+                        <field name="geofencing_radius"/>
+                        <field name="attendance_before_checkin"/>
+                    </group>
+
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>

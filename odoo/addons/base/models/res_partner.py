@@ -202,6 +202,16 @@ class Partner(models.Model):
     ref = fields.Char(string='Reference', index=True)
     lang = fields.Selection(_lang_get, string='Language',
                             help="All the emails and documents sent to this contact will be translated in this language.")
+
+    # lang_display = fields.Char(string="Language Display", compute="_compute_lang_display", store=True)
+    #
+    # @api.depends('lang')
+    # def _compute_lang_display(self):
+    #     lang_dict = dict(self.env['res.lang'].get_installed())
+    #     for record in self:
+    #         name = lang_dict.get(record.lang, '')
+    #         record.lang_display = f"{name}" if name else ''
+
     active_lang_count = fields.Integer(compute='_compute_active_lang_count')
     tz = fields.Selection(_tz_get, string='Timezone', default=lambda self: self._context.get('tz'),
                           help="When printing documents and exporting/importing data, time values are computed according to this timezone.\n"

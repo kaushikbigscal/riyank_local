@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<odoo>
+    <!-- Parent Menu -->
+    <menuitem
+            id="menu_field_visit"
+            name="Field Visit"
+            sequence="1"
+            web_icon="field_visit,static/description/icon.png"
+            groups="field_visit.group_field_visit_user"
+    />
+    <!--    <menuitem-->
+    <!--        id="menu_calendar_event"-->
+    <!--        name="Calendar Events"-->
+    <!--        parent="menu_field_visit"-->
+    <!--        action="calendar.action_calendar_event"-->
+    <!--        sequence="1"-->
+    <!--    />-->
+
+    <menuitem
+            id="menu_field_visits"
+            name="Visits"
+            parent="menu_field_visit"
+            sequence="2"
+    />
+    <menuitem
+            name="My Visits"
+            id="menu_my_field_visits"
+            parent="menu_field_visits"
+            action="my_field_visit_action"
+            sequence="1"
+    />
+    <menuitem
+            name="All Visits"
+            id="menu_field_all_visits"
+            parent="menu_field_visits"
+            action="all_field_visit_action"
+            sequence="2"
+            groups="field_visit.group_field_visit_managers"
+    />
+
+    <menuitem
+            name="Management"
+            id="menu_field_visit_management"
+            parent="menu_field_visit"
+            sequence="2"
+        groups="field_visit.group_field_visit_manager,field_visit.group_field_visit_managers"
+    />
+
+    <menuitem name="Waiting for Approvals"
+              id="menu_waiting_for_approval"
+              parent="menu_field_visit_management"
+              action="action_field_visit_waiting_approval"
+        groups="field_visit.group_field_visit_manager,field_visit.group_field_visit_managers"
+    />
+
+    <menuitem
+            id="menu_field_visit_routes"
+            name="Routes"
+            parent="menu_field_visit"
+            sequence="3"
+            groups="field_visit.group_field_visit_manager,field_visit.group_field_visit_user,field_visit.group_field_visit_managers"
+    />
+    <menuitem
+            name="My Assignments"
+            id="menu_field_visit_my_assignments"
+            parent="menu_field_visit_routes"
+            action="action_my_route_assignment"
+            sequence="1"
+    />
+    <menuitem
+            name="Assignments"
+            id="menu_field_visit_assignments"
+            parent="menu_field_visit_routes"
+            action="action_route_assignment"
+            sequence="2"
+            groups="field_visit.group_field_visit_manager,field_visit.group_field_visit_managers"
+    />
+    <menuitem
+            name="All Routes"
+            id="menu_field_visit_all_routes"
+            parent="menu_field_visit_routes"
+            action="action_route_management"
+            sequence="3"
+            groups="field_visit.group_field_visit_manager,field_visit.group_field_visit_managers"
+    />
+
+    <!-- CONFIGURATION -->
+
+    <menuitem
+            id="menu_field_visit_config"
+            name="Configuration"
+            parent="menu_field_visit"
+            sequence="4"
+            groups="field_visit.group_field_visit_manager"
+    />
+
+    <menuitem
+            name="Close Reasons"
+            id="menu_field_visit_config_close_reason"
+            parent="menu_field_visit_config"
+            action="field_visit_close_reason_action"
+            sequence="3"
+    />
+    <!--        <menuitem-->
+    <!--                name="Visit Templates"-->
+    <!--                id="menu_field_visit_template"-->
+    <!--                parent="menu_field_visit_config"-->
+    <!--                action="field_visit_template_action"-->
+    <!--                sequence="3"-->
+    <!--        />-->
+
+
+</odoo>
+
+

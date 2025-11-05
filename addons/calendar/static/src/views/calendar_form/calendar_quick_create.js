@@ -5,6 +5,7 @@ import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
 import { CalendarFormView } from "./calendar_form_view";
 import { CalendarFormController } from "./calendar_form_controller";
 import { serializeDate, serializeDateTime } from "@web/core/l10n/dates";
+import { useService } from "@web/core/utils/hooks";
 
 const QUICK_CREATE_CALENDAR_EVENT_FIELDS = {
     name: { type: "string" },
@@ -41,7 +42,90 @@ export class CalendarQuickCreateFormController extends CalendarFormController {
     static props = {
         ...CalendarFormController.props,
         goToFullEvent: Function,
+        createInTargetModel: Function,
     };
+
+    setup() {
+        super.setup();
+        this.notification = useService("notification");
+        this.isActivityCreation = this.env.context && this.env.context.default_activity_ids;
+
+    }
+
+    get isMeetingMode() {
+        const data = this.model.root.data;
+        return data && data.event_type === 'meeting';
+    }
+
+    get isRecordMode() {
+        const data = this.model.root.data;
+        return data && data.event_type === 'record';
+    }
+
+    async createInTargetModel() {
+        const data = this.model.root.data;
+        console.log("Data", data);
+
+        if (!this.isRecordMode) {
+            return;
+        }
+
+        const model = data.x_target_model;
+        const { name, description } = data;
+
+        if (!model || !name) {
+            this.notification.add(
+                "Please select a model and provide a name",
+                { type: "danger" }
+            );
+            return;
+        }
+
+        // Build your payload:
+        const vals = {
+            name: name
+        };
+
+        if (description) {
+            vals.description = description;
+        }
+
+        if (model === 'project.task' && data.is_this_fsm) {
+            const [project] = await this.orm.searchRead(
+                'project.project',
+                [['is_fsm', '=', true]],
+                ['id'],
+                { limit: 1 }
+            );
+            if (project) {
+                vals.project_id = project.id;
+            }
+            vals.is_fsm = true;
+        }
+
+        try {
+            // Create the new record
+            const newId = await this.orm.call(model, 'create', [vals]);
+
+            // Open its form
+            this.env.services.action.doAction({
+                type: 'ir.actions.act_window',
+                res_model: model,
+                res_id: newId,
+                views: [[false, 'form']],
+                target: 'new',
+            });
+
+            // Close the quick create dialog
+            this.props.close();
+        } catch (error) {
+            console.error('Error creating record:', error);
+            this.notification.add(
+                `Error creating record: ${error.message}`,
+                { type: "danger" }
+            );
+        }
+    }
 
     goToFullEvent() {
         const context = getDefaultValuesFromRecord(this.model.root.data)
@@ -58,16 +142,29 @@ export class CalendarQuickCreate extends FormViewDialog {
     static props = {
         ...FormViewDialog.props,
         goToFullEvent: Function,
+        createInTargetModel: { type: Function, optional: true },
     };
 
     setup() {
         super.setup();
+
+        // Simple check - if default_activity_ids exists in any context, it's activity creation
+        const context = this.props.context || this.viewProps?.context;
+        const isActivityCreation = context && context.default_activity_ids;
+
+        console.log("isActivityCreation:", isActivityCreation);
+
+        const buttonTemplate = isActivityCreation ?
+            "calendar.CalendarActivityCreateButtons" :
+            "calendar.CalendarRuleCreateButtons";
+
         Object.assign(this.viewProps, {
             ...this.viewProps,
-            buttonTemplate: "calendar.CalendarQuickCreateButtons",
+            buttonTemplate: buttonTemplate,
             goToFullEvent: (contextData) => {
                 this.props.goToFullEvent(contextData);
-            }
+            },
+            createInTargetModel: () => this.props.createInTargetModel(),
         });
     }
 }

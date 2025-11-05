@@ -34,7 +34,7 @@
                 <thead>
                     <tr class="border-bottom">
                         <th scope="col" style="width: 20%;">File Column</th>
-                        <th scope="col" style="width: 20%;">Odoo Field</th>
+                        <th scope="col" style="width: 20%;">Effezient Field</th>
                         <th scope="col">Comments</th>
                     </tr>
                 </thead>

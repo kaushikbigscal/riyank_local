@@ -29,6 +29,9 @@
         <field name="mode">primary</field>
         <field name="priority">10</field>
         <field name="arch" type="xml">
+            <field name="company_id" position="attributes">
+                <attribute name="readonly">0</attribute>
+            </field>
             <xpath expr="//tree" position="attributes">
                 <attribute name="editable">bottom</attribute>
             </xpath>
@@ -47,7 +50,7 @@
     </record>
 
     <record id="resource_calendar_global_leaves_action_from_calendar" model="ir.actions.act_window">
-        <field name="name">Resource Time Off</field>
+        <field name="name">Resource Leave</field>
         <field name="res_model">resource.calendar.leaves</field>
         <field name="view_mode">tree</field>
         <field name="view_id" ref="resource_calendar_leaves_tree_inherit"/>
@@ -71,7 +74,7 @@
                             <field name="associated_leaves_count"/> Public
                         </span>
                         <span class="o_stat_text">
-                            Time Off
+                            Leave
                         </span>
                     </div>
                 </button>

@@ -36,15 +36,19 @@ If you need to manage your meetings, you should install the CRM module.
         'views/calendar_views.xml',
         'views/res_config_settings_views.xml',
         'views/res_partner_views.xml',
+        'views/calendar_rule_views.xml',
         'wizard/calendar_provider_config.xml',
         'wizard/calendar_popover_delete_wizard.xml',
         'wizard/mail_activity_schedule_views.xml',
+
     ],
     'installable': True,
     'application': True,
     'assets': {
         'web.assets_backend': [
             'calendar/static/src/**/*',
+            'calendar/static/src/components/rule_buttons/rule_buttons.js',
+            'calendar/static/src/components/rule_buttons/rule_buttons.scss',
         ],
         'web.qunit_suite_tests': [
             'calendar/static/tests/**/*',

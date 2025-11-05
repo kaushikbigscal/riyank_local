@@ -1,0 +1,57 @@
+<odoo>
+    <record id="view_employee_leave_report_tree" model="ir.ui.view">
+        <field name="name">employee.leave.report.tree</field>
+        <field name="model">employee.leave.report</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="employee_id"/>
+                <field name="department_id"/>
+                <field name="date_from"/>
+                <field name="date_to"/>
+<!--                <field name="company_id"/>-->
+            </tree>
+        </field>
+    </record>
+    <record id="view_hr_approved_search" model="ir.ui.view">
+        <field name="name">hr.leave.approved.search</field>
+        <field name="model">employee.leave.report</field>
+        <field name="arch" type="xml">
+            <search>
+                <!-- Optional fields in the search bar -->
+                <field name="employee_id"/>
+                <field name="department_id"/>
+                <filter string="Today" name="today"
+                        domain="[('date_from', '&lt;=', context_today()), ('date_to', '&gt;=', context_today())]"
+                        help="Leaves for today"/>
+                <filter string="Date" name="date" date="date_from"/>
+
+
+                <!-- Set default filter -->
+                <group expand="0" string="Group By">
+                    <filter name="group_by_employee" string="Employee" context="{'group_by': 'employee_id'}"/>
+                    <filter name="group_by_department" string="Department" context="{'group_by': 'department_id'}"/>
+                    <filter name="group_by_start_date" string="Start Date" context="{'group_by': 'date_from'}"/>
+                    <filter name="group_by_end_date" string="End Date" context="{'group_by': 'date_to'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_employee_leave_report" model="ir.actions.act_window">
+        <field name="name">Employee On Leaves</field>
+        <field name="res_model">employee.leave.report</field>
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="view_employee_leave_report_tree"/>
+        <field name="search_view_id" ref="employee_overview.view_hr_approved_search"/>
+        <field name="context">{'search_default_today': 1}</field>
+        <field name="help" type="html">
+            <p>View all employee On Today leaves from all companies.</p>
+        </field>
+    </record>
+
+    <menuitem id="menu_employee_leave_report"
+              name="Employee On Leaves "
+              parent="hr.hr_menu_hr_reports"
+              action="action_employee_leave_report"
+              sequence="100"/>
+</odoo>

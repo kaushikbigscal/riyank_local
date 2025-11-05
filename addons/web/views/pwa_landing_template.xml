@@ -1,0 +1,61 @@
+<odoo>
+
+    <template id="custom_login_button" inherit_id="web.login">
+        <xpath expr="//button[@type='submit' and contains(text(), 'Log in')]" position="after">
+            <div class="clearfix oe_login_buttons text-center gap-1 d-grid mb-1 pt-3">
+                <t t-set="head">
+                    <link rel="manifest" href="/web/manifest.webmanifest" crossorigin="use-credentials"/>
+                </t>
+                <button type="button" id="installBtn" class="btn btn-primary" style="display: none;">
+                    Install App
+                </button>
+
+            </div>
+            <script>
+                let deferredPrompt;
+                const installBtn = document.getElementById('installBtn');
+
+                // Utility to detect iOS
+                function isIOS() {
+                return /iPhone|iPad|iPod/.test(navigator.userAgent);
+                }
+
+                // Always attach click listener once
+                installBtn.addEventListener('click', () => {
+                if (isIOS()) {
+                alert("To install the App:\n\n1. Tap the share icon.\n2. Select 'Add to Home Screen'");
+                } else if (deferredPrompt) {
+                deferredPrompt.prompt();
+                deferredPrompt.userChoice.then((choiceResult) => {
+                console.log('User choice:', choiceResult.outcome);
+                deferredPrompt = null;
+                });
+                }
+                });
+
+                window.addEventListener('load', () => {
+                if (isIOS()) {
+                installBtn.style.display = 'inline-block';
+                } else {
+                window.addEventListener('beforeinstallprompt', (e) => {
+                e.preventDefault();
+                deferredPrompt = e;
+                installBtn.style.display = 'inline-block';
+                });
+                }
+
+                // Register service worker
+                if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.register('/web/service-worker.js')
+                .then((registration) => {
+                console.log('Service Worker registered:', registration.scope);
+                })
+                .catch((error) => {
+                console.error('Service Worker registration failed:', error);
+                });
+                }
+                });
+            </script>
+         </xpath>
+    </template>
+</odoo>

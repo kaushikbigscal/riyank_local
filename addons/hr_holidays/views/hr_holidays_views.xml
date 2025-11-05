@@ -2,7 +2,7 @@
 <odoo>
 
     <menuitem
-        name="Time Off"
+        name="Leave"
         id="menu_hr_holidays_root"
         sequence="225"
         web_icon="hr_holidays,static/description/icon.png"
@@ -10,7 +10,7 @@
 
     <menuitem
         id="menu_hr_holidays_my_leaves"
-        name="My Time"
+        name="My Leaves"
         parent="menu_hr_holidays_root"
         sequence="1"/>
 
@@ -49,7 +49,7 @@
 
     <menuitem
         id="menu_open_department_leave_approve"
-        name="Time Off"
+        name="Leave"
         parent="menu_hr_holidays_management"
         action="hr_leave_action_action_approve_department"
         sequence="1"/>
@@ -93,7 +93,7 @@
     <menuitem
         id="hr_holidays_status_menu_configuration"
         action="open_view_holiday_status"
-        name="Time Off Types"
+        name="Leave Types"
         parent="menu_hr_holidays_configuration"
         groups="hr_holidays.group_hr_holidays_manager"
         sequence="1"/>
@@ -125,6 +125,6 @@
     <menuitem id="hr_holidays_menu_config_activity_type"
         action="mail_activity_type_action_config_hr_holidays"
         parent="menu_hr_holidays_configuration"
-        groups="base.group_no_one"/>
+        groups="hr_holidays.group_hr_holidays_manager"/>
 
 </odoo>

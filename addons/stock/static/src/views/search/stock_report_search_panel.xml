@@ -3,7 +3,7 @@
 
 <t t-name="stock.StockReportSearchPanel.Regular" t-inherit="web.SearchPanel.Regular">
     <xpath expr="//div/section[1]" position="before">
-        <section t-if="warehouses.length > 1" class="o_search_panel_section o_search_panel_warehouse">
+        <section class="o_search_panel_section o_search_panel_warehouse">
             <header class="o_search_panel_section_header pt-4 pb-2 text-uppercase o_cursor_default">
                 <i t-attf-class="fa fa-filter o_search_panel_section_icon text-warning me-2"/>
                 <b>Warehouses</b>

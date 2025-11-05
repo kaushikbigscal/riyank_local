@@ -1,0 +1,1109 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<odoo>
+    <!--    *vruti*-->
+    <record id="res_partner_visit_form" model="ir.ui.view">
+        <field name="name">res.partner.visit.form</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <div name="button_box" position="inside">
+                <button name="action_open_visits" type="object" class="oe_stat_button" icon="fa-id-card-o"
+                        groups="hr.group_hr_user">
+                    <div class="o_field_widget o_stat_info">
+                        <span class="o_stat_text">Unplanned Visits</span>
+                    </div>
+                </button>
+            </div>
+        </field>
+    </record>
+    <!--    *vruti*-->
+
+    <!--    <record model="ir.ui.view" id="field_visit_tree_view">-->
+    <!--        <field name="name">field.visit.tree</field>-->
+    <!--        <field name="model">field.visit</field>-->
+    <!--        <field name="arch" type="xml">-->
+    <!--            <tree-->
+    <!--                    decoration-success="state == 'completed'"-->
+    <!--                    decoration-info="state == 'submitted'"-->
+    <!--                    decoration-warning="state == 'incident'"-->
+    <!--                    decoration-muted="state == 'cancel'"-->
+    <!--                    multi_edit="1"-->
+    <!--                    sample="1"-->
+    <!--            >-->
+    <!--&lt;!&ndash;                <field name="name" readonly="1"/>&ndash;&gt;-->
+    <!--                &lt;!&ndash;                <field name="date"/>&ndash;&gt;-->
+    <!--                <field name="date_start" string="Planned Date" widget="daterange"-->
+    <!--                       options="{'end_date_field': 'date', 'always_range': '1'}" />-->
+    <!--&lt;!&ndash;                <field name="date"/>&ndash;&gt;-->
+    <!--&lt;!&ndash;                <field name="partner_id"/>&ndash;&gt;-->
+    <!--                <field name="field_visit_plan_type"/>-->
+    <!--                <field name="display_name_customer_city" string="Customer / City"/>-->
+    <!--                <field name="user_id" widget="many2many_avatar_user"/>-->
+    <!--&lt;!&ndash;                <field name="company_id" groups="base.group_multi_company"/>&ndash;&gt;-->
+    <!--                <field name="state" readonly="1"/>-->
+    <!--                <field name="visit_objective" widget="many2many_tags" options="{'color_field': 'color'}"-->
+    <!--                       optional="hide"/>-->
+    <!--                <button-->
+    <!--                        name="action_draft"-->
+    <!--                        type="object"-->
+    <!--                        invisible="state not in ['cancel','incident', 'completed']"-->
+    <!--                        icon="fa-undo"-->
+    <!--                        title="Set To Draft"-->
+    <!--                />-->
+    <!--                <button-->
+    <!--                        name="action_submitted"-->
+    <!--                        type="object"-->
+    <!--                        icon="fa-calendar text-success"-->
+    <!--                        invisible="state != 'draft'"-->
+    <!--                        title="Submitted Visit"-->
+    <!--                />-->
+    <!--                <button-->
+    <!--                        name="action_completed"-->
+    <!--                        type="object"-->
+    <!--                        icon="fa-check"-->
+    <!--                        invisible="state != 'submitted'"-->
+    <!--                        title="Mark As Completed"-->
+    <!--                />-->
+    <!--&lt;!&ndash;                <button&ndash;&gt;-->
+    <!--&lt;!&ndash;                        name="%(field_visit_close_wiz_action)d"&ndash;&gt;-->
+    <!--&lt;!&ndash;                        type="action"&ndash;&gt;-->
+    <!--&lt;!&ndash;                        icon="fa-ban text-danger"&ndash;&gt;-->
+    <!--&lt;!&ndash;                        invisible="state in ['cancel','incident', 'completed']"&ndash;&gt;-->
+    <!--&lt;!&ndash;                        context="{'att_close_type':'cancel'}"&ndash;&gt;-->
+    <!--&lt;!&ndash;                        title="Close Reasons"&ndash;&gt;-->
+    <!--&lt;!&ndash;                />&ndash;&gt;-->
+    <!--&lt;!&ndash;                <button&ndash;&gt;-->
+    <!--&lt;!&ndash;                        name="%(field_visit_close_wiz_action)d"&ndash;&gt;-->
+    <!--&lt;!&ndash;                        type="action"&ndash;&gt;-->
+    <!--&lt;!&ndash;                        icon="fa-exclamation-triangle"&ndash;&gt;-->
+    <!--&lt;!&ndash;                        invisible="state != 'submitted'"&ndash;&gt;-->
+    <!--&lt;!&ndash;                        context="{'att_close_type':'incident'}"&ndash;&gt;-->
+    <!--&lt;!&ndash;                        title="Close Reasons"&ndash;&gt;-->
+    <!--&lt;!&ndash;                />&ndash;&gt;-->
+    <!--&lt;!&ndash;                <field name="show_time_control" column_invisible="True"/>&ndash;&gt;-->
+
+    <!--&lt;!&ndash;                <button&ndash;&gt;-->
+    <!--&lt;!&ndash;                        name="button_start_work"&ndash;&gt;-->
+    <!--&lt;!&ndash;                        string="Start Work"&ndash;&gt;-->
+    <!--&lt;!&ndash;                        tabindex="-1"&ndash;&gt;-->
+    <!--&lt;!&ndash;                        type="object"&ndash;&gt;-->
+    <!--&lt;!&ndash;                        icon="fa-play-circle text-success"&ndash;&gt;-->
+    <!--&lt;!&ndash;                        invisible="show_time_control != 'start'"&ndash;&gt;-->
+    <!--&lt;!&ndash;                        class="oe_stat_button"&ndash;&gt;-->
+    <!--&lt;!&ndash;                        title="Start work"&ndash;&gt;-->
+    <!--&lt;!&ndash;                />&ndash;&gt;-->
+
+    <!--&lt;!&ndash;                <button&ndash;&gt;-->
+    <!--&lt;!&ndash;                        name="button_end_work"&ndash;&gt;-->
+    <!--&lt;!&ndash;                        string="Stop Work"&ndash;&gt;-->
+    <!--&lt;!&ndash;                        tabindex="-1"&ndash;&gt;-->
+    <!--&lt;!&ndash;                        type="object"&ndash;&gt;-->
+    <!--&lt;!&ndash;                        icon="fa-stop-circle text-warning"&ndash;&gt;-->
+    <!--&lt;!&ndash;                        invisible="show_time_control != 'stop'"&ndash;&gt;-->
+    <!--&lt;!&ndash;                        class="oe_stat_button"&ndash;&gt;-->
+    <!--&lt;!&ndash;                        title="End work"&ndash;&gt;-->
+    <!--&lt;!&ndash;                />&ndash;&gt;-->
+
+    <!--            </tree>-->
+    <!--        </field>-->
+    <!--    </record>-->
+    <record model="ir.ui.view" id="field_visit_tree_view">
+        <field name="name">field.visit.tree</field>
+        <field name="model">field.visit</field>
+        <field name="arch" type="xml">
+            <tree
+                    decoration-success="state == 'completed'"
+                    decoration-info="state == 'submitted'"
+                    decoration-warning="state == 'justify'"
+                    decoration-muted="state == 'cancel'"
+                    multi_edit="1"
+                    sample="1"
+            >
+                <field name="name" readonly="1"/>
+                <field name="date_start" string="Planned Date" widget="daterange"
+                       options="{'end_date_field': 'date', 'always_range': '1'}"/>
+                <field name="parent_visit_id" readonly="1"/>
+                <field name="visit_origin" readonly="1"/>
+                <field name="field_visit_plan_type"/>
+                <field name="display_name_customer_city" string="Customer / City"/>
+                <field name="user_id" widget="many2one_avatar_user"/>
+                <field name="state" readonly="1"/>
+                <field name="visit_objective" widget="many2many_tags" options="{'color_field': 'color'}"
+                       optional="hide"/>
+
+                <!-- Functional Action Column -->
+                <!--                <button name="action_cancel"-->
+                <!--                        type="object"-->
+                <!--                        string="Cancel"-->
+                <!--                        icon="fa-ban text-danger"-->
+                <!--                        invisible="state in ['cancel','incident','completed']"/>-->
+                <!--                <button name="action_submitted"-->
+                <!--                        type="object"-->
+                <!--                        string="Submitted"-->
+                <!--                        icon="fa-calendar text-success"-->
+                <!--                        invisible="state != 'draft'"/>-->
+                <!--                <button name="action_approved"-->
+                <!--                        type="object"-->
+                <!--                        string="Approved"-->
+                <!--                        icon="fa-check"-->
+                <!--                        invisible="state != 'submitted'"/>-->
+            </tree>
+        </field>
+    </record>
+
+    <!--    Bulk Action-->
+    <!--        <record id="action_field_visit_bulk_cancel" model="ir.actions.server">-->
+    <!--            <field name="name">Cancel</field>-->
+    <!--            <field name="model_id" ref="model_field_visit"/>-->
+    <!--            <field name="binding_model_id" ref="model_field_visit"/>-->
+    <!--            <field name="binding_type">action</field>-->
+    <!--            <field name="state">code</field>-->
+    <!--            <field name="code">-->
+    <!--        for visit in records:-->
+    <!--            if visit.state not in ['cancel','completed','incident']:-->
+    <!--                # get a default reason for cancel-->
+    <!--                reason = env['field.visit.reason'].search(-->
+    <!--                    [('close_type', '=', 'cancel')],-->
+    <!--                    limit=1-->
+    <!--                )-->
+    <!--                wiz = env['field.visit.close.wiz'].with_context(-->
+    <!--                    att_close_type='cancel',-->
+    <!--                    active_id=visit.id,-->
+    <!--                    active_ids=[visit.id]-->
+    <!--                ).create({-->
+    <!--                    'reason_id': reason.id,-->
+    <!--                    'notes': 'Bulk cancel'-->
+    <!--                })-->
+    <!--                wiz.action_close()-->
+    <!--            </field>-->
+    <!--        </record>-->
+
+    <!-- Bulk Submitted -->
+    <!--        <record id="action_field_visit_bulk_submitted" model="ir.actions.server">-->
+    <!--            <field name="name">Submit</field>-->
+    <!--            <field name="model_id" ref="model_field_visit"/>-->
+    <!--            <field name="binding_model_id" ref="model_field_visit"/>-->
+    <!--            <field name="binding_type">action</field>-->
+    <!--            <field name="state">code</field>-->
+    <!--            <field name="code">-->
+    <!--        for visit in records:-->
+    <!--            if visit.state == 'draft':-->
+    <!--                visit.action_submitted()-->
+    <!--            </field>-->
+    <!--        </record>-->
+
+    <!-- Bulk Approved / Completed -->
+    <!--        <record id="action_field_visit_bulk_approved" model="ir.actions.server">-->
+    <!--            <field name="name">Approved</field>-->
+    <!--            <field name="model_id" ref="model_field_visit"/>-->
+    <!--            <field name="binding_model_id" ref="model_field_visit"/>-->
+    <!--            <field name="binding_type">action</field>-->
+    <!--            <field name="state">code</field>-->
+    <!--            <field name="code">-->
+    <!--        for visit in records:-->
+    <!--            if visit.state == 'submitted':-->
+    <!--                visit.action_completed()-->
+    <!--            </field>-->
+    <!--        </record>-->
+
+    <record id="field_visit_kanban_view" model="ir.ui.view">
+        <field name="name">field.visit.kanban</field>
+        <field name="model">field.visit</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_mobile" sample="1">
+                <field name="user_id" widget="many2one_avatar_user"/>
+                <field name="state"/>
+                <field name="name"/>
+                <field name="field_visit_plan_type"/>
+                <field name="display_name_customer_city"/>
+                <field name="partner_id"/>
+                <field name="date"/>
+                <field name="date_start"/>
+                <field name="activity_ids"/>
+                <field name="show_time_control"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_global_click">
+                            <div class="mw-100">
+                                <div class="o_kanban_card_content" style="min-height: 90px;">
+                                    <div class="o_kanba n_primary_left">
+                                        <div class="o_primary me-5">
+                                            <span class="o_text_overflow fw-bold" t-att-title="record.name.value">
+                                                <t t-esc="record.name.value"/>
+                                            </span>
+
+                                            <div t-if="record.partner_id.value" class="text-muted mt-1">
+                                                <span class="fa fa-user me-2" title="Partner"></span>
+                                                <t t-esc="record.partner_id.value"/>
+                                            </div>
+
+
+                                            <!--                                            <div t-if="record.date.raw_value or record.date_start.raw_value"-->
+                                            <!--                                                 class="text-muted mt-1">-->
+                                            <!--                                                <span class="fa fa-clock-o me-2" title="Date"></span>-->
+                                            <!--                                                <t t-if="record.date_start.raw_value">-->
+                                            <!--                                                    <t t-esc="record.date_start.value"/>-->
+                                            <!--                                                </t>-->
+                                            <!--                                                <i t-if="record.date.raw_value and record.date_start.raw_value"-->
+                                            <!--                                                   class="fa fa-long-arrow-right mx-2 oe_read_only" title="to"/>-->
+                                            <!--                                                <t t-if="record.date.raw_value">-->
+                                            <!--                                                    <t t-esc="record.date.value"/>-->
+                                            <!--                                                </t>-->
+                                            <!--                                            </div>-->
+
+                                            <!--                                        <div t-if="record.date.raw_value">-->
+                                            <!--                                            <span class="fa fa-clock-o me-2" title="End Date"/>-->
+                                            <!--                                            <field name="date" widget="remaining_days"/>-->
+                                            <!--                                        </div>-->
+                                            <div t-if="record.field_visit_plan_type" name="Visit type">
+                                                <t t-esc="record.field_visit_plan_type.value"/>
+                                            </div>
+                                            <div t-if="record.display_name_customer_city" name="Customer / City">
+                                                <t t-esc="record.display_name_customer_city.value"/>
+                                            </div>
+                                            <div t-if="record.date.raw_value" name="date"
+                                                 invisible="state in ['completed', 'canceled']">
+                                                <field name="date" widget="remaining_days"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Bottom Row -->
+                                <div class="o_kanban_record_bottom d-flex justify-content-between align-items-center pt-2">
+                                    <div class="oe_kanban_bottom_left">
+                                        <field name="can_start_timer" invisible="1"/>
+                                        <field name="can_stop_timer" invisible="1"/>
+
+                                        <!--                                        <button-->
+                                        <!--                                                name="button_start_work"-->
+                                        <!--                                                type="object"-->
+                                        <!--                                                icon="fa-lg fa-play-circle text-success"-->
+                                        <!--                                                invisible="not can_start_timer"-->
+                                        <!--                                                class="o_project_kanban_box"-->
+                                        <!--                                                title="Start work"/>-->
+                                        <!--                                        <button-->
+                                        <!--                                                name="button_end_work"-->
+                                        <!--                                                type="object"-->
+                                        <!--                                                icon="fa-lg fa-stop-circle text-warning"-->
+                                        <!--                                                invisible="not can_stop_timer"-->
+                                        <!--                                                class="o_project_kanban_box"-->
+                                        <!--                                                title="End work"/>-->
+                                        <field name="activity_ids" widget="kanban_activity"/>
+                                    </div>
+                                    <div class="oe_kanban_bottom_right">
+                                        <field name="user_id" widget="many2one_avatar_user"/>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="field_visit_form_view">
+        <field name="name">field.visit.form</field>
+        <field name="model">field.visit</field>
+        <field name="arch" type="xml">
+            <form string="Visit">
+                <header>
+                    <button
+                            name="action_draft"
+                            id="action_draft"
+                            string="Draft"
+                            type="object"
+                            invisible="state not in ['cancel','incident']"
+                    />
+                    <button
+                            name="action_submitted"
+                            id="action_submitted"
+                            string="Submit"
+                            class="btn-primary"
+                            type="object"
+                            invisible="not show_submit_btn"
+                    />
+                    <button
+                            name="action_completed"
+                            id="action_completed"
+                            string="Complete"
+                            class="btn-primary"
+                            type="object"
+                            invisible="not show_complete_btn"
+                    />
+                    <button
+                            name="%(field_visit_close_wiz_action)d"
+                            id="action_cancel"
+                            string="Cancel"
+                            type="action"
+                            invisible="state in ['cancel','incident', 'completed']"
+                            context="{'att_close_type':'cancel'}"
+                    />
+                    <button
+                            name="%(field_visit_close_wiz_action)d"
+                            id="action_incident"
+                            string="Incident"
+                            type="action"
+                            invisible="state != 'submitted'"
+                            context="{'att_close_type':'incident'}"
+                    />
+                    <button name="action_justify" string="Justification" type="object" class="btn-secondary"
+                            invisible="not show_justification_btn or state not in ['justify','approved','rejected','validate']"/>
+                    <field
+                            name="state"
+                            widget="statusbar"
+                            statusbar_visible="draft,submitted,justify,approved,rejected,completed,cancel"
+                    />
+                </header>
+                <sheet string="Visit">
+                    <div class="oe_button_box" name="button_box">
+                    </div>
+                    <group>
+                        <group string="Visit Type">
+                            <field name="name" readonly="1"/>
+                            <field name="parent_visit_id" readonly="1" invisible="not id"/>
+                            <field name="visit_origin" readonly="1"/>
+                            <field name="date_start" string="Planned Date" widget="daterange"
+                                   options='{"end_date_field": "date", "always_range": "1"}'/>
+                            <field name="allday" force_save="1"/>
+                            <field name="field_visit_plan_type" widget="radio" options="{'horizontal': true}"/>
+                            <field name="state_id" invisible="field_visit_plan_type != 'city_wise'"/>
+                            <field name="city_id" invisible="field_visit_plan_type != 'city_wise'" required="1"/>
+                            <field name="zip_code" widget="many2many_tags"
+                                   invisible="field_visit_plan_type != 'city_wise'"/>
+                            <field name="show_submit_btn" invisible="1"/>
+                            <field name="show_complete_btn" invisible="1"/>
+                            <field name="show_justification_btn" invisible="1"/>
+                        </group>
+                        <group string="Objective Of Visit">
+                            <field name="visit_objective"
+                                   widget="many2many_tags" options="{'color_field': 'color'}"
+                                   required="field_visit_plan_type == 'official_work'"/>
+                            <field name="sub_objective_ids"
+                                   widget="many2many_tags"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Customer" invisible="field_visit_plan_type in ['official_work', 'city_wise']">
+                            <field name="partner_id"
+                                   widget="res_partner_many2one"
+                                   options="{'always_reload': True}"
+                                   context="{
+                                           'filter_state_id': state_id,
+                                           'filter_city_id': city_id,
+                                           'filter_zip_ids': zip_code
+                                       }"
+                                   required="field_visit_plan_type == 'customer_wise'"
+                            />
+                            <field name="partner_phone" widget="phone" invisible="not partner_id"/>
+                            <field name="partner_mobile" widget="phone" invisible="not partner_id"/>
+                        </group>
+                        <group string="Assignment">
+                            <field name="route_assignment_id" readonly="1" invisible="not route_assignment_id"/>
+                            <field name="user_id" widget="many2one_avatar_user"/>
+                            <!--                            <field name="joint_visit_employee_ids" widget="many2many_tags" domain="[('id', 'in', allowed_joint_visit_user_ids)]"/>-->
+                            <!--                            <field name="joint_visit_user_ids" widget="many2many_tags"/>-->
+                            <field name="joint_visit_user_ids"
+                                   string="Joint Visit"
+                                   widget="many2many_avatar_user"
+                                   context="{'current_user_id': user_id}"/>
+
+
+                            <field name="is_approver_or_salesperson" invisible="1"/>
+                            <field name="allowed_recipient_types" invisible="1"/>
+                            <!--                            <field name="allowed_joint_visit_user_ids" invisible="1"/>-->
+                            <!--                                <field name="calendar_event_id" readonly="1"/>-->
+                        </group>
+                    </group>
+                    <notebook>
+                        <page
+                                string="Close Info"
+                                invisible="state not in ['cancel', 'incident']"
+                        >
+                            <group>
+                                <field
+                                        name="close_reason_id"
+                                        readonly="1"
+                                        options="{'no_edit': True, 'no_open': True}"
+                                />
+                                <field name="close_reason_notes" readonly="1"/>
+                                <field
+                                        name="close_reason_image"
+                                        widget="image"
+                                        readonly="1"
+                                        invisible="not close_reason_image"
+                                />
+                            </group>
+                        </page>
+                        <page string="Internal Notes">
+                            <field
+                                    name="description"
+                                    placeholder="Add a description..."
+                            />
+                        </page>
+                        <page string="Timesheets">
+                            <!-- For Administrator (Managers) -->
+                            <field name="timesheet_ids" context="{'manual_timesheet_entry': True}"
+                                   groups="field_visit.group_field_visit_manager">
+                                <tree>
+                                    <!--            <field name="visit_id" invisible="1"/>-->
+                                    <field name="visit_name" string="Visit Name"/>
+                                    <field name="employee_id" string="Employee"/>
+                                    <field name="start_time"/>
+                                    <field name="end_time"/>
+                                    <field name="start_address" string="Start Address"/>
+                                    <field name="end_address" string="End Address"/>
+                                    <field name="start_latitude" optional="hide"/>
+                                    <field name="start_longitude" optional="hide"/>
+                                    <field name="end_latitude" optional="hide"/>
+                                    <field name="end_longitude" optional="hide"/>
+                                    <field name="total_working_time"/>
+                                    <field name="is_manual" string="Manual?"/>
+                                    <!--            <field name="customer_id"-->
+                                    <!--                   domain="[('city_id', '=', parent.city_id)]"-->
+                                    <!--                   optional="show"/>-->
+                                </tree>
+                                <form>
+                                    <group>
+                                        <!--                <field name="visit_id" invisible="1"/>-->
+                                        <field name="start_time" required="1"/>
+                                        <field name="end_time"/>
+                                        <field name="start_address"/>
+                                        <field name="end_address"/>
+                                        <field name="customer_id"
+                                               domain="[('city_id', '=', parent.city_id)]"
+                                               string="Customer"
+                                               invisible="parent.field_visit_plan_type != 'city_wise'"
+                                               required="parent.field_visit_plan_type == 'city_wise'"/>
+                                        <field name="employee_id" readonly="1"/>
+                                        <field name="actual_user_id"/>
+                                        <field name="total_working_time" readonly="1"/>
+                                        <field name="is_manual" readonly="1"/>
+                                    </group>
+                                </form>
+                            </field>
+
+                            <!-- For Normal Users (no Add line) -->
+                            <field name="timesheet_ids" groups="!field_visit.group_field_visit_manager">
+                                <tree create="0" no_open="1">
+                                    <!--            <field name="visit_id" invisible="1"/>-->
+                                    <field name="visit_name" string="Visit Name"/>
+                                    <field name="employee_id" string="Employee"/>
+                                    <field name="start_time"/>
+                                    <field name="end_time"/>
+                                    <field name="start_address" string="Start Address"/>
+                                    <field name="end_address" string="End Address"/>
+                                    <field name="total_working_time"/>
+                                    <!--            <field name="customer_id" optional="show"/>-->
+                                    <field name="is_manual" string="Manual?"/>
+                                </tree>
+                            </field>
+                        </page>
+
+                        <page string="Justification" invisible="not is_approver_or_salesperson">
+                            <field name="justification_ids" domain="[('recipient_type','in', allowed_recipient_types)]"
+                                   create="false">
+                                <tree create="false" edit="false" no_open="True">
+                                    <field name="user_id"/>
+                                    <field name="datetime"/>
+                                    <field name="message"/>
+                                    <field name="attachment_links"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Customer Visits" invisible="field_visit_plan_type != 'city_wise'">
+                            <field name="customer_line_ids" mode="tree"
+                                   nolink="1"
+                                   options="{'no_create': True, 'no_open': True}">
+                                <tree create="false" edit="false" no_open="True">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="child_visit_name"/>
+                                    <field name="partner_id"/>
+                                    <field name="state"/>
+                                    <!--<field name="show_time_control" invisible="1"/>-->
+                                    <button name="action_open_child_visit"
+                                            type="object"
+                                            string="Open Visit"
+                                            icon="fa-external-link"/>
+                                </tree>
+                                <form>
+                                    <group>
+                                        <field name="partner_id"/>
+                                        <field name="state"/>
+                                        <field name="timesheet_ids">
+                                            <tree>
+                                                <field name="start_time"/>
+                                                <field name="end_time"/>
+                                                <field name="start_address"/>
+                                                <field name="end_address"/>
+                                                <field name="total_working_time"/>
+                                            </tree>
+                                        </field>
+                                    </group>
+                                </form>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field
+                            name="message_follower_ids"
+                            widget="mail_followers"
+                            groups="base.group_user"
+                    />
+                    <field name="activity_ids" widget="mail_activity"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="field_calendar_view">
+        <field name="name">field.visit.calendar</field>
+        <field name="model">field.visit</field>
+        <field name="arch" type="xml">
+            <calendar string="Visit" date_start="date_start" date_stop="date"
+                      event_open_popup="true"
+                      event_limit="5"
+                      quick_create="true"
+                      color="user_id"
+                      quick_create_view_id="%(field_visit.field_visit_form_view)d"
+            >
+                <field name="name"/>
+                <field name="partner_id"/>
+                <field name="user_id" widget="many2one_avatar_user"/>
+                <field name="visit_objective" widget="many2many_tags" options="{'color_field': 'color'}"
+                       invisible="not visit_objective"/>
+            </calendar>
+        </field>
+    </record>
+
+    <record id="field_visit_view_activity" model="ir.ui.view">
+        <field name="name">field.visit.activity</field>
+        <field name="model">field.visit</field>
+        <field name="arch" type="xml">
+            <activity string="Visit">
+                <field name="id"/>
+                <templates>
+                    <div t-name="activity-box">
+                        <img class="rounded"
+                             t-att-src="activity_image('field.visit', 'avatar_128', record.id.raw_value)"
+                             role="img" t-att-title="record.id.value" t-att-alt="record.id.value"/>
+                        <div class="d-flex justify-content-start gap-5">
+                            <field name="name" display="full" class="o_text_block"/>
+                            <field name="user_id" widget="many2one_avatar_user"/>
+
+                        </div>
+                    </div>
+                </templates>
+            </activity>
+        </field>
+    </record>
+
+    <record id="field_visit_filter" model="ir.ui.view">
+        <field name="name">field.visit.search</field>
+        <field name="model">field.visit</field>
+        <field name="arch" type="xml">
+            <search string="Search Visits">
+                <field name="name" readonly="1"/>
+                <field
+                        name="partner_id"
+                        filter_domain="[('partner_id','child_of',self)]"
+                />
+                <field name="user_id" widget="many2one_avatar_user"/>
+                <filter string="Start Date" name="start_date" date="date_start"/>
+                <filter string="End Date" name="end_date" date="date"/>
+                <!--                <field name="opportunity_ids" />-->
+                <field name="visit_objective"/>
+                <separator/>
+                <filter
+                        string="My Visits"
+                        name="assigned_to_me"
+                        domain="[('user_id', '=', uid)]"
+                        help="Visits that are assigned to me"
+                />
+                <separator orientation="vertical"/>
+                <filter
+                        string="Late Visits"
+                        name="visits_overdue"
+                        domain="[('date', '&lt;', context_today().strftime('%Y-%m-%d'))]"
+                />
+                <!--                <filter-->
+                <!--                        string="Today Visits"-->
+                <!--                        name="visits_today"-->
+                <!--                        domain="[('date', '=', context_today().strftime('%Y-%m-%d'))]"-->
+                <!--                />-->
+                <!--                <filter-->
+                <!--                        string="Today Visits"-->
+                <!--                        name="visits_today"-->
+                <!--                        domain="[('is_today_visit', '=', True)]"-->
+                <!--                />-->
+                <filter
+                        string="Today Visits"
+                        name="visits_today"
+                        domain="[
+                                    ('date_start', '&lt;=', context_today()),
+                                    ('date', '&gt;=', context_today())
+                                ]"
+                />
+                <filter
+                        string="Future Visits"
+                        name="visits_upcoming_all"
+                        domain="[('date', '&gt;', context_today())]"
+                />
+                <separator orientation="vertical"/>
+                <filter string="Draft" name="my_draft_visit" domain="[('state','=', 'draft')]"/>
+                <filter string="Completed" name="my_completed_visit" domain="[('state','=', 'completed')]"/>
+                <filter string="Cancelled" name="my_cancelled_visit" domain="[('state','=', 'cancel')]"/>
+                <filter string="Incident" name="my_incident_visit" domain="[('state','=', 'incident')]"/>
+
+                <group expand="0" name="visits" string="Group By">
+                    <filter
+                            string="Salesperson"
+                            name="salesperson"
+                            context="{'group_by': 'user_id'}"
+                    />
+                    <filter
+                            string="Partner"
+                            name="partner"
+                            context="{'group_by': 'partner_id'}"
+                    />
+                    <filter
+                            string="State"
+                            name="state"
+                            context="{'group_by': 'state'}"
+                    />
+                    <filter
+                            string="Company"
+                            name="company"
+                            context="{'group_by':'company_id'}"
+                            groups="base.group_multi_company"
+                    />
+                    <separator orientation="vertical"/>
+                    <filter
+                            string="Visit by Date"
+                            context="{'group_by':'date'}"
+                            name="date"
+                    />
+                    <filter string="Visit Objective" name="objective" context="{'group_by': 'visit_objective'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+    <record model="ir.actions.act_window" id="my_field_visit_action">
+        <field name="name">My Visits</field>
+        <field name="res_model">field.visit</field>
+        <field name="view_mode">kanban,tree,form,calendar,pivot,activity</field>
+        <field name="context">{
+            'show_dashboard': True,
+            'search_default_visits_today':1,
+            }
+        </field>
+        <field name="domain">
+            ['|', ('user_id', '=', uid), ('joint_visit_user_ids', 'in', [uid])]
+        </field>
+        <field
+                name="search_view_id"
+                ref="field_visit.field_visit_filter"
+        />
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No Visits Found. Let's Create One!
+            </p>
+            <p>
+                Track your field visits from scheduling to completion.
+                <br/>
+                Capture onsite details instantly and collaborate seamlessly with your team.
+            </p>
+        </field>
+    </record>
+
+    <record id="view_field_visit_my_pivot" model="ir.ui.view">
+        <field name="name">field.visit.my.pivot</field>
+        <field name="model">field.visit</field>
+        <field name="arch" type="xml">
+            <pivot string="My Visits">
+                <field name="user_id" type="row"/>
+            </pivot>
+
+        </field>
+    </record>
+
+
+    <record model="ir.actions.act_window" id="all_field_visit_action">
+        <field name="name">All Visits</field>
+        <field name="res_model">field.visit</field>
+        <field name="view_mode">kanban,tree,form,calendar,pivot,activity</field>
+        <field name="context">{
+            'show_dashboard': False,
+            'search_default_salesperson':1,
+            }
+        </field>
+        <field
+                name="search_view_id"
+                ref="field_visit.field_visit_filter"
+        />
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No Visits Found. Let's Create One!
+            </p>
+            <p>
+                Track your field visits from scheduling to completion.
+                <br/>
+                Capture onsite details instantly and collaborate seamlessly with your team.
+            </p>
+        </field>
+    </record>
+
+    <record id="view_field_visit_dashboard_view" model="ir.ui.view">
+        <field name="name">Field visit dashboard</field>
+        <field name="model">field.visit</field>
+        <field name="inherit_id" ref="field_visit.field_visit_tree_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//tree" position="attributes">
+                <attribute name="js_class">field_dashboard_list</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- ============ Action for Waiting for Approvals ============ -->
+    <!--    <record id="field_visit_form_waiting_approval" model="ir.ui.view">-->
+    <!--        <field name="name">field.visit.form.waiting.approval</field>-->
+    <!--        <field name="model">field.visit</field>-->
+    <!--        <field name="arch" type="xml">-->
+    <!--            <form string="Visit (Waiting for Approval)" edit="false" create="false">-->
+    <!--                <header>-->
+    <!--                    <button name="action_approve"-->
+    <!--                            type="object"-->
+    <!--                            string="Approve"-->
+    <!--                            class="btn-primary"-->
+    <!--                            invisible="state != 'submitted'"/>-->
+    <!--                    <button name="action_reject"-->
+    <!--                            type="object"-->
+    <!--                            string="Reject"-->
+    <!--                            class="btn-secondary"-->
+    <!--                            invisible="state != 'submitted'"/>-->
+    <!--                    <button name="action_justify"-->
+    <!--                            type="object"-->
+    <!--                            string="Justify"-->
+    <!--                            class="btn-secondary"-->
+    <!--                            invisible="state != 'submitted'"/>-->
+
+    <!--                    <field-->
+    <!--                            name="state"-->
+    <!--                            widget="statusbar"-->
+    <!--                            statusbar_visible="approved,rejected,justify"-->
+    <!--                    />-->
+    <!--                </header>-->
+    <!--                <sheet>-->
+    <!--                    <group>-->
+    <!--                        <group string="Visit Type">-->
+    <!--                            <field name="field_visit_plan_type" widget="radio" options="{'horizontal': true}"/>-->
+    <!--                            <field name="state_id" invisible="field_visit_plan_type != 'city_wise'"/>-->
+    <!--                            <field name="city_id" invisible="field_visit_plan_type != 'city_wise'"/>-->
+    <!--                            <field name="zip_code" widget="many2many_tags"-->
+    <!--                                   invisible="field_visit_plan_type != 'city_wise'"/>-->
+    <!--                            <field name="show_submit_btn" invisible="1"/>-->
+    <!--                            <field name="show_complete_btn" invisible="1"/>-->
+    <!--                        </group>-->
+    <!--                        <group string="Objective Of Visit">-->
+    <!--                            <field name="visit_objective" widget="many2many_tags"-->
+    <!--                                   options="{'color_field': 'color'}"/>-->
+    <!--                            <field name="sub_objective_ids" widget="many2many_tags"-->
+    <!--                                   invisible="not visit_objective"/>-->
+    <!--                        </group>-->
+    <!--                    </group>-->
+    <!--                    <group>-->
+    <!--                        <group string="Customer">-->
+    <!--                            <field name="partner_id" widget="res_partner_many2one"-->
+    <!--                                   context="{'res_partner_search_mode': 'customer', 'show_address': True, 'show_vat': True}"-->
+    <!--                                   options="{'always_reload': True}"/>-->
+    <!--                            <field name="partner_phone" widget="phone" invisible="not partner_id"/>-->
+    <!--                            <field name="partner_mobile" widget="phone" invisible="not partner_id"/>-->
+    <!--                        </group>-->
+    <!--                        <group string="Assignment">-->
+    <!--                            <field name="user_id" widget="many2many_avatar_user"/>-->
+    <!--                            <field name="date_start" string="Planned Date" widget="daterange"-->
+    <!--                                   options='{"end_date_field": "date", "always_range": "1"}'/>-->
+    <!--                            <field name="allday" force_save="1"/>-->
+    <!--                        </group>-->
+    <!--                    </group>-->
+    <!--                </sheet>-->
+    <!--                <div class="oe_chatter">-->
+    <!--                    <field-->
+    <!--                            name="message_follower_ids"-->
+    <!--                            widget="mail_followers"-->
+    <!--                            groups="base.group_user"-->
+    <!--                    />-->
+    <!--                    <field name="activity_ids" widget="mail_activity"/>-->
+    <!--                    <field name="message_ids" widget="mail_thread"/>-->
+    <!--                </div>-->
+    <!--            </form>-->
+    <!--        </field>-->
+    <!--    </record>-->
+    <!--    <record model="ir.ui.view" id="field_visit_tree_waiting_approval">-->
+    <!--        <field name="name">field.visit.tree.waiting.approval</field>-->
+    <!--        <field name="model">field.visit</field>-->
+    <!--        <field name="arch" type="xml">-->
+    <!--            <tree create="false">-->
+    <!--                <field name="date_start" string="Planned Date" widget="daterange"-->
+    <!--                       options="{'end_date_field': 'date', 'always_range': '1'}"/>-->
+    <!--                <field name="field_visit_plan_type"/>-->
+    <!--                <field name="display_name_customer_city" string="Customer / City"/>-->
+    <!--                <field name="user_id" widget="many2many_avatar_user"/>-->
+    <!--                <field name="state" readonly="1"/>-->
+    <!--                <field name="visit_objective" widget="many2many_tags" options="{'color_field': 'color'}"-->
+    <!--                       optional="hide"/>-->
+
+    <!--&lt;!&ndash;                &lt;!&ndash; Only action buttons, work on selected record &ndash;&gt;&ndash;&gt;-->
+    <!--&lt;!&ndash;                <button name="action_approve"&ndash;&gt;-->
+    <!--&lt;!&ndash;                        type="object"&ndash;&gt;-->
+    <!--&lt;!&ndash;                        string="Approve"&ndash;&gt;-->
+    <!--&lt;!&ndash;                        icon="fa-check"&ndash;&gt;-->
+    <!--&lt;!&ndash;                        class="btn-primary"&ndash;&gt;-->
+    <!--&lt;!&ndash;                        states="submitted"/>&ndash;&gt;-->
+    <!--&lt;!&ndash;                <button name="action_reject"&ndash;&gt;-->
+    <!--&lt;!&ndash;                        type="object"&ndash;&gt;-->
+    <!--&lt;!&ndash;                        string="Reject"&ndash;&gt;-->
+    <!--&lt;!&ndash;                        icon="fa-times"&ndash;&gt;-->
+    <!--&lt;!&ndash;                        class="btn-secondary"&ndash;&gt;-->
+    <!--&lt;!&ndash;                        states="submitted"/>&ndash;&gt;-->
+    <!--            </tree>-->
+    <!--        </field>-->
+    <!--    </record>-->
+    <!--<record id="field_visit_tree_view_waiting" model="ir.ui.view">-->
+    <!--    <field name="name">field.visit.tree.waiting</field>-->
+    <!--    <field name="model">field.visit</field>-->
+    <!--    <field name="arch" type="xml">-->
+    <!--        <tree create="false">-->
+    <!--            <field name="field_visit_plan_type"/>-->
+    <!--            <field name="date_start"/>-->
+    <!--            <field name="date"/>-->
+    <!--            <field name="state"/>-->
+    <!--        </tree>-->
+    <!--    </field>-->
+    <!--</record>-->
+
+    <!-- Action for Waiting for Approvals -->
+    <!--    <record id="action_field_visit_waiting_approval" model="ir.actions.act_window">-->
+    <!--        <field name="name">Waiting for Approvals</field>-->
+    <!--        <field name="res_model">field.visit</field>-->
+    <!--        <field name="domain">[('state', '=', 'submitted')]</field>-->
+    <!--        <field name="view_mode">tree,form</field>-->
+    <!--        <field name="views" eval="[-->
+    <!--            (ref('field_visit.field_visit_tree_view'), 'tree'),-->
+    <!--            (ref('field_visit.field_visit_form_waiting_approval'), 'form')-->
+    <!--        ]"/>-->
+    <!--    </record>-->
+
+
+    <!--    <record id="field_visit_form_readonly" model="ir.ui.view">-->
+    <!--        <field name="name">field.visit.form.readonly</field>-->
+    <!--        <field name="model">field.visit</field>-->
+    <!--        <field name="inherit_id" ref="field_visit.field_visit_form_view"/>-->
+    <!--        <field name="arch" type="xml">-->
+    <!--            <form position="attributes">-->
+    <!--                <attribute name="edit">false</attribute>-->
+    <!--                <attribute name="create">false</attribute>-->
+    <!--                <attribute name="delete">false</attribute>-->
+    <!--            </form>-->
+    <!--            <xpath expr="//form//header//button" position="replace">-->
+    <!--&lt;!&ndash;                <header>&ndash;&gt;-->
+    <!--                    <button name="action_approve"-->
+    <!--                            type="object"-->
+    <!--                            string="Approve"-->
+    <!--                            class="btn-primary"-->
+    <!--                            invisible="state == 'submitted'" />-->
+    <!--                    <button name="action_reject"-->
+    <!--                            type="object"-->
+    <!--                            string="Reject"-->
+    <!--                            class="btn-secondary"-->
+    <!--                            invisible="state != 'submitted'"/>-->
+    <!--&lt;!&ndash;                </header>&ndash;&gt;-->
+    <!--            </xpath>-->
+    <!--        </field>-->
+    <!--    </record>-->
+
+    <!-- Tree View -->
+    <record id="field_visit_waiting_approval_tree_view" model="ir.ui.view">
+        <field name="name">field.visit.waiting.approval.tree</field>
+        <field name="model">field.visit</field>
+        <field name="arch" type="xml">
+            <tree string="Waiting for Approval Visits" create="false">
+                <field name="name" readonly="1"/>
+                <field name="parent_visit_id" readonly="1"/>
+                <field name="visit_origin" readonly="1"/>
+                <field name="field_visit_plan_type"/>
+                <field name="display_name_customer_city"/>
+                <field name="date_start"/>
+                <field name="user_id"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Form View (readonly for approvals) -->
+    <record id="field_visit_waiting_approval_form_view" model="ir.ui.view">
+        <field name="name">field.visit.waiting.approval.form</field>
+        <field name="model">field.visit</field>
+        <field name="arch" type="xml">
+            <form string="Visit - Waiting Approval" create="false">
+                <header>
+                    <button name="action_approve_first" string="Validate" type="object" class="btn-primary"
+                            invisible="first_approved or second_approved or state == 'rejected'"/>
+                    <button name="action_approve_second" string="Approve" type="object" class="btn-primary"
+                            invisible="second_approved or not first_approved or state == 'rejected'"/>
+                    <button name="action_reject" string="Reject" type="object" class="btn-danger"
+                            invisible="state in ['rejected','approved']"/>
+                    <button name="action_justify" string="Justification" type="object" class="btn-secondary"/>
+                    <field name="state" widget="statusbar" statusbar_visible="justify,approved,rejected"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name" readonly="1"/>
+                            <field name="parent_visit_id" readonly="1" invisible="not id"/>
+                            <field name="visit_origin" readonly="1"/>
+                            <field name="field_visit_plan_type" readonly="1"/>
+                            <field name="state_id" readonly="1" invisible="field_visit_plan_type == 'customer_wise'"/>
+                            <field name="city_id" readonly="1" invisible="field_visit_plan_type == 'customer_wise'"/>
+                            <field name="zip_code" readonly="1" widget="many2many_tags"
+                                   invisible="field_visit_plan_type == 'customer_wise'"/>
+                            <field name="partner_id" readonly="1" invisible="field_visit_plan_type == 'city_wise'"/>
+                        </group>
+                        <group>
+                            <field name="user_id" readonly="1"/>
+                            <field name="date_start" readonly="1"/>
+                            <field name="allday" readonly="1"/>
+                            <field name="visit_objective" readonly="1" widget="many2many_tags"/>
+                            <field name="sub_objective_ids" readonly="1" widget="many2many_tags"/>
+                            <field name="is_approver_or_salesperson" invisible="1"/>
+                            <field name="allowed_recipient_types" invisible="1"/>
+                            <field name="first_approved" invisible="1"/>
+                            <field name="second_approved" invisible="1"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Justification" invisible="not is_approver_or_salesperson">
+                            <!--                            <field name="justification_ids" domain="[('recipient_type','in',allowed_recipient_types)]" create="false">-->
+                            <!--                                <tree create="false" edit="false" no_open="True">-->
+                            <!--                                    <field name="user_id"/>-->
+                            <!--                                    <field name="datetime"/>-->
+                            <!--                                    <field name="message"/>-->
+                            <!--                                    <field name="attachment_links"/>-->
+                            <!--                                </tree>-->
+                            <!--                            </field>-->
+                            <field name="justification_ids_visible" create="false">
+                                <tree create="false" edit="false" no_open="True">
+                                    <field name="user_id"/>
+                                    <field name="datetime"/>
+                                    <field name="message"/>
+                                    <field name="attachment_links"/>
+                                </tree>
+                            </field>
+
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action (linking tree + custom form) -->
+    <!--    <record id="action_field_visit_waiting_approval" model="ir.actions.act_window">-->
+    <!--        <field name="name">Waiting for Approvals</field>-->
+    <!--        <field name="res_model">field.visit</field>-->
+    <!--        <field name="view_mode">tree,form</field>-->
+    <!--        <field name="view_ids" eval="[-->
+    <!--            (ref('field_visit_waiting_approval_tree_view'), 'tree'),-->
+    <!--            (ref('field_visit_waiting_approval_form_view'), 'form')-->
+    <!--        ]"/>-->
+    <!--        <field name="domain">[('is_approver','=',True), ('state','in',['submitted','validate'])]</field>-->
+    <!--        <field name="target">current</field>-->
+    <!--    </record>-->
+    <!--    <record id="action_field_visit_waiting_approval" model="ir.actions.act_window">-->
+    <!--        <field name="name">Waiting for Approvals</field>-->
+    <!--        <field name="res_model">field.visit</field>-->
+    <!--        <field name="view_mode">tree,form</field>-->
+    <!--        <field name="domain">-->
+    <!--        [-->
+    <!--            '&amp;',-->
+    <!--                ('state','in',['submitted','validate','justify']),-->
+    <!--                '|',-->
+    <!--                    ('user_id.employee_ids.field_visit_first_approval','=',uid),-->
+    <!--                    ('user_id.employee_ids.field_visit_second_approval','=',uid)-->
+    <!--        ]-->
+    <!--        </field>-->
+    <!--    </record>-->
+
+    <!--        <record id="action_field_visit_waiting_approval" model="ir.actions.act_window">-->
+    <!--            <field name="name">Waiting for Approvals</field>-->
+    <!--            <field name="res_model">field.visit</field>-->
+    <!--            <field name="view_mode">tree,form</field>-->
+    <!--            <field name="domain">-->
+    <!--            [-->
+    <!--                '&amp;',-->
+    <!--                    ('state','in',['submitted','validate','justify']),-->
+    <!--                    '|',-->
+    <!--                        '&amp;',-->
+    <!--                            ('user_id.employee_ids.field_visit_first_approval','=',uid),-->
+    <!--                            ('first_approved','=',False),-->
+    <!--                        '&amp;',-->
+    <!--                            ('user_id.employee_ids.field_visit_second_approval','=',uid),-->
+    <!--                            ('second_approved','=',False)-->
+    <!--            ]-->
+    <!--            </field>-->
+    <!--            <field name="view_id" ref="field_visit_waiting_approval_tree_view"/>-->
+    <!--            <field name="view_ids" eval="[(5,0,0),-->
+    <!--                (0,0,{'view_mode':'tree','view_id':ref('field_visit_waiting_approval_tree_view')}),-->
+    <!--                (0,0,{'view_mode':'form','view_id':ref('field_visit_waiting_approval_form_view')})-->
+    <!--            ]"/>-->
+    <!--        </record>-->
+    <record id="action_field_visit_waiting_approval" model="ir.actions.act_window">
+        <field name="name">Waiting for Approvals</field>
+        <field name="res_model">field.visit</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">
+            [
+            '&amp;',
+            ('state','in',['submitted','validate','justify']),
+            '|',
+            '&amp;',
+            ('user_id.employee_ids.field_visit_first_approval','=',uid),
+            ('first_approved','=',False),
+            ('user_id.employee_ids.field_visit_second_approval','=',uid)
+            ]
+        </field>
+        <field name="view_id" ref="field_visit_waiting_approval_tree_view"/>
+        <field name="view_ids" eval="[(5,0,0),
+                (0,0,{'view_mode':'tree','view_id':ref('field_visit_waiting_approval_tree_view')}),
+                (0,0,{'view_mode':'form','view_id':ref('field_visit_waiting_approval_form_view')})
+            ]"/>
+    </record>
+
+    <record id="view_city_wise_start_work_wizard" model="ir.ui.view">
+        <field name="name">city.wise.start.work.wizard.form</field>
+        <field name="model">city.wise.start.work.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Select Customers for City Visit">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="visit_id" readonly="1"/>
+                            <field name="city_id" readonly="1" options="{'no_open': True}"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="customer_ids"/>
+                    </group>
+                </sheet>
+                <footer>
+                    <button name="action_start_city_work" string="Start Visit" type="object" class="btn-primary"/>
+                    <button string="Cancel" special="cancel" class="btn-secondary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

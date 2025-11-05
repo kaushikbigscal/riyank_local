@@ -79,7 +79,7 @@
                                 <field name="coach_id" widget="many2one_avatar_user"/>
                             </group>
                         </group>
-                        <notebook>
+                        <notebook groups="hr.group_hr_user">
                             <page name="public" string="Work Information">
                                 <div id="o_work_employee_container" class="d-lg-flex"> <!-- These two div are used to position org_chart -->
                                     <div id="o_work_employee_main" class="flex-grow-1">

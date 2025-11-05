@@ -422,11 +422,29 @@ export class DateTimePicker extends Component {
             throw new Error(`DateTimePicker error: given "maxDate" comes before "minDate".`);
         }
 
-        const timeValues = this.values.map((val) => [
-            (val || DateTime.local()).hour,
-            val?.minute || 0,
-            val?.second || 0,
-        ]);
+            // Modify this part to add +2 hours to the current time when no time is provided
+
+        const timeValues = this.values.map((val) => {
+            if (val) {
+                return [val.hour, val.minute || 0, val.second || 0];
+            } else {
+                // Add 2 hours first
+                let after2Hours = DateTime.local().plus({ hours: 2 });
+        
+                // Round to nearest 15 minutes
+                const roundedMinute = Math.ceil(after2Hours.minute / 15) * 15;
+        
+                if (roundedMinute === 60) {
+                    after2Hours = after2Hours.plus({ hours: 1 }).set({ minute: 0 });
+                } else {
+                    after2Hours = after2Hours.set({ minute: roundedMinute });
+                }
+        
+                return [after2Hours.hour, after2Hours.minute, after2Hours.second];
+            }
+        });
+
+
         if (props.range) {
             this.state.timeValues = timeValues;
         } else {

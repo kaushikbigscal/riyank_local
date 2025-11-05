@@ -38,7 +38,7 @@ QUnit.module("hr_org_chart", {
                 '</form>',
             resId: 1,
             mockRPC: function (route, args) {
-                if (route === '/hr/get_org_chart') {
+                if (route === '/web/hr/get_org_chart') {
                     assert.ok('employee_id' in args, "it should have 'employee_id' as argument");
                     return Promise.resolve({
                         children: [],
@@ -66,7 +66,7 @@ QUnit.module("hr_org_chart", {
                 '</form>',
             resId: 1,
             mockRPC: function (route, args) {
-                if (route === '/hr/get_org_chart') {
+                if (route === '/web/hr/get_org_chart') {
                     assert.ok('employee_id' in args, "it should have 'employee_id' as argument");
                     return Promise.resolve({}); // return no data
                 }
@@ -94,7 +94,7 @@ QUnit.module("hr_org_chart", {
                 '</form>',
             resId: 1,
             mockRPC: function (route, args) {
-                if (route === '/hr/get_org_chart') {
+                if (route === '/web/hr/get_org_chart') {
                     assert.ok('employee_id' in args, "it should have 'employee_id' as argument");
                     return Promise.resolve({
                         children: [{
@@ -147,7 +147,7 @@ QUnit.module("hr_org_chart", {
                 '</form>',
             resId: 1,
             mockRPC: function (route, args) {
-                if (route === '/hr/get_org_chart') {
+                if (route === '/web/hr/get_org_chart') {
                     assert.ok('employee_id' in args, "should have 'employee_id' as argument");
                     return Promise.resolve({
                         children: [{

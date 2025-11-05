@@ -1,0 +1,18 @@
+<odoo>
+    <data noupdate="1">
+
+        <!-- Create Extended Warranty Product Template -->
+        <record id="product_extended_warranty_template" model="product.template">
+            <field name="name">Extended Warranty</field>
+            <field name="detailed_type">service</field>
+            <field name="sale_ok">True</field>
+            <field name="purchase_ok">False</field>
+            <field name="list_price">0.0</field>
+            <field name="standard_price">0.0</field>
+            <field name="invoice_policy">order</field>
+            <field name="description_sale">Extended warranty for sold products.</field>
+            <field name="is_extended_warranty">True</field>
+        </record>
+
+    </data>
+</odoo>

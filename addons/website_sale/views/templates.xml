@@ -2508,7 +2508,7 @@
         </div>
     </template>
 
-    <template id="website_sale.brand_promotion" inherit_id="website.brand_promotion">
+<!--    <template id="website_sale.brand_promotion" inherit_id="website.brand_promotion">
         <xpath expr="//t[@t-call='web.brand_promotion_message']" position="replace">
             <t t-call="web.brand_promotion_message">
                 <t t-set="_message">
@@ -2517,7 +2517,7 @@
                 <t t-set="_utm_medium" t-valuef="website"/>
             </t>
         </xpath>
-    </template>
+    </template>-->
 
     <template id="sale_order_portal_content_inherit_website_sale" name="Orders Followup Products Links" inherit_id="sale.sale_order_portal_content">
         <xpath expr="//section[@id='details']//div[hasclass('table-responsive')]" position="attributes">

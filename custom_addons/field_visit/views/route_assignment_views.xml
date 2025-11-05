@@ -1,0 +1,424 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Route Assignment Tree View -->
+    <record id="view_route_assignment_tree" model="ir.ui.view">
+        <field name="name">route.assignment.tree</field>
+        <field name="model">route.assignment</field>
+        <field name="arch" type="xml">
+            <tree string="Route Assignments">
+                <field name="route_id" string="Route"/>
+                <field name="employee_ids" widget="many2many_avatar_user"/>
+                <field name="start_date"/>
+                <field name="rrule_type"/>
+                <field name="interval"/>
+                <field name="end_type"/>
+                <field name="visit_count" string="Visits Created"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Wizard Action -->
+    <record id="action_route_assignment_create_visits_wizard" model="ir.actions.act_window">
+        <field name="name">Create Visits Manually</field>
+        <field name="res_model">route.assignment.create.visits.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="context">{'default_route_assignment_id': active_id}</field>
+    </record>
+
+    <!-- Manual Visit Creation Wizard Form -->
+    <record id="view_route_assignment_create_visits_wizard_form" model="ir.ui.view">
+        <field name="name">route.assignment.create.visits.wizard.form</field>
+        <field name="model">route.assignment.create.visits.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Create Visits Manually">
+                <group>
+                    <group>
+                        <field name="route_assignment_id" readonly="1"/>
+                        <field name="visits_to_create" readonly="1"/>
+<!--                        <field name="days" required="1"/>-->
+                    </group>
+                    <group>
+                        <field name="employee_count" readonly="1"/>
+<!--                        <field name="visits_to_create" readonly="1"/>-->
+                    </group>
+                </group>
+
+<!--                <group string="Preview - Dates to Create Visits">-->
+<!--                    <field name="preview_dates" readonly="1" nolabel="1"-->
+<!--                           widget="text" class="o_field_text"/>-->
+<!--                </group>-->
+
+                <footer>
+                    <button name="action_create_visits" string="Create Visits"
+                            type="object" class="oe_highlight" />
+                    <button name="action_cancel" string="Cancel" type="object"
+                            class="btn-secondary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- Route Assignment Form View -->
+    <record id="view_route_assignment_form" model="ir.ui.view">
+        <field name="name">route.assignment.form</field>
+        <field name="model">route.assignment</field>
+        <field name="arch" type="xml">
+            <form string="Route Assignment">
+                <header>
+                    <button name="%(action_route_assignment_create_visits_wizard)d"
+                            string="Manually Create Visits"
+                            type="action"
+                            class="btn-primary"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button class="oe_stat_button" type="object"
+                                name="action_view_visits" icon="fa-calendar">
+                            <field string="Visits" name="visit_count" widget="statinfo"/>
+                        </button>
+                    </div>
+
+                    <group>
+                        <group string="Select Employees &amp; Route">
+                            <field name="employee_ids" widget="many2many_avatar_user" options="{'no_create': True}"/>
+                            <field name="route_id" options="{'no_create': True}"/>
+                        </group>
+
+                        <group string="Schedule Configuration">
+                            <field name="start_date" required="1"/>
+
+                            <label for="interval"/>
+<!--                            <div class="o_col">-->
+<!--                                <div class="o_row">-->
+<!--                                    <field name="interval" class="oe_inline" required="1"/>-->
+<!--                                    <field name="rrule_type" required="1"/>-->
+<!--                                </div>-->
+<!--                                <widget name="week_days" invisible="rrule_type != 'weekly'"/>-->
+<!--                            </div>-->
+                            <div class="o_col">
+                                <div class="o_row">
+                                    <field name="interval" class="oe_inline" required="1"/>
+                                    <field name="rrule_type" required="1"/>
+                                </div>
+
+                                <!-- Weekdays widget for weekly recurrence -->
+                                <widget name="week_days" invisible="rrule_type != 'weekly'"/>
+
+                                <!-- Month selection: show only when Repeat Every = Month -->
+                                <field name="month_by"
+                                       placeholder="select Date/Week Of Month"
+                                       invisible="rrule_type != 'monthly'"/>
+                                <widget name="week_days" invisible="month_by != 'day'"/>
+                                <group invisible="month_by != 'day'">
+                                    <table border="1"  style="border-collapse:collapse; width:100%; table-layout:fixed;">
+                                        <thead>
+                                            <tr>
+                                                <th style="
+                                                            text-align:center;
+                                                            border:1px solid #ccc;
+                                                            width:100px;
+                                                            height:80px;
+                                                            white-space:nowrap;
+                                                            overflow:hidden;
+                                                            text-overflow:ellipsis;">First</th>
+                                                <th style="text-align:center; border:1px solid #ccc; width:100px; height:80px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+                                                    Second
+                                                </th>
+                                                <th style="text-align:center; border:1px solid #ccc; width:100px; height:80px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+                                                    Third
+                                                </th>
+                                                <th style="text-align:center; border:1px solid #ccc; width:100px; height:80px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+                                                    Fourth
+                                                </th>
+                                                <th style="text-align:center; border:1px solid #ccc; width:100px; height:80px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+                                                    Last
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td style="text-align:center; border:1px solid #ccc; width:100px; height:80px;">
+                                                    <field name="first"/>
+                                                </td>
+                                                <td style="text-align:center; border:1px solid #ccc; width:100px; height:80px;">
+                                                    <field name="second"/>
+                                                </td>
+                                                <td style="text-align:center; border:1px solid #ccc; width:100px; height:80px;">
+                                                    <field name="third"/>
+                                                </td>
+                                                <td style="text-align:center; border:1px solid #ccc; width:100px; height:80px;">
+                                                    <field name="fourth"/>
+                                                </td>
+                                                <td style="text-align:center; border:1px solid #ccc; width:100px; height:80px;">
+                                                    <field name="last"/>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </group>
+                                <group invisible="month_by != 'date'">
+                                    <table>
+                                        <tr>
+                                            <td style="text-align:center;">
+                                                <span>1</span><br/><field name="day_1" widget="boolean_button"/>
+                                            </td>
+                                            <td style="text-align:center;">
+                                                <span>2</span><br/><field name="day_2" widget="boolean_button"/>
+                                            </td>
+                                            <td style="text-align:center;">
+                                                <span>3</span><br/><field name="day_3" widget="boolean_button"/>
+                                            </td>
+                                            <td style="text-align:center;">
+                                                <span>4</span><br/><field name="day_4" widget="boolean_button"/>
+                                            </td>
+                                            <td style="text-align:center;">
+                                                <span>5</span><br/><field name="day_5" widget="boolean_button"/>
+                                            </td>
+                                            <td style="text-align:center;">
+                                                <span>6</span><br/><field name="day_6" widget="boolean_button"/>
+                                            </td>
+                                            <td style="text-align:center;">
+                                                <span>7</span><br/><field name="day_7" widget="boolean_button"/>
+                                            </td>
+                                            <td style="text-align:center;">
+                                                <span>8</span><br/><field name="day_8" widget="boolean_button"/>
+                                            </td>
+                                            <td style="text-align:center;">
+                                                <span>9</span><br/><field name="day_9" widget="boolean_button"/>
+                                            </td>
+                                            <td style="text-align:center;">
+                                                <span>10</span><br/><field name="day_10" widget="boolean_button"/>
+                                            </td>
+                                            <td style="text-align:center;">
+                                                <span>11</span><br/><field name="day_11" widget="boolean_button"/>
+                                            </td>
+                                            <td style="text-align:center;">
+                                                <span>12</span><br/><field name="day_12" widget="boolean_button"/>
+                                            </td>
+                                            <td style="text-align:center;">
+                                                <span>13</span><br/><field name="day_13" widget="boolean_button"/>
+                                            </td>
+                                            <td style="text-align:center;">
+                                                <span>14</span><br/><field name="day_14" widget="boolean_button"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="text-align:center;">
+                                                <span>15</span><br/><field name="day_15" widget="boolean_button"/>
+                                            </td>
+                                            <td style="text-align:center;">
+                                                <span>16</span><br/><field name="day_16" widget="boolean_button"/>
+                                            </td>
+                                            <td style="text-align:center;">
+                                                <span>17</span><br/><field name="day_17" widget="boolean_button"/>
+                                            </td>
+                                            <td style="text-align:center;">
+                                                <span>18</span><br/><field name="day_18" widget="boolean_button"/>
+                                            </td>
+                                            <td style="text-align:center;">
+                                                <span>19</span><br/><field name="day_19" widget="boolean_button"/>
+                                            </td>
+                                            <td style="text-align:center;">
+                                                <span>20</span><br/><field name="day_20" widget="boolean_button"/>
+                                            </td>
+                                            <td style="text-align:center;">
+                                                <span>21</span><br/><field name="day_21" widget="boolean_button"/>
+                                            </td>
+                                            <td style="text-align:center;">
+                                                <span>22</span><br/><field name="day_22" widget="boolean_button"/>
+                                            </td>
+                                            <td style="text-align:center;">
+                                                <span>23</span><br/><field name="day_23" widget="boolean_button"/>
+                                            </td>
+                                            <td style="text-align:center;">
+                                                <span>24</span><br/><field name="day_24" widget="boolean_button"/>
+                                            </td>
+                                            <td style="text-align:center;">
+                                                <span>25</span><br/><field name="day_25" widget="boolean_button"/>
+                                            </td>
+                                            <td style="text-align:center;">
+                                                <span>26</span><br/><field name="day_26" widget="boolean_button"/>
+                                            </td>
+                                            <td style="text-align:center;">
+                                                <span>27</span><br/><field name="day_27" widget="boolean_button"/>
+                                            </td>
+                                            <td style="text-align:center;">
+                                                <span>28</span><br/><field name="day_28" widget="boolean_button"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="text-align:center;">
+                                                <span>29</span><br/><field name="day_29" widget="boolean_button"/>
+                                            </td>
+                                            <td style="text-align:center;">
+                                                <span>30</span><br/><field name="day_30" widget="boolean_button"/>
+                                            </td>
+                                            <td style="text-align:center;">
+                                                <span>31</span><br/><field name="day_31" widget="boolean_button"/>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </group>
+<!--                            <field name="month_by" widget="multi_day_picker"/>-->
+
+                                <!-- Day grid (1–31): show only when Month selected and month_by = 'date' -->
+<!--                                <group string="Select Days" invisible="month_by != 'date'">-->
+<!--                                    <group>-->
+<!--                                        <field name="day_1" widget="boolean_button"/>-->
+<!--                                        <field name="day_2" widget="boolean_button"/>-->
+<!--                                        <field name="day_3" widget="boolean_button"/>-->
+<!--                                        <field name="day_4" widget="boolean_button"/>-->
+<!--                                        <field name="day_5" widget="boolean_button"/>-->
+<!--                                        <field name="day_6" widget="boolean_button"/>-->
+<!--                                        <field name="day_7" widget="boolean_button"/>-->
+<!--                                    </group>-->
+<!--                                    <group>-->
+<!--                                        <field name="day_8" widget="boolean_button"/>-->
+<!--                                        <field name="day_9" widget="boolean_button"/>-->
+<!--                                        <field name="day_10" widget="boolean_button"/>-->
+<!--                                        <field name="day_11" widget="boolean_button"/>-->
+<!--                                        <field name="day_12" widget="boolean_button"/>-->
+<!--                                        <field name="day_13" widget="boolean_button"/>-->
+<!--                                        <field name="day_14" widget="boolean_button"/>-->
+<!--                                    </group>-->
+<!--                                    <group>-->
+<!--                                        <field name="day_15" widget="boolean_button"/>-->
+<!--                                        <field name="day_16" widget="boolean_button"/>-->
+<!--                                        <field name="day_17" widget="boolean_button"/>-->
+<!--                                        <field name="day_18" widget="boolean_button"/>-->
+<!--                                        <field name="day_19" widget="boolean_button"/>-->
+<!--                                        <field name="day_20" widget="boolean_button"/>-->
+<!--                                        <field name="day_21" widget="boolean_button"/>-->
+<!--                                    </group>-->
+<!--                                    <group>-->
+<!--                                        <field name="day_22" widget="boolean_button"/>-->
+<!--                                        <field name="day_23" widget="boolean_button"/>-->
+<!--                                        <field name="day_24" widget="boolean_button"/>-->
+<!--                                        <field name="day_25" widget="boolean_button"/>-->
+<!--                                        <field name="day_26" widget="boolean_button"/>-->
+<!--                                        <field name="day_27" widget="boolean_button"/>-->
+<!--                                        <field name="day_28" widget="boolean_button"/>-->
+<!--                                    </group>-->
+<!--                                    <group>-->
+<!--                                        <field name="day_29" widget="boolean_button"/>-->
+<!--                                        <field name="day_30" widget="boolean_button"/>-->
+<!--                                        <field name="day_31" widget="boolean_button"/>-->
+<!--                                    </group>-->
+<!--                                </group>-->
+                            </div>
+
+
+                            <label string="Until" for="end_type"/>
+                            <div class="o_row">
+                                <field name="end_type" required="1"/>
+                                <field name="count"
+                                       required="1"
+                                       invisible="end_type != 'count'"/>
+                                <field name="until"
+                                       invisible="end_type != 'end_date'"
+                                       required="end_type == 'end_date'"/>
+                            </div>
+                        </group>
+                    </group>
+
+                    <!-- Monthly recurrence options -->
+<!--                    <group string="Monthly Options" invisible="rrule_type != 'monthly'">-->
+<!--                        <group>-->
+<!--                            <label string="Day of Month" for="month_by"/>-->
+<!--                            <div class="o_row">-->
+<!--                                <field name="month_by"/>-->
+<!--                                <field name="day"-->
+<!--                                       required="month_by == 'date' and rrule_type == 'monthly'"-->
+<!--                                       invisible="month_by != 'date'"/>-->
+<!--                                <field name="byday"-->
+<!--                                       string="The"-->
+<!--                                       required="month_by == 'day' and rrule_type == 'monthly'"-->
+<!--                                       invisible="month_by != 'day'"/>-->
+<!--                                <field name="weekday"-->
+<!--                                       nolabel="1"-->
+<!--                                       required="month_by == 'day' and rrule_type == 'monthly'"-->
+<!--                                       invisible="month_by != 'day'"/>-->
+<!--                            </div>-->
+<!--                        </group>-->
+<!--                    </group>-->
+
+
+                    <!-- Visits Notebook -->
+                    <notebook>
+                        <page string="Generated Visits" name="visits">
+                            <field name="visit_ids" readonly="1">
+                                <tree>
+                                    <field name="name"/>
+                                    <field name="user_id"/>
+                                    <field name="partner_id" />
+                                    <field name="date"/>
+                                    <field name="state"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <!-- Inherit the field.visit form view -->
+    <record id="view_field_visit_form_inherit_readonly" model="ir.ui.view">
+        <field name="name">field.visit.form.inherit.readonly.fields</field>
+        <field name="model">field.visit</field>
+        <field name="inherit_id" ref="field_visit.field_visit_form_view"/>
+        <field name="arch" type="xml">
+
+            <!-- Make Customer readonly when linked to a route assignment -->
+            <xpath expr="//field[@name='partner_id']" position="attributes">
+                <attribute name="readonly">route_assignment_id != False</attribute>
+            </xpath>
+
+            <!-- Make Field Plan Type readonly -->
+            <xpath expr="//field[@name='field_visit_plan_type']" position="attributes">
+                <attribute name="readonly">route_assignment_id != False</attribute>
+            </xpath>
+
+            <!-- Make Salesperson readonly -->
+            <xpath expr="//field[@name='user_id']" position="attributes">
+                <attribute name="readonly">route_assignment_id != False</attribute>
+            </xpath>
+
+        </field>
+    </record>
+
+    <!-- Route Assignment Search View -->
+    <record id="view_route_assignment_search" model="ir.ui.view">
+        <field name="name">route.assignment.search</field>
+        <field name="model">route.assignment</field>
+        <field name="arch" type="xml">
+            <search string="Route Assignments">
+                <field name="route_id"/>
+                <field name="employee_ids"/>
+                <field name="start_date"/>
+            </search>
+        </field>
+    </record>
+
+    <!-- Route Assignment Actions -->
+    <record id="action_route_assignment" model="ir.actions.act_window">
+        <field name="name">Route Assignments</field>
+        <field name="res_model">route.assignment</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No Route Assignment Found. Let's Create One!
+            </p>
+            <p>
+                Create route assignments to schedule field visits for your team members.
+            </p>
+        </field>
+    </record>
+
+    <record id="action_my_route_assignment" model="ir.actions.act_window">
+        <field name="name">My Assignments</field>
+        <field name="res_model">route.assignment</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('employee_ids', 'in', [uid])]</field>
+    </record>
+</odoo>

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="view_expense_subcategory_tree" model="ir.ui.view">
+        <field name="name">view.expense.subcategory.tree</field>
+        <field name="model">expense.subcategory</field>
+        <field name="arch" type="xml">
+            <tree string="Expense Subcategory">
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_expense_subcategory_form" model="ir.ui.view">
+        <field name="name">view.expense.subcategory.form</field>
+        <field name="model">expense.subcategory</field>
+        <field name="arch" type="xml">
+            <form string="Expense Subcategory">
+                <group>
+                    <field name="name"/>
+                </group>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_expense_subcategory" model="ir.actions.act_window">
+        <field name="name">Expense Subcategory</field>
+        <field name="res_model">expense.subcategory</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No expense subcategories found. Let's create one!
+            </p>
+
+        </field>
+    </record>
+
+    <menuitem id="menu_expense_subcategory"
+              name="Expense Subcategory"
+              action="action_expense_subcategory"
+              parent="hr_expense.menu_hr_expense_configuration"
+              sequence="11"/>
+
+
+    <record id="product_product_expense_form_view_inherit_subcategory" model="ir.ui.view">
+        <field name="name">product.product.expense.form.inherit.subcategory</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="hr_expense.product_product_expense_form_view"/> <!-- Replace with correct view ID -->
+        <field name="arch" type="xml">
+            <!-- Insert notebook inside sheet -->
+            <xpath expr="//sheet" position="inside">
+                <notebook>
+                    <page string="Subcategory">
+                        <group>
+                            <field name="subcategory_id"/>
+                        </group>
+                    </page>
+                </notebook>
+            </xpath>
+        </field>
+    </record>
+
+
+</odoo>

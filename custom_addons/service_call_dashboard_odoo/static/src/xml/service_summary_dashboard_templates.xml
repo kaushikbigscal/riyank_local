@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="ServiceSummaryDashboard">
+        <div class="dashboard-container">
+            <div t-attf-class="sidebar-container {{ state.sidebarOpen ? 'sidebar-open' : '' }}">
+                <div class="oh_dashboards sidebar">
+                    <div class="sidebar-header">
+                        <h3>Project Dashboard</h3>
+                    </div>
+                    <div class="sidebar-content">
+                        <h4 class="sidebar-section-title">DEPARTMENTS</h4>
+                        <div class="sidebar-section">
+                            <t t-foreach="state.companies" t-as="company" t-key="company.id">
+                                <div class="sidebar-item company-item"
+                                     t-att-class="{'active': isCompanyExpanded(company.id)}"
+                                     t-on-click="() => this.toggleCompany(company.id)">
+                                    <i class="fa fa-building"/>
+                                    <span class="item-text"><t t-esc="company.name"/></span>
+                                    <i t-attf-class="fa fa-chevron-{{ isCompanyExpanded(company.id) ? 'down' : 'right' }} ml-auto" />
+                                </div>
+                                <div t-if="isCompanyExpanded(company.id)" class="departments-submenu" t-att-data-company-id="company.id">
+                                    <t t-foreach="getDepartmentsForCompany(company.id)" t-as="dept" t-key="dept.id">
+                                        <div class="sidebar-item department-item"
+                                             t-att-class="{'active': isDepartmentActive(dept.id)}"
+                                             t-on-click.stop="() => this.toggleDepartment(dept.id)">
+                                            <i class="fa fa-sitemap"/>
+                                            <span class="item-text"><t t-esc="dept.name"/></span>
+                                            <i t-if="dept.subDepartments and dept.subDepartments.length > 0"
+                                              t-attf-class="fa fa-chevron-{{ isDepartmentExpanded(dept.id) ? 'down' : 'right' }} ml-auto" />
+                                        </div>
+                                        <div t-if="isDepartmentExpanded(dept.id)" class="sub-departments">
+                                            <t t-foreach="dept.subDepartments" t-as="subDept" t-key="subDept.id">
+                                                <div class="sidebar-item sub-department-item"
+                                                     t-att-class="{'active': isDepartmentActive(subDept.id)}"
+                                                     t-on-click.stop="() => this.onDepartmentClick(subDept.id)">
+                                                    <i class="fa fa-sitemap"/>
+                                                    <span class="item-text"><t t-esc="subDept.name"/></span>
+                                                </div>
+                                            </t>
+                                        </div>
+                                    </t>
+                                    <div t-if="getDepartmentsForCompany(company.id).length === 0" class="sidebar-item no-departments">
+                                        <span class="item-text text-muted">No departments found</span>
+                                    </div>
+                                </div>
+                            </t>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="sidebar-toggle-tab" t-on-click="toggleSidebar">
+                    <i t-attf-class="fa {{ state.sidebarOpen ? 'fa-chevron-left' : 'fa-chevron-right' }}"/>
+                </div>
+            </div>
+
+            <div t-attf-class="main-content {{ state.sidebarOpen ? 'main-content-shifted' : '' }}">
+<!--                <h2 class="heading-dashboard">Dashboard</h2>-->
+<!--                <div class="container-fluid">-->
+<!--                    <div class="filter-section">-->
+<!--                        <div class="inner_select">-->
+<!--                            <div class="filter-item">-->
+<!--                                <select class="form-control custom-select" t-ref="templateSelect" t-on-change="onTemplateChange" t-key="'template-filter'">-->
+<!--                                    <option value="">Select Project Type</option>-->
+<!--                                    <t t-foreach="state.templates" t-as="temp" t-key="temp.id">-->
+<!--                                        <option t-att-value="temp.name">-->
+<!--                                            <t t-esc="temp.name"/>-->
+<!--                                        </option>-->
+<!--                                    </t>-->
+<!--                                </select>-->
+<!--                            </div>-->
+<!--                            <div class="filter-item">-->
+<!--                                <input type="date" class="form-control" t-on-change="onStartDateChange" t-ref="startDateInput" />-->
+<!--                            </div>-->
+<!--                            <div class="filter-item">-->
+<!--                                <input type="date" class="form-control" t-on-change="onEndDateChange" t-ref="endDateInput" />-->
+<!--                            </div>-->
+<!--                            <div class="filter-item">-->
+<!--                                <button class="btn btn-primary apply-filters" t-on-click="applyFilters">Apply Filters</button>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                    <div class="content-placeholder">-->
+<!--                        <p t-if="!state.expandedCompanyId">Select a company from the sidebar</p>-->
+<!--                        <p t-else="">-->
+<!--                            Viewing content for <t t-esc="state.companies.find(c => c.id === state.expandedCompanyId)?.name || 'selected company'" />-->
+<!--                        </p>-->
+<!--                    </div>-->
+<!--                </div>-->
+            </div>
+        </div>
+    </t>
+</templates>
+
+<!--<?xml version="1.0" encoding="UTF-8"?>-->
+<!--<templates id="template" xml:space="preserve">-->
+<!--    <t t-name="SummaryDashboard">-->
+<!--        <div class="dashboard-container">-->
+<!--            &lt;!&ndash; Wrap sidebar and toggle in a container &ndash;&gt;-->
+<!--            <div t-attf-class="sidebar-container {{ state.sidebarOpen ? 'sidebar-open' : '' }}">-->
+<!--                &lt;!&ndash; Sidebar content &ndash;&gt;-->
+<!--                <div class="oh_dashboards sidebar">-->
+<!--                    <div class="sidebar-header">-->
+<!--                        <h3>Project Dashboard</h3>-->
+<!--                    </div>-->
+<!--                    <div class="sidebar-content">-->
+<!--                        <h4 class="sidebar-section-title">Departments</h4>-->
+<!--                        <div class="sidebar-section">-->
+<!--                            <t t-foreach="state.companies" t-as="company" t-key="company.id">-->
+<!--                                <div class="sidebar-item company-item"-->
+<!--                                     t-att-class="{'active': isCompanyExpanded(company.id)}"-->
+<!--                                     t-on-click="() => this.toggleCompany(company.id)">-->
+<!--                                    <i class="fa fa-building"/>-->
+<!--                                    <span class="item-text"><t t-esc="company.name"/></span>-->
+<!--                                    <i t-attf-class="fa fa-chevron-{{ isCompanyExpanded(company.id) ? 'down' : 'right' }} ml-auto" />-->
+<!--                                </div>-->
+
+<!--                                &lt;!&ndash; Departments as sub-menu items &ndash;&gt;-->
+<!--                                <div t-if="isCompanyExpanded(company.id)" class="departments-submenu" t-att-data-company-id="company.id">-->
+<!--                                    <t t-foreach="getDepartmentsForCompany(company.id)" t-as="dept" t-key="dept.id">-->
+<!--                                        <div class="sidebar-item department-item"-->
+<!--                                             t-att-class="{'active': isDepartmentExpanded(dept.id)}"-->
+<!--                                             t-on-click.stop="() => this.toggleDepartment(dept.id)">-->
+<!--                                            <i class="fa fa-sitemap ml-4"/>-->
+<!--                                            <span class="item-text"><t t-esc="dept.name"/></span>-->
+<!--                                            <i t-if="dept.subDepartments and dept.subDepartments.length > 0"-->
+<!--                                               t-attf-class="fa fa-chevron-{{ isDepartmentExpanded(dept.id) ? 'down' : 'right' }} ml-auto" />-->
+<!--                                        </div>-->
+
+<!--                                        &lt;!&ndash; Sub-departments - only show when department is expanded &ndash;&gt;-->
+<!--                                        <div t-if="isDepartmentExpanded(dept.id) and dept.subDepartments and dept.subDepartments.length > 0"-->
+<!--                                             class="sub-departments">-->
+<!--                                            <t t-foreach="dept.subDepartments" t-as="subDept" t-key="subDept.id">-->
+<!--                                                <div class="sidebar-item sub-department-item"-->
+<!--                                                     t-on-click.stop="() => this.onDepartmentClick(subDept.id)">-->
+<!--                                                    <i class="fa fa-sitemap ml-4"/>-->
+<!--                                                    <span class="item-text"><t t-esc="subDept.name"/></span>-->
+<!--                                                </div>-->
+<!--                                            </t>-->
+<!--                                        </div>-->
+<!--                                    </t>-->
+<!--                                    <div t-if="getDepartmentsForCompany(company.id).length === 0" class="sidebar-item no-departments">-->
+<!--                                        <span class="item-text text-muted ml-4">No departments found</span>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                            </t>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+
+<!--                &lt;!&ndash; Sidebar toggle button - Now part of the sidebar container &ndash;&gt;-->
+<!--                <div class="sidebar-toggle-tab" t-on-click="toggleSidebar">-->
+<!--                    <i t-attf-class="fa {{ state.sidebarOpen ? 'fa-chevron-left' : 'fa-chevron-right' }}"/>-->
+<!--                </div>-->
+<!--            </div>-->
+
+<!--            &lt;!&ndash; Main content area &ndash;&gt;-->
+<!--            <div t-attf-class="main-content {{ state.sidebarOpen ? 'main-content-shifted' : '' }}">-->
+<!--                <h2 class="heading-dashboard">Dashboard</h2>-->
+<!--                <div class="container-fluid">-->
+<!--                    &lt;!&ndash; Main dashboard content &ndash;&gt;-->
+<!--                    <div class="content-placeholder">-->
+<!--                        <p t-if="!state.expandedCompanyId">Select a company from the sidebar</p>-->
+<!--                        <p t-else="">-->
+<!--                            Viewing content for <t t-esc="state.companies.find(c => c.id === state.expandedCompanyId)?.name || 'selected company'" />-->
+<!--                        </p>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </t>-->
+<!--</templates>-->

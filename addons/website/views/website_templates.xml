@@ -179,15 +179,15 @@
         do not have any page option (yet) so they can share the same cache -->
         <attribute name="t-cache" add="website,main_object._name == 'website.page' and main_object"/>
     </xpath>
-    <xpath expr="//div[hasclass('o_footer_copyright')]" position="attributes">
+<!--    <xpath expr="//div[hasclass('o_footer_copyright')]" position="attributes">
         <attribute name="data-name">Copyright</attribute>
-        <!-- Background now controlled by css configuration, using color combinations -->
+         Background now controlled by css configuration, using color combinations
         <attribute name="class" add="o_colored_level o_cc" separator=" "/>
     </xpath>
     <xpath expr="//t[@t-call='web.brand_promotion']/.." position="attributes">
         <attribute name="class" add="o_not_editable" separator=" "/>
         <attribute name="t-if">not editable</attribute>
-    </xpath>
+    </xpath>-->
 
     <xpath expr="//div[@id='wrapwrap']" position="after">
         <t t-if="website and website.google_analytics_key and request.env['ir.http']._is_allowed_cookie('optional') and not editable">
@@ -280,7 +280,7 @@
     </xpath>
 </template>
 
-<template id="brand_promotion" inherit_id="web.brand_promotion" name="Brand Promotion">
+<!-- <template id="brand_promotion" inherit_id="web.brand_promotion" name="Brand Promotion">
     <xpath expr="//t[@t-call='web.brand_promotion_message']" position="replace">
         <t t-call="web.brand_promotion_message">
             <t t-set="_message">
@@ -289,7 +289,7 @@
             <t t-set="_utm_medium" t-valuef="website"/>
         </t>
     </xpath>
-</template>
+</template> -->
 
 <!-- Navbar -->
 <template id="navbar_toggler" name="Navbar Toggler">
@@ -1506,34 +1506,38 @@
     <span id="o_fake_navbar_brand"/><!-- Need a fake element so that the menu is still placed correctly -->
 </template>
 
-<template id="option_header_brand_logo" inherit_id="website.placeholder_header_brand" name="Header Brand Logo" active="True">
-    <xpath expr="//*[@id='o_fake_navbar_brand']" position="replace">
-        <a data-name="Navbar Logo" href="/" t-attf-class="navbar-brand logo #{_link_class}">
-            <!--
-            Note: setting width *and* height attributes allows to reserve some
-            space to avoid layout shift during page loading. Of course, CSS
-            rules set the height the user chose, while the width is set to
-            'auto'. But while the image is loading, it is best to already
-            reserve some width to reduce layout shift (like making the menu move
-            or even re-render itself into a "+" menu).
+<template id="option_header_brand_logo"
+              inherit_id="website.placeholder_header_brand"
+              name="Header Brand Logo"
+              active="True">
 
-            The chosen values for the space reservation are the ones of the
-            default logo and theme, but it does not really matter as long as
-            they are coherent. While the image is being loaded, the chosen user
-            height is still applied and the 'auto' width rule induces a width
-            that respects the aspect ratio set by the width and height
-            attributes. That could be a problem if the real logo has a larger
-            height than width, in which case the layout shift would be increased
-            because of the arbitrary values set as width and height, but in most
-            cases, this should reduce it.
+        <xpath expr="//*[@id='o_fake_navbar_brand']" position="replace">
+            <a data-name="Navbar Logo" href="/"
+               t-attf-class="navbar-brand logo d-flex align-items-center #{_link_class}">
 
-            This also allows to gain some page speed scoring.
-            -->
-            <span t-field="website.logo" t-options="{'widget': 'image', 'width': 95, 'height': 40}" role="img" t-att-aria-label="'Logo of %s' % website.name" t-att-title="website.name"/>
-        </a>
-    </xpath>
+                <!-- Login page -->
+                <t t-if="'/web/login' in request.httprequest.path or request.httprequest.path == '/'">
+                    <span t-field="website.logo"
+                          t-options="{'widget': 'image', 'width': 95, 'height': 40}"
+                          role="img"
+                          t-att-aria-label="'Logo of %s' % website.company_id.name"
+                          t-att-title="website.company_id.name"/>
+                    <span class="ms-2 text-muted fs-6" t-esc="website.company_id.name"/>
+                </t>
+
+                <!-- After login -->
+                <t t-else="">
+                    <span t-field="request.env.user.company_id.logo"
+                          t-options="{'widget': 'image', 'width': 95, 'height': 40}"
+                          role="img"
+                          t-att-aria-label="'Logo of %s' % request.env.user.company_id.name"
+                          t-att-title="request.env.user.company_id.name"/>
+                    <span class="ms-2 text-muted fs-6" t-esc="request.env.user.company_id.name"/>
+                </t>
+            </a>
+        </xpath>
 </template>
-
+ 
 <template id="option_header_brand_name" inherit_id="website.placeholder_header_brand" name="Header Brand Name" active="False">
     <xpath expr="//*[@id='o_fake_navbar_brand']" position="replace">
         <a href="/" t-attf-class="navbar-brand #{_link_class}">My Website</a>
@@ -2888,29 +2892,29 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
 
 <!-- Extra element : Search -->
 <template id="website.placeholder_header_search_box" name="Placeholder Header Search Bar"/>
-<template id="website.header_search_box" inherit_id="website.placeholder_header_search_box" name="Header Search Bar" active="True">
-    <xpath expr="." position="inside">
-        <li t-attf-class="#{_item_class}">
-            <t t-if="_layout == 'modal'">
-                <div class="modal fade css_editable_mode_hidden" id="o_search_modal" aria-hidden="true" tabindex="-1">
-                    <div class="modal-dialog modal-lg pt-5">
-                        <div class="modal-content mt-5">
-                            <t t-call="website.header_search_box_input">
-                                <t t-set="_classes" t-valuef="input-group-lg"/>
-                            </t>
-                        </div>
-                    </div>
-                </div>
-                <a t-attf-class="btn rounded-circle p-1 lh-1 #{_button_classes or 'bg-o-color-3'} o_not_editable" data-bs-target="#o_search_modal" data-bs-toggle="modal" role="button" title="Search" href="#">
-                    <i class="oi oi-search fa-stack lh-lg"/>
-                </a>
-            </t>
-            <t t-else="">
-                <t t-call="website.header_search_box_input"/>
-            </t>
-        </li>
-    </xpath>
-</template>
+<!--<template id="website.header_search_box" inherit_id="website.placeholder_header_search_box" name="Header Search Bar" active="True">-->
+<!--    <xpath expr="." position="inside">-->
+<!--        <li t-attf-class="#{_item_class}">-->
+<!--            <t t-if="_layout == 'modal'">-->
+<!--                <div class="modal fade css_editable_mode_hidden" id="o_search_modal" aria-hidden="true" tabindex="-1">-->
+<!--                    <div class="modal-dialog modal-lg pt-5">-->
+<!--                        <div class="modal-content mt-5">-->
+<!--                            <t t-call="website.header_search_box_input">-->
+<!--                                <t t-set="_classes" t-valuef="input-group-lg"/>-->
+<!--                            </t>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--                <a t-attf-class="btn rounded-circle p-1 lh-1 #{_button_classes or 'bg-o-color-3'} o_not_editable" data-bs-target="#o_search_modal" data-bs-toggle="modal" role="button" title="Search" href="#">-->
+<!--                    <i class="oi oi-search fa-stack lh-lg"/>-->
+<!--                </a>-->
+<!--            </t>-->
+<!--            <t t-else="">-->
+<!--                <t t-call="website.header_search_box_input"/>-->
+<!--            </t>-->
+<!--        </li>-->
+<!--    </xpath>-->
+<!--</template>-->
 
 <!-- Extra element : Text -->
 <template id="website.placeholder_header_text_element" name="Placeholder Header Text element"/>

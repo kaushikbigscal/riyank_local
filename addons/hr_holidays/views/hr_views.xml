@@ -34,7 +34,7 @@
                         <div t-if="record.leave_to_approve_count.raw_value > 0" class="row ml16">
                             <div class="col">
                                 <a name="action_open_leave_department" type="object">
-                                    <field name="leave_to_approve_count"/> Time Off Requests
+                                    <field name="leave_to_approve_count"/> Leave Requests
                                 </a>
                             </div>
                         </div>
@@ -53,7 +53,7 @@
                         <div class="row o_kanban_primary_bottom bottom_block bg-view"
                              t-if="record.absence_of_today.raw_value > 0">
                             <div class="col-3">
-                                <a name="%(hr_employee_action_from_department)d" type="action" title="Absent Employee(s), Whose time off requests are either confirmed or validated on today">Absence</a>
+                                <a name="%(hr_employee_action_from_department)d" type="action" title="Absent Employee(s), Whose Leave requests are either confirmed or validated on today">Absence</a>
                             </div>
                             <div class="col-9">
                                 <field name="absence_of_today" widget="progressbar" options="{'current_value': 'absence_of_today', 'max_value': 'total_employee', 'editable': false}"/>
@@ -64,7 +64,7 @@
 
                 <xpath expr="//div[hasclass('o_kanban_manage_reports')]" position="inside">
                     <a role="menuitem" class="dropdown-item" name="%(hr_leave_action_action_department)d" type="action" groups="hr_holidays.group_hr_holidays_user">
-                        Time Off
+                        Leave
                     </a>
                 </xpath>
             </data>
@@ -78,7 +78,7 @@
         <field name="inherit_id" ref="hr.view_employee_filter"/>
         <field name="arch" type="xml">
             <xpath expr="//filter[@name='my_team']" position="before">
-                <filter name="on_timeoff" string="On Time Off" domain="[('is_absent', '=', True)]"/>
+                <filter name="on_timeoff" string="On Leave" domain="[('is_absent', '=', True)]"/>
                 <filter name="at_work" string="At work" domain="[('is_absent', '=', False)]"/>
                 <separator/>
             </xpath>
@@ -163,12 +163,12 @@
                             <field name="allocation_remaining_display"/>/<field name="allocation_display"/> Days
                         </span>
                         <span class="o_stat_text">
-                            Time Off
+                            Leave
                         </span>
                     </div>
                     <div class="o_field_widget o_stat_info" invisible="allocation_display != '0'">
                         <span class="o_stat_text">
-                           Time Off
+                           Leave
                         </span>
                     </div>
                 </button>
@@ -182,7 +182,7 @@
         <field name="inherit_id" ref="hr.view_employee_tree"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='work_location_id']" position="after">
-                <field name="leave_manager_id" optional="hide" string="Time Off Approver" widget="many2one_avatar_user"/>
+                <field name="leave_manager_id" optional="hide" string="Leave Approver" widget="many2one_avatar_user"/>
             </xpath>
         </field>
     </record>
@@ -226,7 +226,7 @@
         <field name="arch" type="xml">
             <xpath expr="//header" position="inside">
                 <button name="%(hr_leave_action_new_request)d"
-                string="Request Time off"
+                string="Request Leave"
                 type="action"
                 class="btn btn-primary"/>
                 <button name="%(hr_leave_allocation_action_my)d"
@@ -275,7 +275,7 @@
                             <field name="allocation_remaining_display"/>/<field name="allocation_display"/> Days
                         </span>
                         <span class="o_stat_text">
-                            Time Off
+                            Leave
                         </span>
                     </div>
                 </button>

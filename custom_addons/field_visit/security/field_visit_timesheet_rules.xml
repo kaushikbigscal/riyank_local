@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <!-- Rule for User: only own timesheets -->
+    <record id="rule_field_visit_timesheet_user" model="ir.rule">
+        <field name="name">Field Visit Timesheet: Own Records</field>
+        <field name="model_id" ref="model_field_visit_timesheet"/>
+        <field name="groups" eval="[(4, ref('field_visit.group_field_visit_user'))]"/>
+        <field name="domain_force">[('employee_id.user_id', '=', user.id)]</field>
+    </record>
+
+    <!-- Rule for Manager: see own + reportees -->
+    <record id="rule_field_visit_timesheet_manager" model="ir.rule">
+        <field name="name">Field Visit Timesheet: Manager + Reportees</field>
+        <field name="model_id" ref="model_field_visit_timesheet"/>
+        <field name="groups" eval="[(4, ref('field_visit.group_field_visit_managers'))]"/>
+        <field name="domain_force">
+            ['|', ('employee_id.user_id', '=', user.id), ('employee_id', 'child_of', user.employee_ids.ids)]
+        </field>
+    </record>
+
+    <!-- Rule for Administrator: see all -->
+    <record id="rule_field_visit_timesheet_admin" model="ir.rule">
+        <field name="name">Field Visit Timesheet: Administrator All</field>
+        <field name="model_id" ref="model_field_visit_timesheet"/>
+        <field name="groups" eval="[(4, ref('field_visit.group_field_visit_manager'))]"/>
+        <field name="domain_force">[(1,'=',1)]</field>
+    </record>
+
+</odoo>

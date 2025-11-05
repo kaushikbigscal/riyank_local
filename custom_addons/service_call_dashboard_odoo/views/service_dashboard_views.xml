@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Action for Project Dashboard-->
+    <record id="service_call_dashboard_action" model="ir.actions.client">
+        <field name="name">Service Call Dashboard</field>
+        <field name="tag">service_call_dashboard</field>
+    </record>
+    <!-- Add this view to show date_time field in task list -->
+
+<!--    <record id="view_task_tree_with_timer" model="ir.ui.view">-->
+<!--        <field name="name">project.task.tree.timer</field>-->
+<!--        <field name="model">project.task</field>-->
+<!--        <field name="inherit_id" ref="industry_fsm.view_task_tree_inherit_fsm"/>-->
+<!--        <field name="arch" type="xml">-->
+<!--            <xpath expr="//tree/field[@name='user_ids']" position="after">-->
+<!--                <field name="date_time" string="Timer Start date/Time"/>-->
+<!--            </xpath>-->
+<!--        </field>-->
+<!--    </record>-->
+    <record id="view_task_tree_service_call_timer" model="ir.ui.view">
+        <field name="name">project.task.tree.service.call.timer</field>
+        <field name="model">project.task</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="project_id"/>
+                <field name="partner_id"/>
+                <field name="user_ids"/>
+                <field name="date_time" string="Timer Start date/Time"/>
+                <field name="company_id"/>
+                <field name="effective_hours"/>
+                <field name="progress"/>
+                <field name="activity_ids"/>
+                <field name="tag_ids"/>
+                <field name="stage_id"/>
+            </tree>
+        </field>
+    </record>
+
+
+
+    <!-- Dashboard menu item -->
+    <menuitem id="service_call_menu_open_Dashboard"
+              name="Dashboard"
+              action="service_call_dashboard_action"
+              parent="industry_fsm.fsm_menu_root"
+              groups="industry_fsm.group_fsm_manager"
+              sequence="45"/>
+
+    <!--    <record id="res_company_dashboard_card_id" model="ir.ui.view">-->
+    <!--        <field name="name">res.company.form</field>-->
+    <!--        <field name="model">res.company</field>-->
+    <!--        <field name="inherit_id" ref="base.view_company_form"/>-->
+    <!--        <field name="arch" type="xml">-->
+    <!--            <xpath expr="//field[@name='signed_required']" position="after">-->
+    <!--                    <field name="service_dashboard_planned_card"/>-->
+    <!--                    <field name="service_dashboard_resolved_card"/>-->
+    <!--            </xpath>-->
+    <!--        </field>-->
+    <!--    </record>-->
+
+    <!--    <xpath expr="//form[1]/sheet[1]/notebook[1]" position="inside">-->
+    <!--        <page string="New Page" name="studio_page_3i7_1il2t65aq">-->
+    <!--            <field name="service_dashboard_planned_card"/>-->
+    <!--            <field name="service_dashboard_resolved_card"/>-->
+    <!--        </page>-->
+    <!--    </xpath>-->
+
+    <!--    <record id="res_company_dashboard_card_id" model="ir.ui.view">-->
+    <!--        <field name="name">res.company.form</field>-->
+    <!--        <field name="model">res.company</field>-->
+    <!--        <field name="inherit_id" ref="base.view_company_form"/>-->
+    <!--        <field name="arch" type="xml">-->
+    <!--            <xpath expr="//form[1]/sheet[1]/notebook[1]" position="inside">-->
+    <!--                <page string="Service Call Page" name="studio_page_3i7_1il2t65aq">-->
+    <!--                    <group>-->
+    <!--                        <field name="service_dashboard_planned_card"/>-->
+    <!--                        <field name="service_dashboard_resolved_card"/>-->
+    <!--                    </group>-->
+    <!--                </page>-->
+    <!--            </xpath>-->
+    <!--        </field>-->
+    <!--    </record>-->
+</odoo>
+
+

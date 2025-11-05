@@ -69,3 +69,6 @@ from . import discuss
 
 # discuss_channel_member must be loaded first
 from . import res_partner
+
+# custom notification for activity done and canceled
+# from . import custom_activity_notification

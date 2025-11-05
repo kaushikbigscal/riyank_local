@@ -1,0 +1,21 @@
+<odoo>
+    <record id="field_visit_justification_wizard_form" model="ir.ui.view">
+        <field name="name">field.visit.justification.wizard.form</field>
+        <field name="model">field.visit.justification.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Add Justification">
+                <sheet>
+                    <group>
+                        <field name="message" placeholder="Enter your justification here..."/>
+                        <field name="attachment"  widget="many2many_binary"/>
+                    </group>
+                    <footer>
+                        <button string="Add" type="object" name="action_add_justification" class="btn-primary"/>
+                        <button string="Cancel" class="btn-secondary" special="cancel"/>
+                    </footer>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+</odoo>

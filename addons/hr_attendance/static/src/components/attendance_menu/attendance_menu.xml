@@ -28,15 +28,15 @@
                                 <h2 t-esc="this.hoursToday" class="mb-0 fs-2"/>
                             </div>
                             <button t-on-click="() => this.onClickSignInOut()" class="flex-basis-100 mt-3" t-attf-class="btn btn-{{ this.state.checkedIn ? 'warning' : 'success' }}">
-                                <span t-if="!this.state.checkedIn">Check in</span>
-                                <span t-else="">Check out</span>
+                                <span t-if="!this.state.checkedIn">Day in</span>
+                                <span t-else="">Day out</span>
                                 <i t-attf-class="fa fa-sign-{{ this.state.checkedIn ? 'out' : 'in' }} ms-1"/>
                             </button>
                         </div>
                     </div>
                     <button t-if="this.isFirstAttendance" t-on-click="() => this.onClickSignInOut()" t-attf-class="btn btn-{{ this.state.checkedIn ? 'warning' : 'success' }}">
-                        <span t-if="!this.state.checkedIn">Check in</span>
-                        <span t-else="">Check out</span>
+                        <span t-if="!this.state.checkedIn">Day in</span>
+                        <span t-else="">Day out</span>
                         <i t-attf-class="fa fa-sign-{{ this.state.checkedIn ? 'out' : 'in' }} ms-1"/>
                     </button>
                 </div>

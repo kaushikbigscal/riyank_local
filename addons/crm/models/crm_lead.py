@@ -105,6 +105,7 @@ class Lead(models.Model):
     _track_duration_field = 'stage_id'
 
     # Description
+
     name = fields.Char(
         'Opportunity', index='trigram', required=True,
         compute='_compute_name', readonly=False, store=True)
@@ -172,9 +173,11 @@ class Lead(models.Model):
     date_conversion = fields.Datetime('Conversion Date', readonly=True)
     date_deadline = fields.Date('Expected Closing', help="Estimate of the date on which the opportunity will be won.")
     # Customer / contact
+    
     partner_id = fields.Many2one(
         'res.partner', string='Customer', check_company=True, index=True, tracking=10,
-        help="Linked partner (optional). Usually created when converting the lead. You can find a partner by its Name, TIN, Email or Internal Reference.")
+         help="Linked partner (optional). Usually created when converting the lead. You can find a partner by its Name, TIN, Email or Internal Reference.")
+    
     partner_is_blacklisted = fields.Boolean('Partner is blacklisted', related='partner_id.is_blacklisted', readonly=True)
     contact_name = fields.Char(
         'Contact Name', index='trigram', tracking=30,

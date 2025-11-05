@@ -23,6 +23,8 @@ This module provides the core of the Odoo Web Client.
         'views/neutralize_views.xml',
         'data/ir_attachment.xml',
         'data/report_layout.xml',
+        "views/pwa_landing_template.xml",
+ 
     ],
     'assets': {
         # ---------------------------------------------------------------------
@@ -116,6 +118,9 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/legacy/xml/base.xml',
             # Don't include dark mode files in light mode
             ('remove', 'web/static/src/**/*.dark.scss'),
+
+
+
         ],
         'web.assets_web': [
             ('include', 'web.assets_backend'),
@@ -217,6 +222,7 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/legacy/js/public/public_root_instance.js',
             'web/static/src/legacy/js/public/public_widget.js',
             'web/static/src/legacy/js/public/signin.js',
+ 
 
         ],
         'web.assets_frontend_lazy': [

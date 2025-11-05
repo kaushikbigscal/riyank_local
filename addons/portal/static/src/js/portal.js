@@ -6,6 +6,7 @@ publicWidget.registry.portalDetails = publicWidget.Widget.extend({
     selector: '.o_portal_details',
     events: {
         'change select[name="country_id"]': '_onCountryChange',
+        'change select[name="state_id"]': '_onStateChange',
     },
 
     /**
@@ -15,8 +16,11 @@ publicWidget.registry.portalDetails = publicWidget.Widget.extend({
         var def = this._super.apply(this, arguments);
 
         this.$state = this.$('select[name="state_id"]');
+        this.$city = this.$('select[name="city"]');
         this.$stateOptions = this.$state.filter(':enabled').find('option:not(:first)');
+        this.$cityOptions = this.$city.filter(':enabled').find('option:not(:first)');
         this._adaptAddressForm();
+        this._adaptCityForm();
 
         return def;
     },
@@ -37,6 +41,18 @@ publicWidget.registry.portalDetails = publicWidget.Widget.extend({
         this.$state.parent().toggle(nb >= 1);
     },
 
+    /**
+     * Filters cities based on state and hides city dropdown if none found
+     * @private
+     */
+    _adaptCityForm: function () {
+        var stateID = this.$state.val() || 0;
+        this.$cityOptions.detach();
+        var $displayedCity = this.$cityOptions.filter('[data-state_id=' + stateID + ']');
+        var count = $displayedCity.appendTo(this.$city).show().length;
+        this.$city.parent().toggle(count >= 1);  // Hide if no cities match
+    },
+
     //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
@@ -46,6 +62,13 @@ publicWidget.registry.portalDetails = publicWidget.Widget.extend({
      */
     _onCountryChange: function () {
         this._adaptAddressForm();
+        this._adaptCityForm();
+    },
+    /**
+     * @private
+     */
+    _onStateChange: function () {
+        this._adaptCityForm();
     },
 });
 

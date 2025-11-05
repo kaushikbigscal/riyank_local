@@ -266,6 +266,10 @@
                     invisible="state != 'draft'"/>
                 <button name="action_quotation_send" id="send_proforma" type="object" string="Send PRO-FORMA Invoice" groups="sale.group_proforma_sales" invisible="state == 'draft' or invoice_count &gt;= 1" context="{'proforma': True, 'validate_analytic': True}"/>
                 <button name="action_quotation_send" id="send_by_email" string="Send by Email" type="object" invisible="state not in ('sent', 'sale')" data-hotkey="g" context="{'validate_analytic': True}"/>
+                <button name="download_sale_report"
+                        type="object"
+                        string="Download PDF"
+                        class="oe_highlight"/>
 
                 <!-- allow to unlock locked orders even if setting is not enabled (e.g. orders synchronized from connectors) -->
                 <button name="action_unlock" type="object" string="Unlock"
@@ -677,13 +681,13 @@
                                     groups="product.group_discount_per_so_line"/>
                         </div>
                         <group name="note_group" col="6" class="mt-2 mt-md-0">
-                            <group colspan="4">
-                                <field  colspan="2" name="note" nolabel="1" placeholder="Terms and conditions..."/>
+                            <group colspan="9">
+                                    <field name="tax_totals" widget="account-tax-totals-field" nolabel="1" colspan="2"
+                                           readonly="1"/>
+
+                                    <field colspan="2" name="note" nolabel="1" placeholder="Terms and conditions..."/>
                             </group>
-                            <group class="oe_subtotal_footer" colspan="2" name="sale_total">
-                                <field name="tax_totals" widget="account-tax-totals-field" nolabel="1" colspan="2" readonly="1"/>
-                            </group>
-                            <div class="clearfix"/>
+                                <div class="clearfix"/>
                         </group>
                     </page>
                     <page string="Other Info" name="other_information">

@@ -12,7 +12,7 @@
                         <setting string="Kiosk Mode" company_dependent="1" help="Define the way the user will be identified by the application.">
                             <field name="attendance_kiosk_mode" required="1" class="w-75"/>
                         </setting>
-                        <setting string="Attendances from Backend" company_dependent="1" help="Allow Users to Check in/out from Odoo.">
+                        <setting string="Attendances from Backend" company_dependent="1" help="Allow Users to Check in/out from Effezient.">
                             <field name="attendance_from_systray" required="1"/>
                         </setting>
                     </block>
@@ -82,6 +82,13 @@
         <field name="context">{'module' : 'hr_attendance', 'bin_size': False}</field>
     </record>
 
+<!--    <menuitem id="hr_attendance.menu_hr_attendance_settings" name="Configuration" parent="menu_hr_attendance_root"-->
+<!--        sequence="99" action="action_hr_attendance_settings" groups="hr_attendance.group_hr_attendance_manager"/>-->
+
     <menuitem id="hr_attendance.menu_hr_attendance_settings" name="Configuration" parent="menu_hr_attendance_root"
+        sequence="99" groups="hr_attendance.group_hr_attendance_manager"/>
+
+    <menuitem id="hr_attendance.hr_attendance_settings" name="Settings" parent="hr_attendance.menu_hr_attendance_settings"
         sequence="99" action="action_hr_attendance_settings" groups="hr_attendance.group_hr_attendance_manager"/>
+
 </odoo>

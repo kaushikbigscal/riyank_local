@@ -9,7 +9,7 @@ from datetime import datetime
 class CalendarLeaves(models.Model):
     _inherit = "resource.calendar.leaves"
 
-    holiday_id = fields.Many2one("hr.leave", string='Time Off Request')
+    holiday_id = fields.Many2one("hr.leave", string='Leave Request')
 
     @api.constrains('date_from', 'date_to', 'calendar_id')
     def _check_compare_dates(self):
@@ -69,16 +69,16 @@ class CalendarLeaves(models.Model):
             duration_difference = previous_duration - leave.number_of_days
             message = False
             if duration_difference > 0 and leave.holiday_status_id.requires_allocation == 'yes':
-                message = _("Due to a change in global time offs, you have been granted %s day(s) back.", duration_difference)
+                message = _("Due to a change in global Leaves, you have been granted %s day(s) back.", duration_difference)
             if leave.number_of_days > previous_duration\
                     and leave.holiday_status_id not in sick_time_status:
-                message = _("Due to a change in global time offs, %s extra day(s) have been taken from your allocation. Please review this leave if you need it to be changed.", -1 * duration_difference)
+                message = _("Due to a change in global Leaves, %s extra day(s) have been taken from your allocation. Please review this leave if you need it to be changed.", -1 * duration_difference)
             try:
                 leave.write({'state': state})
                 leave._check_validity()
             except ValidationError:
                 leave.action_refuse()
-                message = _("Due to a change in global time offs, this leave no longer has the required amount of available allocation and has been set to refused. Please review this leave.")
+                message = _("Due to a change in global Leaves, this leave no longer has the required amount of available allocation and has been set to refused. Please review this leave.")
             if message:
                 leave._notify_change(message)
 
@@ -113,7 +113,7 @@ class CalendarLeaves(models.Model):
 
     def _prepare_public_holidays_values(self, vals_list):
         for vals in vals_list:
-            # Manage the case of create a Public Time Off in another timezone
+            # Manage the case of create a Public Leave in another timezone
             # The datetime created has to be in UTC for the calendar's timezone
             if not vals.get('calendar_id') or vals.get('resource_id') or \
                 not isinstance(vals.get('date_from'), (datetime, str)) or \
@@ -155,7 +155,7 @@ class CalendarLeaves(models.Model):
 class ResourceCalendar(models.Model):
     _inherit = "resource.calendar"
 
-    associated_leaves_count = fields.Integer("Time Off Count", compute='_compute_associated_leaves_count')
+    associated_leaves_count = fields.Integer("Leave Count", compute='_compute_associated_leaves_count')
 
     def _compute_associated_leaves_count(self):
         leaves_read_group = self.env['resource.calendar.leaves']._read_group(

@@ -20,8 +20,8 @@
 
         <div t-if="this.props.employeeData" class="flex-grow-1">
             <h1 class="mt-5 mb8" t-esc="this.props.employeeData.employee_name"/>
-            <h3 class="mt8 mb24"><t t-if="!checkedIn">Welcome!</t><t t-else="">Want to check out?</t></h3>
-            <h3 class="mt-4 mb0 text-muted">Please enter your PIN to <b t-if="checkedIn">check out</b><b t-else="">check in</b></h3>
+            <h3 class="mt8 mb24"><t t-if="!checkedIn">Welcome!</t><t t-else="">Want to day out?</t></h3>
+            <h3 class="mt-4 mb0 text-muted">Please enter your PIN to <b t-if="checkedIn">day out</b><b t-else="">day in</b></h3>
             <div class="row">
                 <div class="col-md-8 offset-md-2 o_hr_attendance_pin_pad">
                     <div class="row g-0" >

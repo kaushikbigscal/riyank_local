@@ -8,8 +8,15 @@
         <field name="arch" type="xml">
             <form>
                 <group>
-                    <field name="label_quantity" widget="radio"/>
-                    <field name="print_format" widget="radio"/>
+                    <group>
+                        <field name="label_quantity" widget="radio" invisible="1"/>
+                        <field name="move_quantity"/>
+                        <field name="quantity" invisible="move_quantity == 'move'"/>
+                        <field name="print_format" widget="radio"/>
+                    </group>
+                    <group>
+                        <field name="extra_html" widget="html" invisible="print_format == '4x12'"/>
+                    </group>
                 </group>
                 <footer>
                     <button name="process" string="Confirm" type="object" class="btn-primary" data-hotkey="q"/>

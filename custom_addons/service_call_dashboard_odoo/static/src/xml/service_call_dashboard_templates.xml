@@ -1,0 +1,702 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Template for the service call dashboard -->
+<templates id="service_call_dashboard_templates" xml:space="preserve">
+	<t t-name="service_call_dashboard_odoo.ServiceProjectDashboard">
+		<div class="oh_service_call_dashboards">
+			<link rel="stylesheet" href="/service_call_dashboard_odoo/static/src/css/service_dashboard.css"/>
+			<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css"/>
+			<button class="sidebar-toggle-btn" t-on-click="toggleMainSidebar">
+				<i class="bi bi-chevron-double-right"/>
+			</button>
+			<!-- Main Sidebar -->
+			<div class="main-sidebar">
+				<div class="sidebar-header">
+					<h3>
+						<t t-if="state.currentView === 'companies'">Companies</t>
+						<t t-elif="state.currentView === 'departments'">
+							<i class="fa fa-building" t-on-click="showCompanies"/>
+                            Departments
+
+						</t>
+						<t t-elif="state.currentView === 'subdepartments'">
+							<i class="fa fa-building" t-on-click="showDepartments"/>
+                            Sub Departments
+
+						</t>
+					</h3>
+				</div>
+				<div class="sidebar-content">
+					<!-- Companies List with Nested Structure -->
+					<div t-if="state.currentView === 'companies'" class="company-list">
+						<t t-foreach="state.companies" t-as="company" t-key="company.id">
+							<div class="company-item" t-att-class="{'active': state.selectedCompany?.id === company.id}"
+                                 t-on-click="() => this.toggleCompany(company)">
+								<i class="fa fa-building"/>
+								<span t-esc="company.name"/>
+								<i t-attf-class="fa fa-chevron-{{ state.selectedCompany?.id === company.id ? 'down' : 'right' }} ms-auto"/>
+							</div>
+							<!-- Departments (shown when company is selected) -->
+							<div t-if="state.selectedCompany?.id === company.id" class="department-list nested-list">
+								<t t-foreach="state.departments" t-as="department" t-key="department.id">
+									<t t-if="department.name == 'Service Division'">
+										<div class="department-item"
+                                         t-att-class="{'active': state.selectedDepartment?.id === department.id}"
+                                         t-on-click="() => this.toggleDepartment(department)">
+											<i class="fa fa-sitemap"/>
+											<span t-esc="department.name"/>
+											<i t-attf-class="fa fa-chevron-{{ state.selectedDepartment?.id === department.id ? 'down' : 'right' }} ms-auto"/>
+										</div>
+									</t>
+									<!-- Sub-departments (shown when department is selected) -->
+									<div t-if="state.selectedDepartment?.id === department.id" class="subdepartment-list nested-list">
+										<t t-foreach="state.subdepartments" t-as="subdepartment" t-key="subdepartment.id">
+											<div class="subdepartment-item"
+                                             t-att-class="{'active': state.selectedSubDepartment?.id === subdepartment.id}"
+                                             t-on-click="() => this.selectSubDepartment(subdepartment)">
+												<i class="fa fa-sitemap"/>
+												<span t-esc="subdepartment.name"/>
+												<i t-attf-class="fa fa-chevron-{{ state.selectedSubDepartment?.id === subdepartment.id ? 'down' : 'right' }} ms-auto"/>
+											</div>
+											<!-- Display States when a Subdepartment is selected -->
+											<div t-if="state.selectedSubDepartment?.id === subdepartment.id"
+                                                 class="state-list nested-list">
+												<t t-foreach="state.states" t-as="stateItem" t-key="stateItem.id">
+													<t t-if="stateItem.subdepartment_id === subdepartment.id">
+														<div class="state-item"
+                                                             t-att-class="{'active': state.selectedState?.id === stateItem.id}"
+                                                             t-on-click="() => this.selectState(stateItem)">
+															<i class="fa fa-map-marker"/>
+															<span t-esc="stateItem.name"/>
+															<i t-attf-class="fa fa-chevron-{{ state.selectedState?.id === stateItem.id ? 'down' : 'right' }} ms-auto"/>
+														</div>
+														<!-- Display Cities when this State is selected -->
+														<div t-if="state.selectedState?.id === stateItem.id"
+                                                             class="city-list nested-list">
+															<t t-foreach="state.cities" t-as="cityItem" t-key="cityItem.id">
+																<div class="city-item"
+                                                                     t-att-class="{'active': state.selectedCities.includes(cityItem.name)}">
+																	<span class="city-checkbox-wrapper">
+																		<input type="checkbox"
+                                                                               class="city-checkbox"
+                                                                               id="city-{{ cityItem.id }}"
+                                                                               t-att-checked="state.selectedCities.includes(cityItem.name)"
+                                                                               t-on-change="() => this.toggleCitySelection(cityItem)" />
+																	</span>
+																	<span t-esc="cityItem.name"/>
+																</div>
+															</t>
+															<div t-if="state.cities.length === 0" class="no-cities-message">
+                                                                No cities found for this state
+                                                            </div>
+														</div>
+													</t>
+												</t>
+											</div>
+										</t>
+									</div>
+								</t>
+							</div>
+						</t>
+					</div>
+
+					<div class="sidebar-bottom">
+						<div class="sidebar-footer">
+							<button class="btn btn-primary sidebar-action-button"
+                                t-on-click="applyDepartmentFilter"
+                                style="background: #7C7BAD;"
+                                t-att-disabled="state.isApplyingFilter">
+								<t t-if="state.isApplyingFilter">
+									<i class="fa fa-spinner fa-spin me-2"/>
+                                Applying...
+
+								</t>
+								<t t-else="">
+									<i class="fa fa-filter me-2"/>
+                                Apply Filter
+
+								</t>
+							</button>
+							<button class="btn btn-secondary sidebar-action-button"
+                                    t-on-click="clearDepartmentFilter"
+                                    style="background: #875A7B;"
+                                    t-att-disabled="state.isClearingFilter">
+								<t t-if="state.isClearingFilter">
+									<i class="fa fa-spinner fa-spin me-2"/>
+                                    Clearing...
+
+								</t>
+								<t t-else="">
+									<i class="fa fa-times me-2"/>
+                                    Clear Filter
+
+								</t>
+							</button>
+						</div>
+					</div>
+					<!-- Departments List -->
+					<div t-if="state.currentView === 'departments'" class="department-list">
+						<t t-foreach="state.departments" t-as="department" t-key="department.id">
+							<div class="company-item" t-on-click="() => this.selectDepartment(department)">
+								<i class="fa fa-sitemap"/>
+								<span t-esc="department.name"/>
+								<i class="fa fa-chevron-right ms-auto"/>
+							</div>
+						</t>
+					</div>
+					<div t-if="state.currentView === 'states'" class="state-list">
+						<t t-foreach="state.states" t-as="stateItem" t-key="stateItem.id">
+							<div class="company-item" t-on-click="() => this.selectState(stateItem)">
+								<i class="fa fa-flag"/>
+								<span t-esc="stateItem.name"/>
+								<i class="fa fa-chevron-right ms-auto"/>
+							</div>
+						</t>
+					</div>
+					<!-- Sub Departments List -->
+					<div t-if="state.currentView === 'subdepartments'" class="subdepartment-list">
+						<t t-foreach="state.subdepartments" t-as="subdepartment" t-key="subdepartment.id">
+							<div class="company-item" t-on-click="() => this.selectSubDepartment(subdepartment)">
+								<i class="fa fa-folder"/>
+								<span t-esc="subdepartment.name"/>
+							</div>
+						</t>
+					</div>
+				</div>
+			</div>
+			<!-- Main Content with proper margin -->
+			<div class="dashboard-content">
+				<div class="container-fluid">
+					<t t-call="service_call_dashboard_odoo.DashboardServiceCall"/>
+					<t t-call="service_call_dashboard_odoo.DashboardCallChart"/>
+				</div>
+			</div>
+		</div>
+	</t>
+	<t t-name="service_call_dashboard_odoo.DashboardServiceCall">
+<!--		<div class="oe_right" style="display: flex; justify-content: flex-end; gap: 10px; margin-bottom: 10px;">-->
+<!--			<button class="btn load-form-button"-->
+<!--                    title="Create New Call">-->
+<!--				<i class="fa fa-plus" aria-hidden="true"/>-->
+
+<!--			</button>-->
+<!--			<button class="btn load-charts-button"-->
+<!--                    title="Show Charts">-->
+<!--                	<i class="fa fa-area-chart" aria-hidden="true"/>-->
+<!--            </button>-->
+<!--			<button class="btn refresh-form-button"-->
+<!--                    t-on-click="refreshPage"-->
+<!--                    title="Refresh Dashboard">-->
+<!--				<i class="fa fa-refresh"/>-->
+<!--			</button>-->
+<!--		</div>-->
+<!--		&lt;!&ndash;Service Team Today header section&ndash;&gt;-->
+<!--		<div class="section-title-container" style="margin: 20px 0; text-align: center; padding-bottom: 10px;">-->
+<!--			<h2 class="heading-dashboard" style="color:  #71639e; font-weight: bold; margin: 0;">-->
+<!--                Service Team-->
+<!--            </h2>-->
+<!--		</div>-->
+		<div class="section-title-container" style="margin: 20px 0; display: flex; justify-content: space-between; align-items: center; padding-bottom: 10px;">
+		  <!-- Centered Heading -->
+		  <h2 class="heading-dashboard" style="color: #71639e; font-weight: bold; margin: 0; text-align: center; flex: 1; margin-left: 130px;">
+			Service Team
+		  </h2>
+
+		  <!-- Right-Aligned Buttons -->
+		  <div class="oe_right" style="display: flex; justify-content: flex-end; gap: 10px; margin-bottom: 0;">
+			<button class="btn load-form-button" title="Create New Call"><i class="fa fa-plus" aria-hidden="true"></i></button>
+			<button class="btn load-charts-button" title="Show Charts"><i class="fa fa-area-chart" aria-hidden="true"></i></button>
+			<button class="btn refresh-form-button" t-on-click="refreshPage" title="Refresh Dashboard"><i class="fa fa-refresh"></i></button>
+		  </div>
+		</div>
+		<div class="main-section_data">
+			<div class="start-card">
+				<div class="oh-card_data" t-on-click="handleTeamClick" style="cursor: pointer;">
+					<div class="stat-widget-one-data">
+						<div class="stat-icon_data">
+							<i class="fa fa-users" />
+						</div>
+						<div class="stat-content_data">
+							<div class="stat-head">Team</div>
+							<div class="stat_count" id="active_projects">
+								<t t-out="state.teamStats?.total_team || '0'"/>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="start-card">
+				<div class="oh-card_data" t-on-click="handleFreeClick" style="cursor: pointer;">
+					<div class="stat-widget-one-data">
+						<div class="stat-icon_data">
+							<i class="fa fa-tasks" />
+						</div>
+						<div class="stat-content_data">
+							<div class="stat-head">Free</div>
+							<div class="stat_count" id="total_tasks">
+								<t t-out="state.teamStats?.free_team || '0'"/>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="start-card">
+				<div class="oh-card_data" t-on-click="handleOverdueClick" style="cursor: pointer;">
+					<div class="stat-widget-one-data">
+						<div class="stat-icon_data">
+							<i class="fa fa-calendar-times-o" />
+						</div>
+						<div class="stat-content_data">
+							<div class="stat-head">Running Overdue</div>
+							<div class="stat_count" id="total_closed_task">
+								<t t-out="state.teamStats?.running_overdue || '0'"/>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="start-card">
+				<div class="oh-card_data" t-on-click="handleOccupiedClick" style="cursor: pointer;">
+					<div class="stat-widget-one-data">
+						<div class="stat-icon_data">
+							<i class="fa fa-exclamation-circle" />
+						</div>
+						<div class="stat-content_data">
+							<div class="stat-head">Occupied</div>
+							<div class="stat_count" id="un_assigned_task">
+								<t t-out="state.teamStats?.occupied || '0'"/>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="start-card">
+				<div class="oh-card_data" t-on-click="handleOnLeaveClick" style="cursor: pointer;">
+					<div class="stat-widget-one-data">
+						<div class="stat-icon_data">
+							<i class="fa fa-umbrella" />
+						</div>
+						<div class="stat-content_data">
+							<div class="stat-head">On leave</div>
+							<div class="stat_count" id="un_assigned_task">
+								<t t-out="state.teamStats?.on_leave || '0'"/>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!--Calls Today header section-->
+		<div class="section-title-container" style="margin: 20px 0; text-align: center; padding-bottom: 10px;">
+			<h2 class="heading-dashboard" style="color:  #71639e; font-weight: bold; margin: 0;">
+                Today Calls
+            </h2>
+		</div>
+		<div class="main-section_data">
+			<div class="start-card">
+				<div class="oh-card_data">
+					<div class="stat-widget-one-data" t-on-click="show_total_calls_today">
+						<div class="stat-icon_data">
+							<i class="fa fa-phone"/>
+						</div>
+						<div class="stat-content_data">
+							<div class="stat-head">Total</div>
+							<div class="stat_count">
+								<t t-out="state.total_stage_tasks_today || '0'"/>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+
+			<div class="start-card">
+				<div class="oh-card_data" t-on-click="show_unassigned_calls_today">
+					<div class="stat-widget-one-data">
+						<div class="stat-icon_data">
+							<i class="fa fa-user-times" />
+						</div>
+						<div class="stat-content_data">
+							<div class="stat-head">Unassigned</div>
+							<div class="stat_count">
+								<t t-out="state.calls_unassigned_today || '0'"/>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="start-card">
+				<div class="oh-card_data">
+					<div class="stat-widget-one-data" t-on-click="show_assigned_calls_today">
+						<div class="stat-icon_data">
+							<i class="fa fa-user-o" />
+						</div>
+						<div class="stat-content_data">
+							<div class="stat-head">Assigned</div>
+							<div class="stat_count">
+								<t t-out="state.calls_assigned_today || '0'"/>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="start-card" t-if="service_dashboard_today_planned_card">
+                <div class="oh-card_data" t-on-click="today_in_planned_count_click">
+                    <div class="stat-widget-one-data">
+                        <div class="stat-icon_data"><i class="fa fa-calendar" /></div>
+                        <div class="stat-content_data">
+                            <div class="stat-head">Planned</div>
+                            <div class="stat_count">
+                               <t t-out="state.planned_today_tasks || '0'"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+			<div class="start-card">
+				<div class="oh-card_data">
+					<div class="stat-widget-one-data" t-on-click="new_stage_tasks_today_click">
+						<div class="stat-icon_data">
+							<i class="fa fa-share" />
+						</div>
+						<div class="stat-content_data">
+							<div class="stat-head">In-Progress</div>
+							<div class="stat_count">
+								<t t-out="state.new_stage_tasks_today || '0'"/>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="start-card">
+				<div class="oh-card_data" t-on-click="calls_on_hold_today_click">
+					<div class="stat-widget-one-data">
+						<div class="stat-icon_data">
+							<i class="fa fa-pause-circle" />
+						</div>
+						<div class="stat-content_data">
+							<div class="stat-head">Pending</div>
+							<div class="stat_count">
+								<t t-out="state.calls_on_hold_today || '0'"/>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+            <div class="start-card" t-if="service_dashboard_today_resolved_card">
+                <div class="oh-card_data" t-on-click="today_in_resolved_count_click">
+                    <div class="stat-widget-one-data">
+                        <div class="stat-icon_data"><i class="fa fa-check-circle" /></div>
+                        <div class="stat-content_data">
+                            <div class="stat-head">Resolved</div>
+                            <div class="stat_count">
+                           <t t-out="state.resolved_today_tasks || '0'"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+			<div class="start-card">
+				<div class="oh-card_data" t-on-click="show_closed_calls_today">
+					<div class="stat-widget-one-data">
+						<div class="stat-icon_data">
+							<i class="fa fa-check-circle" />
+						</div>
+						<div class="stat-content_data">
+							<div class="stat-head">Completed</div>
+							<div class="stat_count">
+								<t t-out="state.calls_closed_today || '0'"/>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+<!--		Satyam -->
+<!--		<div class="main-section_data">-->
+<!--            <div class="start-card in-progress-card" t-if="service_dashboard_today_planned_card">-->
+<!--                <div class="oh-card_data" t-on-click="today_in_planned_count_click">-->
+<!--                    <div class="stat-widget-one-data">-->
+<!--                        <div class="stat-icon_data"><i class="fa fa-check-circle" /></div>-->
+<!--                        <div class="stat-content_data">-->
+<!--                            <div class="stat-head">Planned</div>-->
+<!--                            <div class="stat_count">-->
+<!--                               <t t-out="state.planned_today_tasks || '0'"/>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+
+<!--            <div class="start-card" t-if="service_dashboard_today_resolved_card">-->
+<!--                <div class="oh-card_data" t-on-click="today_in_resolved_count_click">-->
+<!--                    <div class="stat-widget-one-data">-->
+<!--                        <div class="stat-icon_data"><i class="fa fa-check-circle" /></div>-->
+<!--                        <div class="stat-content_data">-->
+<!--                            <div class="stat-head">Resolved</div>-->
+<!--                            <div class="stat_count">-->
+<!--                           <t t-out="state.resolved_today_tasks || '0'"/>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--         </div>-->
+
+		<!-- Third Section Header -->
+		<div class="section-title-container" style="margin: 30px 0 20px; text-align: center; padding-bottom: 10px;">
+			<h2 class="heading-dashboard" style="color:  #71639e; font-weight: bold; margin: 0;">
+                Previous Calls
+            </h2>
+		</div>
+		<div class="filter-section" style="max-width: 650px; margin: 0 auto;">
+			<div class="date-filters"
+                     style="display: flex; align-items: flex-end; gap: 20px; flex-wrap: wrap; justify-content: center;">
+				<div class="filter-item" style="flex: 0 0 auto; min-width: 180px;">
+					<label class="form-label"
+                               style="display: block; margin-bottom: 8px; font-weight: 600; color: #344767;">From Date</label>
+					<input type="date"
+                               class="form-control from-date"
+                               placeholder="Select start date"
+                               style="width: 100%; padding: 8px 12px; border: 1px solid #dee2e6; border-radius: 4px; font-size: 14px; transition: border-color 0.15s ease-in-out; outline: none;"/>
+				</div>
+				<div class="filter-item" style="flex: 0 0 auto; min-width: 180px;">
+					<label class="form-label"
+                               style="display: block; margin-bottom: 8px; font-weight: 600; color: #344767;">To Date</label>
+					<input type="date"
+                               class="form-control to-date"
+                               placeholder="Select end date"
+                               style="width: 100%; padding: 8px 12px; border: 1px solid #dee2e6; border-radius: 4px; font-size: 14px; transition: border-color 0.15s ease-in-out; outline: none;"/>
+				</div>
+				<div class="filter-item" style="flex: 0 0 auto;">
+					<button class="btn btn-primary reset-button apply-date-filter"
+                                style="padding: 8px 20px; background-color:  #71639e; border: none; border-radius: 4px; color: white; font-weight: 500; cursor: pointer; transition: background-color 0.15s ease-in-out;">
+                            Apply Filter
+                        </button>
+				</div>
+			</div>
+		</div>
+		<div class="main-section_data">
+			<div class="start-card">
+				<div class="oh-card_data" t-on-click="all_tasks_total_click">
+					<div class="stat-widget-one-data">
+						<div class="stat-icon_data">
+							<i class="fa fa-phone" />
+						</div>
+						<div class="stat-content_data">
+							<div class="stat-head">Total</div>
+							<div class="stat_count">
+								<!--                                <t t-esc="all_assigned_tasks_total"/>-->
+								<t t-out="all_previous_tasks_total || '0'"/>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="start-card">
+				<div class="oh-card_data" t-on-click="all_unassigned_tasks_total_click">
+					<div class="stat-widget-one-data">
+						<div class="stat-icon_data">
+							<i class="fa fa-user-times" />
+						</div>
+						<div class="stat-content_data">
+							<div class="stat-head">Unassigned</div>
+							<div class="stat_count">
+								<t t-esc="all_unassigned_tasks_total || '0'"/>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="start-card">
+				<div class="oh-card_data" t-on-click="all_assigned_tasks_total_click">
+					<div class="stat-widget-one-data">
+						<div class="stat-icon_data">
+							<i class="fa fa-user-o" />
+						</div>
+						<div class="stat-content_data">
+							<div class="stat-head">Assigned</div>
+							<div class="stat_count">
+								<!--                                <t t-esc="all_assigned_tasks_total"/>-->
+								<t t-out="all_assigned_tasks_total || '0'"/>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="start-card" t-if="service_dashboard_planned_card">
+				<div class="oh-card_data" t-on-click="in_planned_count_click">
+					<div class="stat-widget-one-data">
+						<div class="stat-icon_data">
+							<i class="fa fa-calendar" />
+						</div>
+						<div class="stat-content_data">
+							<div class="stat-head">Planned</div>
+							<div class="stat_count">
+								<t t-esc="in_planned_count ||'0'"/>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="start-card">
+				<div class="oh-card_data" t-on-click="in_progress_count_click">
+					<div class="stat-widget-one-data">
+						<div class="stat-icon_data">
+							<i class="fa fa-spinner"/>
+						</div>
+						<div class="stat-content_data">
+							<div class="stat-head">In-Progress</div>
+							<div class="stat_count">
+								<t t-esc="in_progress_count || '0'"/>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="start-card">
+				<div class="oh-card_data" t-on-click="all_on_hold_tasks_total_click">
+					<div class="stat-widget-one-data">
+						<div class="stat-icon_data">
+							<i class="fa fa-pause-circle" />
+						</div>
+						<div class="stat-content_data">
+							<div class="stat-head">Pending</div>
+							<div class="stat_count">
+								<t t-esc="all_on_hold_tasks_total || '0'"/>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="start-card" t-if="service_dashboard_resolved_card">
+				<div class="oh-card_data" t-on-click="in_resolved_count_click">
+					<div class="stat-widget-one-data">
+						<div class="stat-icon_data">
+							<i class="fa fa-check-circle" />
+						</div>
+						<div class="stat-content_data">
+							<div class="stat-head">Resolved</div>
+							<div class="stat_count">
+								<t t-esc="in_resolved_count || '0'"/>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="start-card">
+				<div class="oh-card_data" t-on-click="all_closed_tasks_total_click">
+					<div class="stat-widget-one-data">
+						<div class="stat-icon_data">
+							<i class="fa fa-check-circle" />
+						</div>
+						<div class="stat-content_data">
+							<div class="stat-head">Completed</div>
+							<div class="stat_count">
+								<t t-esc="all_closed_tasks_total || '0'"/>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+<!--		<div class="main-section_data">-->
+<!--			<div class="start-card" t-if="service_dashboard_planned_card">-->
+<!--				<div class="oh-card_data" t-on-click="in_planned_count_click">-->
+<!--					<div class="stat-widget-one-data">-->
+<!--						<div class="stat-icon_data">-->
+<!--							<i class="fa fa-check-circle" />-->
+<!--						</div>-->
+<!--						<div class="stat-content_data">-->
+<!--							<div class="stat-head">Planned</div>-->
+<!--							<div class="stat_count">-->
+<!--								<t t-esc="in_planned_count ||'0'"/>-->
+<!--							</div>-->
+<!--						</div>-->
+<!--					</div>-->
+<!--				</div>-->
+<!--			</div>-->
+<!--			<div class="start-card" t-if="service_dashboard_resolved_card">-->
+<!--				<div class="oh-card_data" t-on-click="in_resolved_count_click">-->
+<!--					<div class="stat-widget-one-data">-->
+<!--						<div class="stat-icon_data">-->
+<!--							<i class="fa fa-check-circle" />-->
+<!--						</div>-->
+<!--						<div class="stat-content_data">-->
+<!--							<div class="stat-head">Resolved</div>-->
+<!--							<div class="stat_count">-->
+<!--								<t t-esc="in_resolved_count || '0'"/>-->
+<!--							</div>-->
+<!--						</div>-->
+<!--					</div>-->
+<!--				</div>-->
+<!--			</div>-->
+<!--		</div>-->
+	</t>
+	<t t-name="service_call_dashboard_odoo.DashboardCallChart">
+		<div class="main-section_data charts-section_data" style="display: none;">
+			<div class="section-title-container"
+                 style="margin: 20px 0; text-align: center; padding-bottom: 10px;">
+				<h2 class="heading-dashboard" style="color:  #71639e; font-weight: bold; margin: 0;">
+                        Chart Records
+                    </h2>
+			</div>
+			<div class="row mt-4">
+				<!-- Tag Wise Call Count Chart -->
+				<div class="col-md-6 d-flex justify-content-center">
+					<div class="chart-container" style="width: 100%; max-width: 750px; height: 400px; background: white;
+                    padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin: 10px;">
+						<h2 class="section-header"
+                            style="text-align: center; margin-bottom: 20px;">Tag Wise Call Count</h2>
+						<div class="graph_canvas" style="position: relative; height: 300px;">
+							<canvas id="task_tags_chart"/>
+						</div>
+					</div>
+				</div>
+				<!-- Employee Call Distribution Chart -->
+				<div class="col-md-6 d-flex justify-content-center">
+					<div class="chart-container" style="width: 100%; max-width: 750px; height: 400px; background: white;
+										padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin: 10px;">
+							<h2 class="section-header text-center mb-4">Employee Call Distribution</h2>
+							<div class="graph_canvas" style="position: relative; height: 300px;">
+								<canvas id="employee_task_chart"/>
+							</div>
+					</div>
+				</div>
+
+				<div class="col-md-6 d-flex justify-content-center">
+					<div class="chart-container" style="width: 100%; max-width: 750px; height: 400px; background: white;
+                    padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin: 10px;">
+						<h2 class="section-header"
+                            style="text-align: center; margin-bottom: 20px;">Stage Wise Call Count</h2>
+						<div class="graph_canvas" style="position: relative; height: 300px;">
+							<canvas id="task_stages_chart"/>
+						</div>
+					</div>
+				</div>
+<!--				<div class="col-md-6 d-flex justify-content-center">-->
+<!--					<div class="chart-container" style="width: 100%; max-width: 750px; height: 400px; background: white;-->
+<!--                    padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin: 10px;">-->
+<!--						<h2 class="section-header"-->
+<!--                            style="text-align: center; margin-bottom: 20px;">Customer Wise Call Count</h2>-->
+<!--						<div class="graph_canvas" style="position: relative; height: 300px;">-->
+<!--							<canvas id="customer_tasks_chart"/>-->
+<!--						</div>-->
+<!--					</div>-->
+<!--				</div>-->
+<!--				<div class="col-md-6 d-flex justify-content-center">-->
+<!--					<div class="chart-container" style="width: 100%; max-width: 750px; height: 400px; background: white;-->
+<!--                    padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin: 10px;">-->
+<!--						<h2 class="section-header"-->
+<!--                            style="text-align: center; margin-bottom: 20px;">Internal External Call Count</h2>-->
+<!--						<div class="graph_canvas" style="position: relative; height: 300px;">-->
+<!--							<canvas id="chartElements"/>-->
+<!--						</div>-->
+<!--					</div>-->
+<!--				</div>-->
+			</div>
+		</div>
+	</t>
+</templates>

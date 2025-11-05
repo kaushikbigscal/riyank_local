@@ -160,6 +160,22 @@ class ProductTemplate(models.Model):
     # Properties
     product_properties = fields.Properties('Properties', definition='categ_id.product_properties_definition', copy=True)
 
+    barcode_qr_value = fields.Char(
+        string="QR/Barcode Value",
+        compute="_compute_barcode_qr_value",
+        store=False
+    )
+
+    def _compute_barcode_qr_value(self):
+        base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+        for product in self:
+            product.barcode_qr_value = "%s/my/ticket/create?product_id=%d" % (
+                base_url,
+                product.id
+            )
+            _logger.info("Generated QR code value for product %s (ID %d): %s",
+                         product.name, product.id, product.barcode_qr_value)
+
     def _compute_item_count(self):
         for template in self:
             # Pricelist item count counts the rules applicable on current template or on its variants.

@@ -1,0 +1,85 @@
+<odoo>
+    <record id="view_print_label_wizard_form" model="ir.ui.view">
+        <field name="name">print.label.wizard.form</field>
+        <field name="model">print.label.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Enter Quantity">
+                <group>
+                    <group>
+                        <field name="move_quantity"/>
+                        <field name="quantity" invisible="move_quantity == 'move'"/>
+                        <field name="mapping_id" invisible="1"/>
+                        <field name="format" widget="radio"/>
+                    </group>
+                    <group>
+                        <field name="extra_html" invisible="format == '4x12'"/>
+                    </group>
+                </group>
+                <footer>
+                    <button string="Confirm" type="object" name="action_confirm" class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action to open the wizard -->
+    <record id="action_print_label_wizard" model="ir.actions.act_window">
+        <field name="name">Print Label</field>
+        <field name="res_model">print.label.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_print_label_wizard_form"/>
+        <field name="target">new</field>
+    </record>
+
+
+    <record id="view_bulk_print_label_wizard_form" model="ir.ui.view">
+        <field name="name">bulk.print.label.wizard.form</field>
+        <field name="model">bulk.print.label.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Print Labels">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="mapping_ids" invisible="1" widget="many2many_tags"
+                                   options="{'no_create': True}"/>
+                            <field name="move_quantity"/>
+                            <field name="quantity" invisible="move_quantity == 'move'"/>
+                            <field name="format" widget="radio"/>
+                        </group>
+                        <group>
+                            <field name="extra_html" invisible="format == '4x12'"/>
+
+                        </group>
+                    </group>
+                    <footer>
+                        <button string="Print" type="object" name="action_confirm" class="btn-primary"/>
+                        <button string="Cancel" class="btn-secondary" special="cancel"/>
+                    </footer>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Act Window to open the wizard -->
+    <record id="action_bulk_print_label_wizard" model="ir.actions.act_window">
+        <field name="name">Bulk Print Labels</field>
+        <field name="res_model">bulk.print.label.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_bulk_print_label_wizard_form"/>
+        <field name="target">new</field>
+        <!-- default active_ids are passed later by server action; user may also open wizard directly -->
+    </record>
+
+    <!-- Server action that appears in the Action menu for customer.product.mapping -->
+    <record id="server_action_open_bulk_print_wizard" model="ir.actions.server">
+        <field name="name">Print Labels</field>
+        <field name="model_id" ref="model_customer_product_mapping"/> <!-- ensure this external id exists -->
+        <field name="binding_model_id" ref="model_customer_product_mapping"/>
+        <field name="state">code</field>
+        <field name="code">
+            action = env.ref('industry_fsm.action_bulk_print_label_wizard').read()[0]
+        </field>
+    </record>
+
+</odoo>

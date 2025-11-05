@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.hr.payroll</field>
+        <field name="model">res.config.settings</field>
+        <field name="priority" eval="45"/>
+        <field name="inherit_id" ref="hr_attendance.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//app[@name='hr_attendance']" position="inside">
+
+                <block title="Attendance Configuration" name="attendance_configuration_block">
+                    <setting string="Allow Multiple Check-ins" company_dependent="1"
+                             help="Allow employees to check in and out multiple times per day.">
+                        <field name="allow_multiple_checkins"/>
+                    </setting>
+
+                    <setting string="Check Out Time Limit" company_dependent="1"
+                             help="Set the time limit before which employees cannot check out (24-hour format: HH:MM).">
+                        <field name="check_out_time_limit"/>
+                    </setting>
+                </block>
+            </xpath>
+        </field>
+    </record>
+</odoo>

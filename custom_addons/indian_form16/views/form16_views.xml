@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_form16_tree" model="ir.ui.view">
+        <field name="name">indian.form16.tree</field>
+        <field name="model">indian.form16</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="employee_id"/>
+                <field name="assessment_year"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_form16_form" model="ir.ui.view">
+        <field name="name">indian.form16.form</field>
+        <field name="model">indian.form16</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_generate_form" string="Generate Form" type="object" class="btn-primary"/>
+                </header>
+                <sheet>
+                    <group>
+                        <field name="employee_id"/>
+                        <field name="assessment_year"/>
+                    </group>
+                    <group>
+                        <field name="form_pdf" filename="form_pdf_filename" readonly="1"/>
+                        <field name="form_pdf_filename" invisible="1"/>
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_form16" model="ir.actions.act_window">
+        <field name="name">Form 16</field>
+        <field name="res_model">indian.form16</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="menu_indian_form16_root"
+              name="Indian Form 16"
+              sequence="100"/>
+
+    <menuitem id="menu_form16"
+              name="Form 16"
+              parent="om_hr_payroll.menu_hr_payroll_root"
+              action="action_form16"
+              sequence="10"/>
+
+</odoo>

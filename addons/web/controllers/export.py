@@ -179,8 +179,8 @@ class ExportXlsxWriter:
         self.base_style = self.workbook.add_format({'text_wrap': True})
         self.header_style = self.workbook.add_format({'bold': True})
         self.header_bold_style = self.workbook.add_format({'text_wrap': True, 'bold': True, 'bg_color': '#e9ecef'})
-        self.date_style = self.workbook.add_format({'text_wrap': True, 'num_format': 'yyyy-mm-dd'})
-        self.datetime_style = self.workbook.add_format({'text_wrap': True, 'num_format': 'yyyy-mm-dd hh:mm:ss'})
+        self.date_style = self.workbook.add_format({'text_wrap': True, 'num_format': 'dd/mm/yyyy'})
+        self.datetime_style = self.workbook.add_format({'text_wrap': True, 'num_format': 'dd/mm/yyyy hh:mm:ss'})
         self.worksheet = self.workbook.add_worksheet()
         self.value = False
         self.float_format = '#,##0.00'
@@ -449,7 +449,7 @@ class ExportFormat(object):
             return base
 
         model_description = request.env['ir.model']._get(base).name
-        return f"{model_description} ({base})"
+        return f"{model_description}"
 
     def from_data(self, fields, rows):
         """ Conversion method from Odoo's export data to whatever the
@@ -517,7 +517,7 @@ class CSVExport(ExportFormat, http.Controller):
             _logger.exception("Exception during request handling.")
             payload = json.dumps({
                 'code': 200,
-                'message': "Odoo Server Error",
+                'message': "Effezzient Server Error",
                 'data': http.serialize_exception(exc)
             })
             raise InternalServerError(payload) from exc
@@ -561,7 +561,7 @@ class ExcelExport(ExportFormat, http.Controller):
             _logger.exception("Exception during request handling.")
             payload = json.dumps({
                 'code': 200,
-                'message': "Odoo Server Error",
+                'message': "Effezzient Server Error",
                 'data': http.serialize_exception(exc)
             })
             raise InternalServerError(payload) from exc

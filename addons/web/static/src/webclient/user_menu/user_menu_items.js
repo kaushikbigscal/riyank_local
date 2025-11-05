@@ -8,19 +8,19 @@ import { session } from "@web/session";
 import { browser } from "../../core/browser/browser";
 import { registry } from "../../core/registry";
 
-function documentationItem(env) {
-    const documentationURL = "https://www.odoo.com/documentation/17.0";
-    return {
-        type: "item",
-        id: "documentation",
-        description: _t("Documentation"),
-        href: documentationURL,
-        callback: () => {
-            browser.open(documentationURL, "_blank");
-        },
-        sequence: 10,
-    };
-}
+//function documentationItem(env) {
+//    const documentationURL = "https://www.odoo.com/documentation/17.0";
+//    return {
+//        type: "item",
+//        id: "documentation",
+//        description: _t("Documentation"),
+//        href: documentationURL,
+//        callback: () => {
+//            browser.open(documentationURL, "_blank");
+//        },
+//        sequence: 10,
+//    };
+//}
 
 function supportItem(env) {
     const url = session.support_url;
@@ -85,24 +85,24 @@ export function preferencesItem(env) {
     };
 }
 
-function odooAccountItem(env) {
-    return {
-        type: "item",
-        id: "account",
-        description: _t("My Odoo.com account"),
-        callback: () => {
-            env.services
-                .rpc("/web/session/account")
-                .then((url) => {
-                    browser.open(url, "_blank");
-                })
-                .catch(() => {
-                    browser.open("https://accounts.odoo.com/account", "_blank");
-                });
-        },
-        sequence: 60,
-    };
-}
+//function odooAccountItem(env) {
+//    return {
+//        type: "item",
+//        id: "account",
+//        description: _t("My Odoo.com account"),
+//        callback: () => {
+//            env.services
+//                .rpc("/web/session/account")
+//                .then((url) => {
+//                    browser.open(url, "_blank");
+//                })
+//                .catch(() => {
+//                    browser.open("https://accounts.odoo.com/account", "_blank");
+//                });
+//        },
+//        sequence: 60,
+//    };
+//}
 
 function logOutItem(env) {
     const route = "/web/session/logout";
@@ -120,10 +120,11 @@ function logOutItem(env) {
 
 registry
     .category("user_menuitems")
-    .add("documentation", documentationItem)
+//    .add("documentation", documentationItem)
     .add("support", supportItem)
     .add("shortcuts", shortCutsItem)
     .add("separator", separator)
     .add("profile", preferencesItem)
-    .add("odoo_account", odooAccountItem)
     .add("log_out", logOutItem);
+//    .add("odoo_account", odooAccountItem)
+    

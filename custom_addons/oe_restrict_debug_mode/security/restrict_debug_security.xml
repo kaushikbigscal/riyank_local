@@ -1,0 +1,6 @@
+<odoo>
+    <record id="group_oe_restrict_debug_mode" model="res.groups">
+        <field name="name">Restrict Debug Mode Access</field>
+        <field name="category_id" ref="base.module_category_usability"/>
+    </record>
+</odoo>

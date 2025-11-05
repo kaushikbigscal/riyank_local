@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
-    'name': 'Time Off',
+    'name': 'Leave',
     'version': '1.6',
     'category': 'Human Resources/Time Off',
     'sequence': 85,

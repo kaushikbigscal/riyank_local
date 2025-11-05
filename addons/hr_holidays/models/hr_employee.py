@@ -15,16 +15,16 @@ class HrEmployeeBase(models.AbstractModel):
     _inherit = "hr.employee.base"
 
     leave_manager_id = fields.Many2one(
-        'res.users', string='Time Off',
+        'res.users', string='Leave',
         compute='_compute_leave_manager', store=True, readonly=False,
         domain="[('share', '=', False), ('company_ids', 'in', company_id)]",
-        help='Select the user responsible for approving "Time Off" of this employee.\n'
+        help='Select the user responsible for approving "Leave" of this employee.\n'
              'If empty, the approval is done by an Administrator or Approver (determined in settings/users).')
     remaining_leaves = fields.Float(
-        compute='_compute_remaining_leaves', string='Remaining Paid Time Off',
-        help='Total number of paid time off allocated to this employee, change this value to create allocation/time off request. '
-             'Total based on all the time off types without overriding limit.')
-    current_leave_state = fields.Selection(compute='_compute_leave_status', string="Current Time Off Status",
+        compute='_compute_remaining_leaves', string='Remaining Paid Leave',
+        help='Total number of paid Leave allocated to this employee, change this value to create allocation/Leave request. '
+             'Total based on all the Leave types without overriding limit.')
+    current_leave_state = fields.Selection(compute='_compute_leave_status', string="Current Leave Status",
         selection=[
             ('draft', 'New'),
             ('confirm', 'Waiting Approval'),
@@ -35,10 +35,10 @@ class HrEmployeeBase(models.AbstractModel):
         ])
     leave_date_from = fields.Date('From Date', compute='_compute_leave_status')
     leave_date_to = fields.Date('To Date', compute='_compute_leave_status')
-    leaves_count = fields.Float('Number of Time Off', compute='_compute_remaining_leaves')
+    leaves_count = fields.Float('Number of Leave', compute='_compute_remaining_leaves')
     allocation_count = fields.Float('Total number of days allocated.', compute='_compute_allocation_count')
     allocations_count = fields.Integer('Total number of allocations', compute="_compute_allocation_count")
-    show_leaves = fields.Boolean('Able to see Remaining Time Off', compute='_compute_show_leaves')
+    show_leaves = fields.Boolean('Able to see Remaining Leave', compute='_compute_show_leaves')
     is_absent = fields.Boolean('Absent Today', compute='_compute_leave_status', search='_search_absent_employee')
     allocation_display = fields.Char(compute='_compute_allocation_remaining_display')
     allocation_remaining_display = fields.Char(compute='_compute_allocation_remaining_display')
@@ -254,7 +254,7 @@ class HrEmployeeBase(models.AbstractModel):
 class HrEmployee(models.Model):
     _inherit = 'hr.employee'
 
-    current_leave_id = fields.Many2one('hr.leave.type', compute='_compute_current_leave', string="Current Time Off Type",
+    current_leave_id = fields.Many2one('hr.leave.type', compute='_compute_current_leave', string="Current Leave Type",
                                        groups="hr.group_hr_user")
 
     def _compute_current_leave(self):
@@ -275,7 +275,7 @@ class HrEmployee(models.Model):
 
     def action_time_off_dashboard(self):
         return {
-            'name': _('Time Off Dashboard'),
+            'name': _('Leave Dashboard'),
             'type': 'ir.actions.act_window',
             'res_model': 'hr.leave',
             'views': [[self.env.ref('hr_holidays.hr_leave_employee_view_dashboard').id, 'calendar']],
@@ -385,11 +385,32 @@ class HrEmployee(models.Model):
     @api.model
     def _get_contextual_employee(self):
         ctx = self.env.context
+
+        # Priority to explicitly passed employee in context
         if 'employee_id' in ctx:
             return self.browse(ctx.get('employee_id'))
+
         if 'default_employee_id' in ctx:
             return self.browse(ctx.get('default_employee_id'))
-        return self.env.user.employee_id
+
+        # get employee for current company
+        user = self.env.user
+        employee = user.with_company(self.env.company).employee_id
+        if employee:
+            return employee
+
+        # Fallback: try to find employee for user's default company
+        default_company = user.company_id
+        if default_company and default_company != self.env.company:
+            employee = self.env['hr.employee'].with_company(default_company).search([
+                ('user_id', '=', user.id),
+                ('company_id', '=', default_company.id)
+            ], limit=1)
+            if employee:
+                return employee
+
+        # If all fails, fallback to basic mapping
+        return user.employee_id
 
     def _get_consumed_leaves(self, leave_types, target_date=False, ignore_future=False):
         employees = self or self._get_contextual_employee()

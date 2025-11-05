@@ -19,6 +19,21 @@ class Task(models.Model):
                 else:
                     vals['name'] = _('Untitled to-do')
         return super().create(vals_list)
+        
+    def write(self, vals):
+        res = super().write(vals)
+
+        if vals.get('state') == '1_done':
+            done_stage = self.env['project.task.type'].sudo().search([
+                ('name', 'ilike', 'done'),
+                ('user_id', '=', self.env.uid)
+            ], limit=1)
+
+            if done_stage:
+                for task in self:
+                    task.personal_stage_type_id = done_stage
+
+        return res
 
     def _ensure_onboarding_todo(self):
         if not self.env.user.has_group('project_todo.group_onboarding_todo'):
@@ -51,4 +66,7 @@ class Task(models.Model):
             'res_model': 'project.task',
             'res_id': self.id,
             'type': 'ir.actions.act_window',
-        }
+        } 
+        
+        
+        

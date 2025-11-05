@@ -147,6 +147,9 @@ class PickingType(models.Model):
 
     picking_properties_definition = fields.PropertiesDefinition("Picking Properties")
 
+
+
+
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:
@@ -525,6 +528,34 @@ class Picking(models.Model):
     _sql_constraints = [
         ('name_uniq', 'unique(name, company_id)', 'Reference must be unique per company!'),
     ]
+
+    is_done = fields.Boolean(
+        string="Is Done",
+        compute="_compute_is_done",
+        store=True,
+        readonly=True,
+    )
+
+    code_type = fields.Selection([
+        ('qr_code', 'QR Code'),
+        ('barcode', 'Barcode'),
+        ('none', 'None'),
+    ], string="Label Type",
+       compute="_compute_code_type",
+       store=False)
+
+    def _compute_code_type(self):
+        """Always recompute from system parameter"""
+        param_value = self.env['ir.config_parameter'].sudo().get_param(
+            'industry_fsm.product_code', 'none'
+        )
+        for rec in self:
+            rec.code_type = param_value
+
+    @api.depends('state')
+    def _compute_is_done(self):
+        for picking in self:
+            picking.is_done = (picking.state == 'done')
 
     @api.depends()
     def _compute_show_qty_button(self):
@@ -1114,6 +1145,12 @@ class Picking(models.Model):
         self.package_level_ids.filtered(lambda p: not p.move_ids).unlink()
 
     def button_validate(self):
+
+        for move in self.move_ids:
+            if move.quantity > move.product_uom_qty:
+                raise ValidationError(_(
+                    'You cannot add more serial numbers than the quantity ordered'))
+
         draft_picking = self.filtered(lambda p: p.state == 'draft')
         draft_picking.action_confirm()
         for move in draft_picking.move_ids:
@@ -1592,18 +1629,29 @@ class Picking(models.Model):
                 'default_move_quantity': 'move'},
         }
 
+    # def action_open_label_type(self):
+    #     if self.user_has_groups('stock.group_production_lot') and self.move_line_ids.lot_id:
+    #         view = self.env.ref('stock.picking_label_type_form')
+    #         return {
+    #             'name': _('Choose Type of Labels To Print'),
+    #             'type': 'ir.actions.act_window',
+    #             'res_model': 'picking.label.type',
+    #             'views': [(view.id, 'form')],
+    #             'target': 'new',
+    #             'context': {'default_picking_ids': self.ids},
+    #         }
+    #     return self.action_open_label_layout()
+
     def action_open_label_type(self):
-        if self.user_has_groups('stock.group_production_lot') and self.move_line_ids.lot_id:
-            view = self.env.ref('stock.picking_label_type_form')
-            return {
-                'name': _('Choose Type of Labels To Print'),
-                'type': 'ir.actions.act_window',
-                'res_model': 'picking.label.type',
-                'views': [(view.id, 'form')],
-                'target': 'new',
-                'context': {'default_picking_ids': self.ids},
-            }
-        return self.action_open_label_layout()
+        view = self.env.ref('stock.lot_label_layout_form_picking')
+        return {
+            'name': _('Choose Labels Layout'),
+            'type': 'ir.actions.act_window',
+            'res_model': 'lot.label.layout',
+            'views': [(view.id, 'form')],
+            'target': 'new',
+            'context': {'default_move_line_ids': self.move_line_ids.ids},
+        }
 
     def _attach_sign(self):
         """ Render the delivery report in pdf and attach it to the picking in `self`. """
@@ -1698,7 +1746,7 @@ class Picking(models.Model):
                 wizard = self.env['lot.label.layout'].create({
                     'move_line_ids': pickings.move_line_ids.ids,
                     'label_quantity': 'lots' if '_lots' in print_format else 'units',
-                    'print_format': '4x12' if '4x12' in print_format else 'zpl',
+                    'print_format': '2x7' if '2x7' in print_format else 'dymo',
                 })
                 action = wizard.process()
                 if action:

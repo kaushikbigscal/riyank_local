@@ -192,27 +192,55 @@ class CustomerPortal(Controller):
             error, error_message = self.details_form_validate(post)
             values.update({'error': error, 'error_message': error_message})
             values.update(post)
+            # if not error:
+            #     values = {key: post[key] for key in self._get_mandatory_fields()}
+            #     values.update({key: post[key] for key in self._get_optional_fields() if key in post})
+            #     for field in set(['country_id', 'state_id']) & set(values.keys()):
+            #         try:
+            #             values[field] = int(values[field])
+            #         except:
+            #             values[field] = False
+            #     values.update({'zip': values.pop('zipcode', '')})
+            #     self.on_account_update(values, partner)
+            #     partner.sudo().write(values)
             if not error:
                 values = {key: post[key] for key in self._get_mandatory_fields()}
                 values.update({key: post[key] for key in self._get_optional_fields() if key in post})
+
                 for field in set(['country_id', 'state_id']) & set(values.keys()):
                     try:
                         values[field] = int(values[field])
                     except:
                         values[field] = False
+
                 values.update({'zip': values.pop('zipcode', '')})
+                if post.get('city'):
+                    try:
+                        city_id = int(post['city'])
+                        values['city_id'] = city_id
+
+                        # ✅ Set char field `city` for display in contact widget
+                        city_obj = request.env['res.city'].sudo().browse(city_id)
+                        if city_obj.exists():
+                            values['city'] = city_obj.name
+                    except ValueError:
+                        values['city_id'] = False
+
                 self.on_account_update(values, partner)
                 partner.sudo().write(values)
+
                 if redirect:
                     return request.redirect(redirect)
                 return request.redirect('/my/home')
 
         countries = request.env['res.country'].sudo().search([])
         states = request.env['res.country.state'].sudo().search([])
+        cities = request.env['res.city'].sudo().search([])
 
         values.update({
             'partner': partner,
             'countries': countries,
+            'cities': cities,
             'states': states,
             'has_check_vat': hasattr(request.env['res.partner'], 'check_vat'),
             'partner_can_edit_vat': partner.can_edit_vat(),
@@ -224,6 +252,7 @@ class CustomerPortal(Controller):
         response.headers['X-Frame-Options'] = 'SAMEORIGIN'
         response.headers['Content-Security-Policy'] = "frame-ancestors 'self'"
         return response
+
 
     def on_account_update(self, values, partner):
         pass

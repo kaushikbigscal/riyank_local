@@ -1,0 +1,55 @@
+<odoo noupdate="1">
+
+    <record model="ir.module.category" id="module_category_services_field_visit">
+        <field name="name">Field Visit</field>
+        <field name="sequence">10</field>
+        <field name="parent_id" ref="base.module_category_services"/>
+    </record>
+
+    <record id="group_field_visit_user" model="res.groups">
+        <field name="name">User</field>
+        <field name="category_id" ref="field_visit.module_category_services_field_visit"/>
+    </record>
+
+    <record id="group_field_visit_managers" model="res.groups">
+        <field name="name">Manager</field>
+        <field name="category_id" ref="field_visit.module_category_services_field_visit"/>
+        <field name="implied_ids" eval="[(4, ref('field_visit.group_field_visit_user'))]"/>
+        <!--            <field name="implied_ids" eval="[(4, ref('field_visit.group_field_visit_user'))]"/>-->
+    </record>
+
+    <record id="group_field_visit_manager" model="res.groups">
+        <field name="name">Administrator</field>
+        <field name="category_id" ref="field_visit.module_category_services_field_visit"/>
+        <field name="implied_ids" eval="[(4, ref('field_visit.group_field_visit_managers'))]"/>
+    </record>
+
+
+    <record id="field_visit_rule_manager" model="ir.rule">
+        <field name="name">Manager: See own and team visits</field>
+        <field name="model_id" ref="model_field_visit"/>
+        <field name="domain_force">['|', '|', ('user_id', '=', user.id), ('user_id.employee_ids.parent_id', 'child_of',
+            user.employee_id.id), ('joint_visit_user_ids', 'in', [user.id])]
+        </field>
+        <field name="groups" eval="[(4, ref('group_field_visit_managers'))]"/>
+    </record>
+
+    <record id="field_visit_rule_user" model="ir.rule">
+        <field name="name">User: See only own visits</field>
+        <field name="model_id" ref="model_field_visit"/>
+        <field name="domain_force">[
+            '|',
+            ('user_id', '=', user.id),
+            ('joint_visit_user_ids', 'in', [user.id])
+            ]
+        </field>
+        <field name="groups" eval="[(4, ref('group_field_visit_user'))]"/>
+    </record>
+
+    <record id="field_visit_rule_admin" model="ir.rule">
+        <field name="name">Admin: See all visits</field>
+        <field name="model_id" ref="model_field_visit"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('group_field_visit_manager'))]"/>
+    </record>
+</odoo>

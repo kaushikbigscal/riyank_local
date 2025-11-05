@@ -1,50 +1,354 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-<data>
-<template id="report_lot_label">
-    <t t-call="web.basic_layout">
-        <t t-set='nRows' t-value='12'/>
-        <t t-set='nCols' t-value='4'/>
-        <div class="oe_structure"></div>
-        <div t-foreach="[docs[x:x + nRows * nCols] for x in range(0, len(docs), nRows * nCols)]" t-as="page_docs" class="o_label_sheet" t-att-style="'padding: 20mm 8mm'">
-            <table class="my-0 table table-sm table-borderless">
-                <t t-foreach="range(nRows)" t-as="row">
-                    <tr>
-                        <t t-foreach="range(nCols)" t-as="col">
-                            <t t-set="barcode_index" t-value="(row * nCols + col)"/>
-                            <t t-if="barcode_index &lt; len(page_docs)">
-                                <t t-set="o" t-value="page_docs[barcode_index]"/>
-                            </t>
-                            <t t-else="">
-                                <t t-set="o" t-value="page_docs[0]"/>
-                            </t>
-                            <td t-att-style="barcode_index &gt;= len(page_docs) and 'visibility:hidden'">
-                                <div t-att-style="'position:relative; width:43mm; height:34mm; border: 1px solid %s;' % (o.env.user.company_id.primary_color or 'black')">
-                                    <t t-set="final_barcode" t-value="''"/>
-                                    <t t-if="env.user.has_group('stock.group_stock_lot_print_gs1')">
-                                        <t t-if="o.product_id.valid_ean" t-set="final_barcode" t-value="'01' + '0' * (14 - len(o.product_id.barcode)) + o.product_id.barcode"/>
-                                        <t name="gs1_datamatrix_lot" t-if="o.product_id.tracking == 'lot'" t-set="final_barcode" t-value="(final_barcode or '') + '10' + o.name"/>
-                                        <t t-elif="o.product_id.tracking == 'serial'" t-set="final_barcode" t-value="(final_barcode or '') + '21' + o.name"/>
-                                    </t>
-                                    <span class="o_label_4x12" t-field="o.product_id.display_name" t-att-style="'width:22mm' if final_barcode else ''">Demo Product</span>
-                                    <span class="o_label_4x12" name="lot_name" t-field="o.name" t-att-style="'width:22mm' if final_barcode else ''">Demo Name</span>
-                                    <t t-if="env.user.has_group('stock.group_stock_lot_print_gs1')">
-                                        <div t-if="final_barcode" t-att-style="'position:absolute; right:.5px; bottom:.5px'">
-                                            <span t-out="final_barcode" t-options="{'widget': 'barcode', 'symbology': 'ECC200DataMatrix', 'img_style': 'width:17mm; height:17mm'}">12345678901</span>
-                                        </div>
+    <data>
+        <template id="report_lot_label">
+            <t t-call="web.basic_layout">
+
+                <!-- Set rows and columns -->
+                <t t-set='nRows' t-value='7'/>
+                <t t-set='nCols' t-value='2'/>
+
+                <t t-set="wizard"
+                   t-value="env['lot.label.layout'].sudo().search([('create_uid','=', env.uid)], order='id desc', limit=1)"/>
+                <div class="oe_structure"></div>
+
+                <!-- Paginate the docs into pages -->
+                <div t-foreach="[docs[x:x + nRows * nCols] for x in range(0, len(docs), nRows * nCols)]"
+                     t-as="page_docs"
+                     class="o_label_sheet"
+                     t-att-style="'padding: 20mm 8mm;'">
+
+                    <table class="my-0 table table-sm table-borderless" style="border-collapse:collapse;">
+                        <t t-foreach="range(nRows)" t-as="row">
+                            <tr>
+                                <t t-foreach="range(nCols)" t-as="col">
+                                    <t t-set="barcode_index" t-value="(row * nCols + col)"/>
+                                    <t t-if="barcode_index &lt; len(page_docs)">
+                                        <t t-set="o" t-value="page_docs[barcode_index]"/>
                                     </t>
                                     <t t-else="">
-                                        <span t-field="o.name" t-options="{'widget': 'barcode', 'img_style': 'width:100%; height:35%'}">Customizable Desk</span>
+                                        <t t-set="o" t-value="page_docs[0]"/>
                                     </t>
-                                </div>
-                            </td>
+
+                                    <!-- Get warranty information for this lot -->
+                                    <t t-set="warranty_info" t-value="o._get_warranty_info()"/>
+
+                                    <td t-att-style="'%s' % ('visibility:hidden;' if barcode_index >= len(page_docs) else '')">
+                                        <div t-att-style="'position:relative; width:95mm; height:35mm; border: 1px solid %s; padding:0; box-sizing:border-box;' % (o.env.user.company_id.primary_color or 'black')">
+                                            <!-- inner 2-column table (left = QR/barcode, right = text) -->
+                                            <table style="width:100%; height:100%; border-collapse:collapse;">
+                                                <tr>
+                                                    <!-- LEFT: fixed-width column for QR / barcode -->
+                                                    <td style="width:34mm; padding:3mm; vertical-align:top; text-align:center;">
+                                                        <!-- system parameter (global, fetched once per label) -->
+                                                        <t t-set="code_type"
+                                                           t-value="env['ir.config_parameter'].sudo().get_param('industry_fsm.product_code', 'none')"/>
+                                                        <t t-if="code_type == 'qr_code'">
+                                                            <t t-set="base_url"
+                                                               t-value="env['ir.config_parameter'].sudo().get_param('web.base.url')"/>
+                                                            <t t-set="ticket"
+                                                               t-value="base_url + '/my/ticket/create?product_id=' + str(o.product_id.id) + '&amp;serial_number=' + o.name"/>
+                                                            <!-- QR (square) -->
+                                                            <span t-out="ticket"
+                                                                  t-options="{'widget': 'barcode', 'symbology': 'QR', 'img_style': 'width:28mm; height:28mm'}"/>
+                                                        </t>
+                                                        <t t-elif="code_type == 'barcode'">
+                                                            <t t-set="base_url"
+                                                               t-value="env['ir.config_parameter'].sudo().get_param('web.base.url')"/>
+                                                            <t t-set="ticket"
+                                                               t-value="base_url + '/my/ticket/create?product_id=' + str(o.product_id.id) + '&amp;serial_number=' + o.name"/>
+                                                            <!-- linear/wide barcode -->
+                                                            <span t-out="ticket"
+                                                                  t-options="{'widget': 'barcode', 'symbology': 'pdf417', 'img_style': 'width:34mm; height:12mm'}"/>
+                                                        </t>
+                                                        <t t-elif="code_type == 'none'">
+                                                            <div style="font-size:10px; color: #444;">No code</div>
+                                                        </t>
+                                                    </td>
+
+                                                    <!-- RIGHT: text area (product + serial + warranty). vertically centered -->
+                                                    <td style="padding:3mm; vertical-align:top; text-align:left; font-size:10px; line-height:1;">
+                                                        <span style="font-weight:700;">Product:</span>
+                                                        <span t-esc="o.product_id.name"/>
+                                                        <br/>
+
+                                                        <span style="font-weight:700;">Serial Number:</span>
+                                                        <span t-esc="o.name"/>
+                                                        <br/>
+
+                                                        <t t-if="warranty_info['warranty_start_date']">
+                                                            <span style="font-weight:600;">Warranty Start:</span>
+                                                            <span t-esc="warranty_info['warranty_start_date']"
+                                                                  t-options="{'widget': 'date'}"/>
+                                                            <br/>
+                                                        </t>
+
+                                                        <t t-if="warranty_info['line_warranty_end_date']">
+                                                            <span style="font-weight:600;">Warranty End:</span>
+                                                            <span t-esc="warranty_info['line_warranty_end_date']"
+                                                                  t-options="{'widget': 'date'}"/>
+                                                        </t>
+                                                        <t t-if="wizard and wizard.extra_html">
+                                                            <div class="text-end"
+                                                                 style="display:block; font-size:16px; margin-top:5px">
+                                                                <t t-raw="wizard.extra_html"/>
+                                                            </div>
+                                                        </t>
+                                                    </td>
+                                                </tr>
+                                            </table>
+
+                                        </div>
+                                    </td>
+                                </t>
+                            </tr>
                         </t>
-                    </tr>
+                    </table>
+
+                    <div class="oe_structure"></div>
+                </div>
+            </t>
+        </template>
+
+        <template id="report_lot_label_dymo">
+            <t t-call="web.basic_layout">
+                <t t-foreach="docs" t-as="o">
+                    <!-- Get warranty information for this lot -->
+                    <t t-set="warranty_info" t-value="o._get_warranty_info()"/>
+                    <t t-set="wizard"
+                       t-value="env['lot.label.layout'].sudo().search([('create_uid','=', env.uid)], order='id desc', limit=1)"/>
+                    <!-- Full-page Dymo label (80mm x 22mm landscape) - No container box -->
+                    <div t-att-style="'width:80mm; height:43mm; padding:0; margin:0; page-break-after:always; position:relative;'">
+
+                        <!-- QR / Barcode positioned absolutely -->
+                        <div style="position:absolute; left:0; top:0; width:18mm; height:100%; text-align:center; vertical-align:middle; display:flex; align-items:center; justify-content:center;margin-top:5px; ">
+                            <t t-set="code_type"
+                               t-value="env['ir.config_parameter'].sudo().get_param('industry_fsm.product_code','none')"/>
+                            <t t-if="code_type == 'qr_code'">
+                                <t t-set="base_url"
+                                   t-value="env['ir.config_parameter'].sudo().get_param('web.base.url')"/>
+                                <t t-set="ticket"
+                                   t-value="base_url + '/my/ticket/create?product_id=' + str(o.product_id.id) + '&amp;serial_number=' + o.name"/>
+                                <span t-out="ticket"
+                                      t-options="{'widget':'barcode','symbology':'QR','img_style':'width:30mm;height:30mm'}"/>
+                            </t>
+                            <t t-elif="code_type == 'barcode'">
+                                <t t-set="base_url"
+                                   t-value="env['ir.config_parameter'].sudo().get_param('web.base.url')"/>
+                                <t t-set="ticket"
+                                   t-value="base_url + '/my/ticket/create?product_id=' + str(o.product_id.id) + '&amp;serial_number=' + o.name"/>
+                                <span t-out="ticket"
+                                      t-options="{'widget':'barcode','symbology':'pdf417','img_style':'width:34mm;height:14mm'}"/>
+                            </t>
+                        </div>
+
+                        <!-- Product & Serial & Warranty positioned absolutely -->
+                        <div t-att-style="'position:absolute; left:' + ('36mm' if code_type == 'qr_code' else '36mm') + '; top:0; width:' + ('58mm' if code_type == 'qr_code' else '58mm') + '; height:100%; display:flex; flex-direction:column; justify-content:center; font-size:' + ('6px' if code_type == 'qr_code' else '6px') + '; line-height:1.1; overflow:hidden; font-size:11px;'">
+                            <div style="font-weight:700; margin-bottom:0.5mm; word-wrap:break-word;">
+                                <span>Product:</span>
+                                <span t-esc="o.product_id.name"/>
+                            </div>
+                            <div style="font-weight:700; margin-bottom:0.5mm; word-wrap:break-word;">
+                                <span>Serial Number:</span>
+                                <span t-esc="o.name"/>
+                            </div>
+
+                            <!-- Warranty Start Date -->
+                            <div t-if="warranty_info['warranty_start_date'] and warranty_info['line_warranty_end_date']"
+                                 style="font-weight:600; margin-bottom:0.5mm; word-wrap:break-word;">
+                                <span>Warranty Start:</span>
+                                <span t-esc="warranty_info['warranty_start_date']"
+                                      t-options="{'widget': 'date', 'format': 'dd/MM/yyyy'}"/>
+                            </div>
+
+                            <!-- Warranty End Date -->
+                            <div t-if="warranty_info['line_warranty_end_date']"
+                                 style="font-weight:600; margin-bottom:0.5mm; word-wrap:break-word;">
+                                <span>Warranty End:</span>
+                                <span t-esc="warranty_info['line_warranty_end_date']"
+                                      t-options="{'widget': 'date', 'format': 'dd/MM/yyyy'}"/>
+                            </div>
+                            <t t-if="wizard and wizard.extra_html">
+                                <div class="text-end" style="display:block; font-size:16px;">
+                                    <t t-raw="wizard.extra_html"/>
+                                </div>
+                            </t>
+
+                        </div>
+
+                    </div>
+
                 </t>
-            </table>
-            <div class="oe_structure"></div>
-        </div>
-    </t>
-</template>
-</data>
+            </t>
+        </template>
+
+        <template id="report_lot_label_4x7">
+            <t t-call="web.basic_layout">
+                <t t-set='nRows' t-value='7'/>
+                <t t-set='nCols' t-value='4'/>
+
+                <t t-set="wizard"
+                   t-value="env['lot.label.layout'].sudo().search([('create_uid','=', env.uid)], order='id desc', limit=1)"/>
+                <div class="oe_structure"></div>
+                <div t-foreach="[docs[x:x + nRows * nCols] for x in range(0, len(docs), nRows * nCols)]"
+                     t-as="page_docs"
+                     class="o_label_sheet"
+                     t-att-style="'padding: 20mm 8mm'">
+                    <table class="my-0 table table-sm table-borderless">
+
+
+                        <t t-foreach="range(nRows)" t-as="row">
+
+                            <tr>
+                                <t t-foreach="range(nCols)" t-as="col">
+                                    <t t-set="barcode_index" t-value="(row * nCols + col)"/>
+                                    <t t-if="barcode_index &lt; len(page_docs)">
+                                        <t t-set="o" t-value="page_docs[barcode_index]"/>
+                                    </t>
+                                    <t t-else="">
+                                        <t t-set="o" t-value="page_docs[0]"/>
+                                    </t>
+                                    <t t-set="warranty_info" t-value="o._get_warranty_info()"/>
+                                    <td t-att-style="barcode_index &gt;= len(page_docs) and 'visibility:hidden'">
+                                        <div t-att-style="'position:relative; width:43mm; height:35mm; border: 1px solid %s; text-align:center; padding:2mm;' % (o.env.user.company_id.primary_color or 'black')">
+
+                                            <!-- Product Name -->
+
+
+                                            <!-- Get code_type from system parameter -->
+                                            <t t-set="code_type"
+                                               t-value="env['ir.config_parameter'].sudo().get_param('industry_fsm.product_code', 'none')"/>
+
+                                            <!-- Conditional rendering based on code_type -->
+                                            <t t-if="code_type == 'qr_code'">
+                                                <!-- QR Code (base URL + product_id + lot) -->
+                                                <t t-set="base_url"
+                                                   t-value="env['ir.config_parameter'].sudo().get_param('web.base.url')"/>
+                                                <t t-set="ticket"
+                                                   t-value="base_url + '/my/ticket/create?product_id=' + str(o.product_id.id) + '&amp;serial_number=' + o.name"/>
+                                                <span t-out="ticket"
+                                                      t-options="{'widget': 'barcode', 'symbology': 'QR', 'img_style': 'width:14mm; height:14mm'}"/>
+                                            </t>
+
+                                            <t t-elif="code_type == 'barcode'">
+                                                <!-- Regular Barcode using lot name/serial number -->
+                                                <t t-set="base_url"
+                                                   t-value="env['ir.config_parameter'].sudo().get_param('web.base.url')"/>
+                                                <t t-set="ticket"
+                                                   t-value="base_url + '/my/ticket/create?product_id=' + str(o.product_id.id) + '&amp;serial_number=' + o.name"/>
+                                                <span t-out="ticket"
+                                                      t-options="{'widget': 'barcode', 'symbology': 'pdf417', 'img_style': 'width:40mm; height:15mm'}"/>
+                                            </t>
+
+                                            <div style="font-size:10px; font-weight:bold; text-align:left; line-height:1;">
+                                                Serial No:
+                                                <span t-field="o.name">Serial</span>
+                                                <br/>
+
+                                                <t t-if="warranty_info['warranty_start_date']">
+                                                    Warranty Start:
+                                                    <span t-esc="warranty_info['warranty_start_date']"
+                                                          t-options="{'widget': 'date'}"/>
+                                                    <br/>
+                                                </t>
+
+                                                <t t-if="warranty_info['line_warranty_end_date']">
+                                                    Warranty End:
+                                                    <span t-esc="warranty_info['line_warranty_end_date']"
+                                                          t-options="{'widget': 'date'}"/>
+                                                    <br/>
+                                                </t>
+
+                                                <t t-if="wizard and wizard.extra_html">
+                                                    <span style="font-size:13px; display:block; text-align:right;">
+                                                        <t t-raw="wizard.extra_html"/>
+                                                    </span>
+                                                </t>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </t>
+                            </tr>
+                        </t>
+                    </table>
+                    <div class="oe_structure"></div>
+                </div>
+            </t>
+        </template>
+
+
+        <template id="report_lot_label_4x12">
+            <t t-call="web.basic_layout">
+                <!-- Set rows and columns -->
+                <t t-set='nRows' t-value='12'/>
+                <t t-set='nCols' t-value='4'/>
+
+                <!-- Get the last created layout for the user -->
+                <t t-set="wizard"
+                   t-value="env['lot.label.layout'].sudo().search([('create_uid','=', env.uid)], order='id desc', limit=1)"/>
+
+                <div class="oe_structure"></div>
+
+                <!-- Paginate docs -->
+                <div t-foreach="[docs[x:x + nRows * nCols] for x in range(0, len(docs), nRows * nCols)]"
+                     t-as="page_docs"
+                     class="o_label_sheet"
+                     t-att-style="'padding: 10mm 5mm;'">
+
+                    <table class="table table-sm table-borderless my-0">
+                        <t t-foreach="range(nRows)" t-as="row">
+                            <tr>
+                                <t t-foreach="range(nCols)" t-as="col">
+                                    <t t-set="barcode_index" t-value="(row * nCols + col)"/>
+                                    <t t-if="barcode_index &lt; len(page_docs)">
+                                        <t t-set="o" t-value="page_docs[barcode_index]"/>
+                                    </t>
+                                    <t t-else="">
+                                        <t t-set="o" t-value="page_docs[0]"/>
+                                    </t>
+                                    <t t-set="warranty_info" t-value="o._get_warranty_info()"/>
+
+                                    <td t-att-style="barcode_index &gt;= len(page_docs) and 'visibility:hidden;'">
+                                        <div t-att-style="'position:relative; width:45mm; height:20mm; border: 1px solid %s; text-align:center; padding:2mm;' % (o.env.user.company_id.primary_color or 'black')">
+
+                                            <!-- Get code type from system parameter -->
+                                            <t t-set="code_type"
+                                               t-value="env['ir.config_parameter'].sudo().get_param('industry_fsm.product_code', 'none')"/>
+
+                                            <!-- QR / Barcode -->
+                                            <t t-if="code_type == 'qr_code'">
+                                                <t t-set="base_url"
+                                                   t-value="env['ir.config_parameter'].sudo().get_param('web.base.url')"/>
+                                                <t t-set="ticket"
+                                                   t-value="base_url + '/my/ticket/create?product_id=' + str(o.product_id.id) + '&amp;serial_number=' + o.name"/>
+                                                <span t-out="ticket"
+                                                      t-options="{'widget': 'barcode', 'symbology': 'QR', 'img_style': 'width:13mm; height:13mm'}"/>
+                                            </t>
+
+                                            <t t-elif="code_type == 'barcode'">
+                                                <t t-set="base_url"
+                                                   t-value="env['ir.config_parameter'].sudo().get_param('web.base.url')"/>
+                                                <t t-set="ticket"
+                                                   t-value="base_url + '/my/ticket/create?product_id=' + str(o.product_id.id) + '&amp;serial_number=' + o.name"/>
+                                                <span t-out="ticket"
+                                                      t-options="{'widget': 'barcode', 'symbology': 'pdf417', 'img_style': 'width:38mm; height:12mm'}"/>
+                                            </t>
+
+                                            <!-- Serial number and warranty -->
+                                            <div style="font-size:9px; font-weight:bold; margin-top:1mm; text-align:left; line-height:1.1;">
+                                                Serial No:
+                                                <span t-field="o.name"/>
+
+                                            </div>
+                                        </div>
+                                    </td>
+                                </t>
+                            </tr>
+                        </t>
+                    </table>
+                    <div class="oe_structure"></div>
+                </div>
+            </t>
+        </template>
+    </data>
 </odoo>

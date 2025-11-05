@@ -18,14 +18,14 @@
                             <setting id="interview_forms_setting" string="Send Interview Survey" help="Send an Interview Survey to the applicant during the recruitment process" title="Use interview forms tailored to each job position during the recruitment process. Select the form to use in the job position detail form. This relies on the Survey app.">
                                 <field name="module_hr_recruitment_survey"/>
                             </setting>
-                            <setting id="sms" string="Send SMS" documentation="/applications/marketing/sms_marketing/pricing/pricing_and_faq.html" help="Send texts to your contacts">
+                            <setting id="sms" string="Send SMS" help="Send texts to your contacts">
                             </setting>
                             <setting string="CV Display" help="Display CV on application form" id="display_cv">
                                 <field name="group_applicant_cv_display"/>
                             </setting>
-                            <setting id="recruitment_extract_settings" string="CV Digitization (OCR)" company_dependent="1" help="Digitize your CV to extract name and email automatically." title="Use OCR to fill data from a picture of the CV or the file itself">
-                                <field name="module_hr_recruitment_extract" widget="upgrade_boolean"/>
-                            </setting>
+<!--                            <setting id="recruitment_extract_settings" string="CV Digitization (OCR)" company_dependent="1" help="Digitize your CV to extract name and email automatically." title="Use OCR to fill data from a picture of the CV or the file itself">-->
+<!--                                <field name="module_hr_recruitment_extract" widget="upgrade_boolean"/>-->
+<!--                            </setting>-->
                         </block>
                     </app>
                 </xpath>

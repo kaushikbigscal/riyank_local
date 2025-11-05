@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- Record Rule: Users can only see their own resignation -->
+    <record id="resignation_user_own_rule" model="ir.rule">
+        <field name="name">Resignation: User Own Only</field>
+        <field name="model_id" ref="model_hr_resignation"/>
+        <field name="groups" eval="[(4, ref('hr_resignation.group_hr_resignation_user'))]"/>
+        <field name="domain_force">[('employee_id.user_id', '=', user.id)]</field>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+
+    <!-- Record Rule: Admins can see all -->
+    <record id="resignation_admin_all_rule" model="ir.rule">
+        <field name="name">Resignation: Admin See All</field>
+        <field name="model_id" ref="model_hr_resignation"/>
+        <field name="groups" eval="[(4, ref('hr_resignation.group_hr_resignation_manager'))]"/>
+        <field name="domain_force">[(1, '=', 1)]</field> <!-- no restriction -->
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
+    </record>
+</odoo>

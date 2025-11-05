@@ -58,12 +58,15 @@ class SaleOrder(models.Model):
         comodel_name='res.company',
         required=True, index=True,
         default=lambda self: self.env.company)
+
+
     partner_id = fields.Many2one(
         comodel_name='res.partner',
         string="Customer",
         required=True, change_default=True, index=True,
         tracking=1,
-        domain="[('company_id', 'in', (False, company_id))]")
+       )
+
     state = fields.Selection(
         selection=SALE_ORDER_STATE,
         string="Status",
@@ -816,6 +819,29 @@ class SaleOrder(models.Model):
                     " You must first cancel it."))
 
     #=== ACTION METHODS ===#
+
+    def download_sale_report(self):
+        self.ensure_one()
+        try:
+            # Try to find a custom report for sale orders
+            customizer = self.env['xml.upload'].search([
+                ('model_id.model', '=', 'sale.order'),
+                ('report_action', '=', 'action_xml_upload_custom_report_format_for_all_sale_order'),
+                ('xml_file', '!=', False),
+            ], limit=1)
+
+            if customizer and customizer.xml_file:
+                # Use the custom report if available
+                return self.env.ref('data_recycle.action_xml_upload_custom_report_format_for_all_sale_order').report_action(self)
+            else:
+                # Fallback to the default sale order report
+                return self.env.ref('sale.action_report_saleorder').report_action(self)
+        except ValueError:
+            # Fallback if the custom report action is not found (e.g., module not installed)
+            return self.env.ref('sale.action_report_saleorder').report_action(self)
+        except Exception as e:
+            # Catch any other error and show a user-friendly message
+            raise UserError(f"Failed to generate sale report: {str(e)}")
 
     def action_open_discount_wizard(self):
         self.ensure_one()

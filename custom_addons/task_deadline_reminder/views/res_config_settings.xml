@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="res_config_settings_view_form_inherit_reminder" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.reminder</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="project.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+
+            <!-- Add after the 'Analytics' block -->
+            <xpath expr="//app[@name='project']/block[@name='analytic']" position="after">
+                <block title="Reminder" name="reminder">
+                    <setting id="overdue_task_reminder_setting" help="Notify users about overdue tasks.">
+                        <field name="enable_overdue_reminder"/>
+                    </setting>
+                </block>
+            </xpath>
+        </field>
+    </record>
+
+
+    <record id="res_config_settings_view_form_inherit_task_deadline_reminder" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.task.deadline.reminder</field>
+        <field name="model">res.config.settings</field>
+        <field name="priority" eval="45"/>
+        <field name="inherit_id" ref="hr_attendance.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//app[@name='hr_attendance']" position="inside">
+                <block title="Reminder" name="task_deadline_reminder">
+                    <setting id="day_in_reminder_setting" help="Send reminder after user's scheduled start hour.">
+                        <field name="reminder_day_in_offset_minutes"/>
+                    </setting>
+
+                    <setting id="day_out_reminder_setting" help="Send reminder after user's scheduled end hour.">
+                        <field name="reminder_day_out_offset_minutes"/>
+                    </setting>
+                </block>
+            </xpath>
+        </field>
+    </record>
+
+
+    <record id="view_task_reminder_form" model="ir.ui.view">
+        <field name="name">task.reminder.form</field>
+        <field name="model">task.reminder</field>
+        <field name="arch" type="xml">
+            <form string="Reminder">
+                <group>
+                    <field name="name"/>
+                    <field name="author_id"/>
+                    <field name="user_ids" widget="many2many_avatar_user"/>-->
+                    <field name="related_model"/>
+                    <field name="related_id"/>
+                    <field name="deadline"/>
+                    <field name="is_read"/>
+                </group>
+                <notebook>
+                    <page string="Body">
+                        <field name="body"/>
+                    </page>
+                </notebook>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_task_reminder_tree" model="ir.ui.view">
+        <field name="name">task.reminder.tree</field>
+        <field name="model">task.reminder</field>
+        <field name="arch" type="xml">
+            <tree string="Reminders">
+                <field name="name"/>
+                <field name="deadline"/>
+                <field name="user_ids"/>
+                <field name="is_read"/>
+            </tree>
+        </field>
+    </record>
+    <record id="view_task_reminder_search" model="ir.ui.view">
+        <field name="name">task.reminder.search</field>
+        <field name="model">task.reminder</field>
+        <field name="arch" type="xml">
+            <search>
+                <filter string="Read Status" name="is_read" context="{'group_by': 'is_read'}"/>
+            </search>
+        </field>
+    </record>
+    <record id="action_task_reminder" model="ir.actions.act_window">
+        <field name="name">Reminders</field>
+        <field name="res_model">task.reminder</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first task reminder
+            </p>
+        </field>
+    </record>
+    <menuitem id="menu_task_reminder"
+              name="Reminders"
+              parent="mail.mail_menu_technical"
+              action="action_task_reminder"
+              sequence="30"
+              groups="base.group_system"/>
+</odoo>

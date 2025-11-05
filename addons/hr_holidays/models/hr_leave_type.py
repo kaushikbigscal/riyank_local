@@ -18,7 +18,7 @@ _logger = logging.getLogger(__name__)
 
 class HolidaysType(models.Model):
     _name = "hr.leave.type"
-    _description = "Time Off Type"
+    _description = "Leave Type"
     _order = 'sequence'
 
     @api.model
@@ -27,77 +27,77 @@ class HolidaysType(models.Model):
         taken = leave_type.leaves_taken > 0
         return -1 * leave_type.sequence, leave_type.employee_requests == 'no' and remaining, leave_type.employee_requests == 'yes' and remaining, taken
 
-    name = fields.Char('Time Off Type', required=True, translate=True)
+    name = fields.Char('Leave Type', required=True, translate=True)
     sequence = fields.Integer(default=100,
-        help='The type with the smallest sequence is the default value in time off request')
-    create_calendar_meeting = fields.Boolean(string="Display Time Off in Calendar", default=True)
-    color = fields.Integer(string='Color', help="The color selected here will be used in every screen with the time off type.")
+        help='The type with the smallest sequence is the default value in Leave request')
+    create_calendar_meeting = fields.Boolean(string="Display Leave in Calendar", default=True)
+    color = fields.Integer(string='Color', help="The color selected here will be used in every screen with the Leave type.")
     icon_id = fields.Many2one('ir.attachment', string='Cover Image', domain="[('res_model', '=', 'hr.leave.type'), ('res_field', '=', 'icon_id')]")
     active = fields.Boolean('Active', default=True,
-                            help="If the active field is set to false, it will allow you to hide the time off type without removing it.")
+                            help="If the active field is set to false, it will allow you to hide the Leave type without removing it.")
 
     # employee specific computed data
     max_leaves = fields.Float(compute='_compute_leaves', string='Maximum Allowed', search='_search_max_leaves',
-        help='This value is given by the sum of all time off requests with a positive value.')
+        help='This value is given by the sum of all Leave requests with a positive value.')
     leaves_taken = fields.Float(
-        compute='_compute_leaves', string='Time off Already Taken',
-        help='This value is given by the sum of all time off requests with a negative value.')
+        compute='_compute_leaves', string='Leave Already Taken',
+        help='This value is given by the sum of all Leave requests with a negative value.')
     virtual_remaining_leaves = fields.Float(
-        compute='_compute_leaves', search='_search_virtual_remaining_leaves', string='Virtual Remaining Time Off',
-        help='Maximum Time Off Allowed - Time Off Already Taken - Time Off Waiting Approval')
+        compute='_compute_leaves', search='_search_virtual_remaining_leaves', string='Virtual Remaining Leave',
+        help='Maximum Leave Allowed - Leave Already Taken - Leave Waiting Approval')
 
     allocation_count = fields.Integer(
         compute='_compute_allocation_count', string='Allocations')
     group_days_leave = fields.Float(
-        compute='_compute_group_days_leave', string='Group Time Off')
+        compute='_compute_group_days_leave', string='Group Leave')
     company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.company)
     responsible_ids = fields.Many2many(
-        'res.users', 'hr_leave_type_res_users_rel', 'hr_leave_type_id', 'res_users_id', string='Notified Time Off Officer',
+        'res.users', 'hr_leave_type_res_users_rel', 'hr_leave_type_id', 'res_users_id', string='Notified Leave Officer',
         domain=lambda self: [('groups_id', 'in', self.env.ref('hr_holidays.group_hr_holidays_user').id),
                              ('share', '=', False),
                              ('company_ids', 'in', self.env.company.id)],
                              auto_join=True,
-        help="Choose the Time Off Officers who will be notified to approve allocation or Time Off Request. If empty, nobody will be notified")
+        help="Choose the Leave Officers who will be notified to approve allocation or Leave Request. If empty, nobody will be notified")
     leave_validation_type = fields.Selection([
         ('no_validation', 'No Validation'),
-        ('hr', 'By Time Off Officer'),
+        ('hr', 'By Leave Officer'),
         ('manager', "By Employee's Approver"),
-        ('both', "By Employee's Approver and Time Off Officer")], default='hr', string='Time Off Validation')
+        ('both', "By Employee's Approver and Leave Officer")], default='hr', string='Leave Validation')
     requires_allocation = fields.Selection([
         ('yes', 'Yes'),
         ('no', 'No Limit')], default="yes", required=True, string='Requires allocation',
-        help="""Yes: Time off requests need to have a valid allocation.\n
-              No Limit: Time Off requests can be taken without any prior allocation.""")
+        help="""Yes: Leave requests need to have a valid allocation.\n
+              No Limit: Leave requests can be taken without any prior allocation.""")
     employee_requests = fields.Selection([
         ('yes', 'Extra Days Requests Allowed'),
         ('no', 'Not Allowed')], default="no", required=True, string="Employee Requests",
         help="""Extra Days Requests Allowed: User can request an allocation for himself.\n
         Not Allowed: User cannot request an allocation.""")
     allocation_validation_type = fields.Selection([
-        ('officer', 'Approved by Time Off Officer'),
+        ('officer', 'Approved by Leave Officer'),
         ('no', 'No validation needed')], default='no', string='Approval',
         compute='_compute_allocation_validation_type', store=True, readonly=False,
         help="""Select the level of approval needed in case of request by employee
         - No validation needed: The employee's request is automatically approved.
-        - Approved by Time Off Officer: The employee's request need to be manually approved by the Time Off Officer.""")
+        - Approved by Leave Officer: The employee's request need to be manually approved by the Leave Officer.""")
     has_valid_allocation = fields.Boolean(compute='_compute_valid', search='_search_valid', help='This indicates if it is still possible to use this type of leave')
-    time_type = fields.Selection([('other', 'Worked Time'), ('leave', 'Absence')], default='leave', string="Kind of Time Off",
+    time_type = fields.Selection([('other', 'Worked Time'), ('leave', 'Absence')], default='leave', string="Kind of Leave",
                                  help="The distinction between working time (ex. Attendance) and absence (ex. Training) will be used in the computation of Accrual's plan rate.")
     request_unit = fields.Selection([
         ('day', 'Day'),
         ('half_day', 'Half Day'),
-        ('hour', 'Hours')], default='day', string='Take Time Off in', required=True)
+        ('hour', 'Hours')], default='day', string='Take Leave in', required=True)
     unpaid = fields.Boolean('Is Unpaid', default=False)
-    leave_notif_subtype_id = fields.Many2one('mail.message.subtype', string='Time Off Notification Subtype', default=lambda self: self.env.ref('hr_holidays.mt_leave', raise_if_not_found=False))
+    leave_notif_subtype_id = fields.Many2one('mail.message.subtype', string='Leave Notification Subtype', default=lambda self: self.env.ref('hr_holidays.mt_leave', raise_if_not_found=False))
     allocation_notif_subtype_id = fields.Many2one('mail.message.subtype', string='Allocation Notification Subtype', default=lambda self: self.env.ref('hr_holidays.mt_leave_allocation', raise_if_not_found=False))
     support_document = fields.Boolean(string='Supporting Document')
     accruals_ids = fields.One2many('hr.leave.accrual.plan', 'time_off_type_id')
     accrual_count = fields.Float(compute="_compute_accrual_count", string="Accruals count")
-    # negative time off
+    # negative Leave
     allows_negative = fields.Boolean(string='Allow Negative Cap',
         help="If checked, users request can exceed the allocated days and balance can go in negative.")
     max_allowed_negative = fields.Integer(string="Amount in Negative",
-        help="Define the maximum level of negative days this kind of time off can reach. Value must be at least 1.")
+        help="Define the maximum level of negative days this kind of Leave can reach. Value must be at least 1.")
 
     _sql_constraints = [(
         'check_negative',

@@ -1,0 +1,827 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <template id="form16_report_template">
+        <t t-call="web.html_container">
+<!--            <t t-call="web.external_layout">-->
+           <div class="page">
+         <style type="text/css">
+
+            table { width: 100%; border-collapse: collapse; }
+            td { padding: 5px; border: 1px solid black; }
+            .center { text-align: center; }
+            .right { text-align: right; }
+            .bold { font-weight: bold; }
+         </style>
+         <table>
+            <tbody>
+               <tr>
+                  <td colspan="15" class="center bold">
+                     <h2>FORM NO. 16</h2>
+                     <p>[See rule 31(1)(a)]</p>
+                     <h3>PART A</h3>
+                     <p>Certificate under section 203 of the Income-tax Act, 1961 for Tax deducted at source on Salary</p>
+                  </td>
+               </tr>
+               <tr>
+                  <td colspan="7">Name and address of the Employer</td>
+                  <td colspan="8">Name and designation of the Employee</td>
+               </tr>
+               <tr>
+                  <td colspan="7" class="bold">
+                     <t t-esc="company.name"/>
+                     <br/>
+                     <t t-esc="company.street"/>
+                     <br/>
+                     <t t-esc="company.city"/>
+                  </td>
+                  <td colspan="8" class="bold">
+                     <t t-esc="employee.name"/>
+                     <br/>
+                     <t t-esc="employee.job_title"/>
+                  </td>
+               </tr>
+               <tr>
+                  <td colspan="4">PAN of the Deductor</td>
+                  <td colspan="3">TAN of the Deductor</td>
+                  <td colspan="8">PAN OF THE EMPLOYEE</td>
+               </tr>
+               <tr>
+                  <td colspan="4" class="bold">
+                     <t t-esc="company.vat"/>
+                  </td>
+                  <td colspan="3" class="bold">
+                     <t t-esc="company.company_registry"/>
+                  </td>
+                  <td colspan="8" class="bold">
+                     <t t-esc="employee.identification_id"/>
+                  </td>
+               </tr>
+               <tr class="center">
+                  <td colspan="7">CIT (TDS)</td>
+                  <td colspan="4">Assessment Year</td>
+                  <td colspan="4">Period</td>
+               </tr>
+               <tr class="center">
+                  <td colspan="7" class="bold">THE COMMISSIONER OF INCOME TAX (TDS)</td>
+                  <td colspan="4" class="bold">
+                     <t t-esc="assessment_year.name"/>
+                  </td>
+                  <td colspan="2">From</td>
+                  <td colspan="2">To</td>
+               </tr>
+               <tr class="center">
+                  <td colspan="7"></td>
+                  <td colspan="4"></td>
+                  <t t-set="first_year" t-value="assessment_year.name.split('-')[0]"/>
+                  <t t-set="second_year" t-value="int(first_year) + 1"/>
+                  <td colspan="2" class="bold">
+                     01/04/
+                     <t t-esc="first_year"/>
+                  </td>
+                  <td colspan="2" class="bold">
+                     31/03/
+                     <t t-esc="second_year"/>
+                  </td>
+               </tr>
+               <tr>
+                  <td colspan="15" class="bold">
+                     <h3 class="center">Part B (Refer Note 1)</h3>
+                  </td>
+               </tr>
+               <tr>
+                  <td colspan="15" class="bold">
+                     <p>Details of Salary paid and any other income and tax deducted</p>
+                  </td>
+               </tr>
+               <tr>
+                  <td colspan="1">A</td>
+                  <td colspan="11">Whether opting out of taxation u/s 115BAC(1A)?</td>
+                  <td colspan="3" class="right bold">
+                     <t t-esc="regime_type"/>
+                  </td>
+               </tr>
+               <tr>
+                  <td colspan="1">1.</td>
+                  <td colspan="14">Gross Salary</td>
+               </tr>
+               <tr>
+                  <td colspan="1">(a)</td>
+                  <td colspan="6">Salary as per provisions contained in section 17(1)</td>
+                  <td colspan="3" class="right">
+                  </td>
+                  <td colspan="3" class="right">
+                     Rs. <t t-esc="total_earnings"/>
+                  </td>
+                  <td colspan="3" class="right">
+                  </td>
+               </tr>
+               <tr>
+                  <td colspan="1">(b)</td>
+                  <td colspan="6">Value of perquisites under section 17(2) (as per Form No. 12BA, wherever applicable)</td>
+                  <td colspan="3" class="right"/>
+                  <td colspan="3" class="right">Rs. 0</td>
+                  <td colspan="3" class="right"/>
+               </tr>
+               <tr>
+                  <td colspan="1">(c)</td>
+                  <td colspan="6">Profits in lieu of salary under section 17(3) (as per Form No. 12BA, wherever applicable)</td>
+                  <td colspan="3" class="right"/>
+                  <td colspan="3" class="right">Rs. 0</td>
+                  <td colspan="3" class="right"/>
+               </tr>
+               <tr>
+                  <td colspan="1">(d)</td>
+                  <td colspan="6">Total</td>
+                  <td colspan="3" class="right bold">
+                  </td>
+                  <td colspan="3" class="right bold">
+
+                  </td>
+                  <td colspan="3" class="right bold">
+                     Rs. <t t-esc="total_earnings"/>
+                  </td>
+               </tr>
+               <tr>
+                  <td colspan="1">(e)</td>
+                  <td colspan="6">Reported total amount of salary received from other employer(s)</td>
+                  <td colspan="3" class="right bold">
+                  </td>
+                  <td colspan="3" class="right bold">
+                  </td>
+                  <td colspan="3" class="right bold">
+                      Rs. <t t-esc="previous_emp_income"/>
+                  </td>
+               </tr>
+               <tr>
+                  <td colspan="1">2.</td>
+                  <td colspan="14">Less: Allowance to the extent exempt under section 10</td>
+               </tr>
+               <tr>
+                  <td colspan="1">(a)</td>
+                  <td colspan="6">Travel concession or assistance under section 10(5)</td>
+                  <td colspan="3" class="right">
+
+                  </td>
+                  <td colspan="3" class="right">
+                     Rs. <t t-esc="section10"/>
+                  </td>
+                  <td colspan="3" class="right">
+
+                  </td>
+               </tr>
+               <tr>
+                  <td colspan="1">(b)</td>
+                  <td colspan="6">Death-cum-retirement gratuity under section 10(10)</td>
+                  <td colspan="3" class="right">
+
+                  </td>
+                  <td colspan="3" class="right">
+                     Rs. <t t-esc="section10"/>
+                  </td>
+                  <td colspan="3" class="right">
+
+                  </td>
+               </tr>
+               <tr>
+                  <td colspan="1">(c)</td>
+                  <td colspan="6">Commuted value of pension under section 10(10A)</td>
+                  <td colspan="3" class="right">
+
+                  </td>
+                  <td colspan="3" class="right">
+                     Rs. <t t-esc="section10"/>
+                  </td>
+                  <td colspan="3" class="right">
+
+                  </td>
+               </tr>
+               <tr>
+                  <td colspan="1">(d)</td>
+                  <td colspan="6">Cash equivalent of leave salary encashment under section 10(10AA)</td>
+                  <td colspan="3" class="right">
+
+                  </td>
+                  <td colspan="3" class="right">
+                     Rs. <t t-esc="section10"/>
+                  </td>
+                  <td colspan="3" class="right">
+
+                  </td>
+               </tr>
+               <tr>
+                  <td colspan="1">(e)</td>
+                  <td colspan="6">House rent allowance under section 10(13A)</td>
+                  <td colspan="3" class="right">
+
+                  </td>
+                  <td colspan="3" class="right">
+                     Rs. <t t-esc="section10"/>
+                  </td>
+                  <td colspan="3" class="right">
+
+                  </td>
+               </tr>
+               <tr>
+                  <td colspan="1">(f)</td>
+                  <td colspan="6">Other special allowances under section 10(14)</td>
+                  <td colspan="3" class="right">
+
+                  </td>
+                  <td colspan="3" class="right">
+                     Rs. <t t-esc="section10"/>
+                  </td>
+                  <td colspan="3" class="right">
+
+                  </td>
+               </tr>
+               <tr>
+                  <td colspan="1">(g)</td>
+                  <td colspan="6">Amount of any other exemption under section 10</td>
+                  <td colspan="3" class="right">
+
+                  </td>
+                  <td colspan="3" class="right">
+                     Rs. <t t-esc="section10"/>
+                  </td>
+                  <td colspan="3" class="right">
+
+                  </td>
+               </tr>
+               <tr>
+                  <td colspan="1">(h)</td>
+                  <td colspan="6">Total amount of any other exemption under section 10</td>
+                  <td colspan="3" class="right">
+
+                  </td>
+                  <td colspan="3" class="right">
+                     Rs. <t t-esc="section10"/>
+                  </td>
+                  <td colspan="3" class="right">
+
+                  </td>
+               </tr>
+               <tr>
+                  <td colspan="1">(i)</td>
+                  <td colspan="6">Total amount of exemption claimed under section 10 [2(a) + 2(b) + 2(c) + 2(d) + 2(e) + 2(g) + 2(h)]</td>
+                  <td colspan="3" class="right">
+
+                  </td>
+                  <td colspan="3" class="right">
+
+                  </td>
+                  <td colspan="3" class="right">
+                     Rs. <t t-esc="section10"/>
+                  </td>
+               </tr>
+               <tr>
+                  <td colspan="1">3.</td>
+                  <td colspan="6">Total amount of salary received from current employer [1(d)-2(i)]</td>
+                  <td colspan="3" class="right bold">
+
+                  </td>
+                  <td colspan="3" class="right bold">
+
+                  </td>
+                  <td colspan="3" class="right bold">
+                     <t t-set="point_3" t-value="total_earnings - section10"/>
+                     Rs. <t t-esc="point_3"/>
+                  </td>
+               </tr>
+               <tr>
+                  <td colspan="1">4.</td>
+                  <td colspan="14">Less: Deductions under section 16</td>
+
+               </tr>
+               <tr>
+                  <td colspan="1">(a)</td>
+                  <td colspan="6">Standard deduction under section 16(ia)</td>
+                  <td colspan="3" class="right">
+
+                  </td>
+                  <td colspan="3" class="right">
+                     Rs. <t t-esc="standard_ded"/>
+                  </td>
+                  <td colspan="3" class="right">
+
+                  </td>
+               </tr>
+               <tr>
+                  <td colspan="1">(b)</td>
+                  <td colspan="6">Entertainment allowance under section 16(ii)</td>
+                  <td colspan="3" class="right">
+
+                  </td>
+                  <td colspan="3" class="right">
+                     Rs. <t t-esc="entertainment_allowance"/>
+                  </td>
+                  <td colspan="3" class="right">
+
+                  </td>
+               </tr>
+               <tr>
+                  <td colspan="1">(c)</td>
+                  <td colspan="6">Tax on employment under section 16(iii)</td>
+                  <td colspan="3" class="right">
+
+                  </td>
+                  <td colspan="3" class="right">
+                     Rs. <t t-esc="professional_tax"/>
+                  </td>
+                  <td colspan="3" class="right">
+
+                  </td>
+               </tr>
+               <tr>
+                  <td colspan="1">5.</td>
+                  <td colspan="6">Total amount of deductions under section 16 [4(a)+4(b)+4(c)]</td>
+                  <td colspan="3" class="right">
+
+                  </td>
+                  <td colspan="3" class="right">
+
+                  </td>
+                  <td colspan="3" class="right">
+                     <t t-set="point_5" t-value="professional_tax + 0 + standard_ded"/>
+                     Rs. <t t-esc="point_5"/>
+                  </td>
+               </tr>
+               <tr>
+                  <td colspan="1">6.</td>
+                  <td colspan="6">Income chargeable under the "head Salaries" [3+1(e)-5]</td>
+                  <td colspan="3" class="right bold">
+                  </td>
+                  <td colspan="3" class="right bold">
+                  </td>
+                  <td colspan="3" class="right bold">
+                     <t t-set="point_6" t-value="point_3 + previous_emp_income - point_5"/>
+                     Rs. <t t-esc="point_6"/>
+                  </td>
+               </tr>
+               <tr>
+                  <td colspan="1">7.</td>
+                  <td colspan="14">Add: Any other income reported by the employee under as per section 192 (2B)
+                  </td>
+
+               </tr>
+               <tr>
+                  <td colspan="1">(a)</td>
+                  <td colspan="6">Income (or admissible loss) from house property reported by employee offered for TDS</td>
+                  <td colspan="3" class="right">
+
+                  </td>
+                  <td colspan="3" class="right">
+                     Rs. <t t-esc="let_out_income_loss"/>
+                  </td>
+                  <td colspan="3" class="right">
+
+                  </td>
+               </tr>
+               <tr>
+                  <td colspan="1">(b)</td>
+                  <td colspan="6">Income under the head Other Sources offered for TDS</td>
+                  <td colspan="3" class="right">
+                  </td>
+                  <td colspan="3" class="right">
+                     Rs. <t t-esc="other_income"/>
+                  </td>
+                  <td colspan="3" class="right">
+                  </td>
+               </tr>
+               <tr>
+                  <td colspan="1">8.</td>
+                  <td colspan="6">Total amount of other income reported by the employee [7(a)+7(b)]</td>
+                  <td colspan="3" class="right bold">
+
+                  </td>
+                  <td colspan="3" class="right bold">
+                  </td>
+                  <td colspan="3" class="right bold">
+                     <t t-set="point_8" t-value="other_income + let_out_income_loss"/>
+                     Rs. <t t-esc="point_8"/>
+                  </td>
+               </tr>
+               <tr>
+                  <td colspan="1">9.</td>
+                  <td colspan="6">Gross total income (6+8)</td>
+                  <td colspan="3" class="right">
+
+                  </td>
+                  <td colspan="3" class="right">
+
+                  </td>
+                  <td colspan="3" class="right">
+                     <t t-set="point_9" t-value="point_8 + point_6"/>
+                     Rs. <t t-esc="point_8 + point_6"/>
+                  </td>
+               </tr>
+               <tr>
+                  <td colspan="1">10.</td>
+                  <td colspan="14">Deductions under Chapter VI-A
+                  </td>
+               </tr>
+               <tr>
+                  <td colspan="10"></td>
+                  <td colspan="3" class="right">
+                     Gross Amount
+                  </td>
+                  <td colspan="3" class="right">
+                     Deductible Amount
+                  </td>
+               </tr>
+
+               <tr>
+                  <td colspan="1">(a)</td>
+                  <td colspan="6">Deduction in respect of life insurance premia, contributions to provident fund
+                     etc. under section 80C</td>
+                  <td colspan="3" class="right">
+
+                  </td>
+                  <td colspan="3" class="right">
+                     <t t-set="sec_80c_total_total" t-value="sec_80c_total - ccc80_total"/>
+                     Rs. <t t-esc="sec_80c_total_total"/>
+                  </td>
+                  <td colspan="3" class="right">
+                     <t t-set="sec_80c_applicable_total" t-value="sec_80c_applicable - ccc80_applicable"/>
+                     Rs. <t t-esc="sec_80c_applicable_total"/>
+                  </td>
+               </tr>
+               <tr>
+                  <td colspan="1">(b)</td>
+                  <td colspan="6">Deduction in respect of contribution to certain pension funds under section 80CCC </td>
+                  <td colspan="3" class="right">
+
+                  </td>
+                  <td colspan="3" class="right">
+                     Rs. <t t-esc="ccc80_total"/>
+                  </td>
+                  <td colspan="3" class="right">
+                     Rs. <t t-esc="ccc80_applicable"/>
+                  </td>
+               </tr>
+               <tr>
+                  <td colspan="1">(c)</td>
+                  <td colspan="6">Deduction in respect of contribution by taxpayer to pension scheme under
+                     section 80CCD (1) </td>
+                  <td colspan="3" class="right">
+
+                  </td>
+                  <td colspan="3" class="right">
+                     Rs. <t t-esc="ccd80_1_total"/>
+                  </td>
+                  <td colspan="3" class="right">
+                     Rs. <t t-esc="ccc80_1_applicable"/>
+                  </td>
+               </tr>
+               <tr>
+                  <td colspan="1">(d)</td>
+                  <td colspan="6">Total deduction under section 80C, 80CCC and 80CCD(1)</td>
+                  <td colspan="3" class="right">
+
+                  </td>
+                  <td colspan="3" class="right">
+                     Rs. <t t-esc="sec_80c_applicable_total + ccc80_total + ccd80_1_total"/>
+                  </td>
+                  <td colspan="3" class="right">
+                     <t t-set="total_applicable" t-value="sec_80c_applicable_total + ccc80_applicable + ccc80_1_applicable"/>
+                     Rs. <t t-esc="total_applicable"/>
+                  </td>
+               </tr>
+               <tr>
+                  <td colspan="1">(e)</td>
+                  <td colspan="6">Deductions in respect of amount paid/deposited to a notified pension scheme
+                     under section 80CCD (1B)
+                     </td>
+                  <td colspan="3" class="right">
+
+                  </td>
+                  <td colspan="3" class="right">
+                     Rs. <t t-esc="total_80ccd1b"/>
+                  </td>
+                  <td colspan="3" class="right">
+                     Rs. <t t-esc="applicable_80ccd1b"/>
+                  </td>
+               </tr>
+               <tr>
+                  <td colspan="1">(f)</td>
+                  <td colspan="6">Deduction in respect of contribution by Employer to pension scheme under
+                     section 80CCD (2)</td>
+                  <td colspan="3" class="right">
+
+                  </td>
+                  <td colspan="3" class="right">
+                     Rs. <t t-esc="applicable_80ccd2"/>
+                  </td>
+                  <td colspan="3" class="right">
+                     Rs. <t t-esc="applicable_80ccd2"/>
+                  </td>
+               </tr>
+               <tr>
+                  <td colspan="1">(g)</td>
+                  <td colspan="6">Deduction in respect of health insurance premia under section 80D</td>
+                  <td colspan="3" class="right">
+
+                  </td>
+                  <td colspan="3" class="right">
+                    Rs.  <t t-esc="total_80d"/>
+                  </td>
+                  <td colspan="3" class="right">
+                     Rs. <t t-esc="applicable_80d"/>
+                  </td>
+               </tr>
+               <tr>
+                  <td colspan="1">(h)</td>
+                  <td colspan="6">Deduction in respect of interest on loan taken for higher education under
+                     section 80E</td>
+                  <td colspan="3" class="right">
+
+                  </td>
+                  <td colspan="3" class="right">
+                     Rs. <t t-esc="total_80e"/>
+                  </td>
+                  <td colspan="3" class="right">
+                     Rs. <t t-esc="total_80e"/>
+                  </td>
+               </tr>
+               <tr>
+                  <td colspan="1">(i)</td>
+                  <td colspan="6">Deduction in respect of contribution by the employee to Agnipath Scheme
+                     under section 80CCH</td>
+                  <td colspan="3" class="right">
+
+                  </td>
+                  <td colspan="3" class="right">
+                     Rs. <t t-esc="total_80cch"/>
+                  </td>
+                  <td colspan="3" class="right">
+                     Rs. <t t-esc="total_80cch"/>
+                  </td>
+               </tr>
+               <tr>
+                  <td colspan="1">(j)</td>
+                  <td colspan="6">Deduction in respect of contribution by the Central Government to Agnipath
+                     Scheme under section 80CCH</td>
+                  <td colspan="3" class="right">
+
+                  </td>
+                  <td colspan="3" class="right">
+                     Rs. <t t-esc="total_80cch_2"/>
+                  </td>
+                  <td colspan="3" class="right">
+                     Rs. <t t-esc="total_80cch_2"/>
+                  </td>
+               </tr>
+               <tr>
+                  <td colspan="7"></td>
+
+                  <td colspan="3" class="right">
+                     Gross Amount
+                  </td>
+                  <td colspan="3" class="right">
+                     Qualifying Amount
+                  </td>
+                  <td colspan="3" class="right">
+                     Deductible Amount
+                  </td>
+               </tr>
+               <tr>
+                  <td colspan="1">(k)</td>
+                  <td colspan="6">Total Deduction in respect of donations to certain funds, charitable
+                     institutions, etc. under section 80G
+                     </td>
+                  <td colspan="3" class="right">
+                     Rs. <t t-esc="total_80g"/>
+                  </td>
+                  <td colspan="3" class="right">
+                     Rs. <t t-esc="total_80g"/>
+                  </td>
+                  <td colspan="3" class="right">
+                     Rs. <t t-esc="total_80g"/>
+                  </td>
+               </tr>
+               <tr>
+                  <td colspan="1">(l)</td>
+                  <td colspan="6">Deduction in respect of interest on deposits in savings account under section
+                     80TTA</td>
+                  <td colspan="3" class="right">
+                     Rs. <t t-esc="total_80tta"/>
+                  </td>
+                  <td colspan="3" class="right">
+                    Rs. <t t-esc="applicable_80tta"/>
+                  </td>
+                  <td colspan="3" class="right">
+                     Rs. <t t-esc="applicable_80tta"/>
+                  </td>
+               </tr>
+               <tr>
+                  <td colspan="1">(m)</td>
+                  <td colspan="15">Amount deductible under any other provision(s) of Chapter VI-A</td>
+               </tr>
+               <tr>
+                  <td colspan="1">(n)</td>
+                  <td colspan="6">Total of amount deductible under any other provision(s) of
+                     Chapter VI-A</td>
+                  <td colspan="3" class="right">
+                     Rs. <t t-esc="total_other_ded_vi_a"/>
+                  </td>
+                  <td colspan="3" class="right">
+                     Rs. <t t-esc="total_other_ded_vi_a"/>
+                  </td>
+                  <td colspan="3" class="right">
+                     Rs. <t t-esc="applicable_other_ded_vi_a"/>
+                  </td>
+               </tr>
+               <tr>
+                  <td colspan="1">11.</td>
+                  <td colspan="6">Aggregate of deductible amount under Chapter VI-A
+                     [10(d)+10(e)+10(f)+10(g)+10(h)+10(i)+10(j)+10(k)+10(l)+10(n)]
+                     </td>
+                  <td colspan="3" class="right bold">
+
+                  </td>
+                  <td colspan="3" class="right bold">
+
+                  </td>
+                  <td colspan="3" class="right bold">
+                     <t t-set="chapter_vi_a_aggregate" t-value="total_applicable + applicable_80ccd1b + applicable_80ccd2 + applicable_80d + total_80e + total_80cch + total_80cch_2 + total_80g + applicable_80tta + applicable_other_ded_vi_a"/>
+                     Rs. <t t-esc="chapter_vi_a_aggregate"/>
+                  </td>
+               </tr>
+               <tr>
+                  <td colspan="1">12.</td>
+                  <td colspan="6">Total taxable income (9–11)</td>
+                  <td colspan="3" class="right bold">
+
+                  </td>
+                  <td colspan="3" class="right bold">
+
+                  </td>
+                  <td colspan="3" class="right bold">
+                     Rs. <t t-esc="point_9 - chapter_vi_a_aggregate"/>
+                  </td>
+               </tr>
+               <tr>
+                  <td colspan="1">13.</td>
+                  <td colspan="6">Tax on total income </td>
+                  <td colspan="3" class="right bold">
+
+                  </td>
+                  <td colspan="3" class="right bold">
+
+                  </td>
+                  <td colspan="3" class="right bold">
+                     Rs. <t t-esc="tax_on_income"/>
+                  </td>
+               </tr>
+               <tr>
+                  <td colspan="1">14.</td>
+                  <td colspan="6">Rebate under section 87A, if applicable</td>
+                  <td colspan="3" class="right bold"/>
+                  <td colspan="3" class="right bold"/>
+                  <td colspan="3" class="right bold">Rs. <t t-esc="rebate"/></td>
+               </tr>
+               <tr>
+                  <td colspan="1">15</td>
+                  <td colspan="6">Surcharge, wherever applicable</td>
+                  <td colspan="3" class="right bold">
+
+                  </td>
+                  <td colspan="3" class="right bold">
+
+                  </td>
+                  <td colspan="3" class="right bold">
+                     Rs. <t t-esc="total_surchargen"/>
+                  </td>
+               </tr>
+               <tr>
+                  <td colspan="1">16</td>
+                  <td colspan="6">Health and education cess @ 4</td>
+                  <td colspan="3" class="right bold">
+
+                  </td>
+                  <td colspan="3" class="right bold">
+
+                  </td>
+                  <td colspan="3" class="right bold">
+                     Rs. <t t-esc="total_cessn"/>
+                  </td>
+               </tr>
+               <tr>
+                  <td colspan="1">17</td>
+                  <td colspan="6">Tax payable (13+15+16-14)</td>
+                  <td colspan="3" class="right bold">
+
+                  </td>
+                  <td colspan="3" class="right bold">
+
+                  </td>
+                  <td colspan="3" class="right bold">
+                     <t t-set="point_17" t-value="tax_on_income + total_surchargen + total_cessn"/>
+                     Rs. <t t-esc="point_17"/>
+                  </td>
+               </tr>
+               <tr>
+                  <td colspan="1">18</td>
+                  <td colspan="6">Less: Relief under section 89 (attach details)</td>
+                  <td colspan="3" class="right bold">
+
+                  </td>
+                  <td colspan="3" class="right bold">
+
+                  </td>
+                  <td colspan="3" class="right bold">
+                     Rs. 0
+                  </td>
+               </tr>
+               <tr>
+                  <td colspan="1">19</td>
+                  <td colspan="6"><i>Less : Tax deducted/ collected at source as per Form No. 12BAA submitted
+                     under provisions of section 192(2B)
+                     </i></td>
+                  <td colspan="3" class="right bold">
+
+                  </td>
+                  <td colspan="3" class="right bold">
+
+                  </td>
+                  <td colspan="3" class="right bold">
+                     Rs. <t t-esc="tds_deducated"/>
+                  </td>
+               </tr>
+               <tr>
+                  <td colspan="1">20.</td>
+                  <td colspan="6">Net tax payable (17-18-19)</td>
+                  <td colspan="3" class="right bold">
+
+                  </td>
+                  <td colspan="3" class="right bold">
+
+                  </td>
+                  <td colspan="3" class="right bold">
+                     <t t-esc="point_17 - 0 - tds_deducated"/>
+                  </td>
+               </tr>
+               <!-- Verification section -->
+               <tr>
+                  <td colspan="15" class="center bold">
+                     <h3>Verification</h3>
+                  </td>
+               </tr>
+               <tr>
+                  <td colspan="15">
+                     <p>
+                        I,
+                        <strong>
+                           <t t-esc="employee.name"/>
+                        </strong>
+                        son of
+                        <t t-esc="employee.name"/>
+                        working in the capacity of
+                        <strong>
+                           <t t-esc="employee.job_title"/>
+                        </strong>
+                        (designation) do hereby certify that the information given above is true, complete and correct and is based on the books of account, documents, TDS statements, TDS deposited and other available records.
+                     </p>
+                  </td>
+               </tr>
+               <tr>
+                  <td colspan="2">Place</td>
+                  <td colspan="4" class="bold">
+                     <t t-esc="company.city"/>
+                  </td>
+                  <td colspan="9" rowspan="2" class="text-center">
+                     Signature of person responsible for deduction of tax
+                  </td>
+               </tr>
+               <tr>
+                  <td colspan="2">Date</td>
+                  <td colspan="4" class="bold">
+                     <t t-esc="current_date.strftime('%d-%m-%Y')"/>
+                  </td>
+               </tr>
+               <tr>
+                  <td colspan="3">Designation:</td>
+                  <td colspan="3" class="bold">
+                     <t t-esc="employee.job_title"/>
+                  </td>
+                  <td colspan="2">Full Name:</td>
+                  <td colspan="7" class="bold">
+                     <t t-esc="employee.name"/>
+                  </td>
+               </tr>
+
+            </tbody>
+         </table>
+      </div>
+
+        </t>
+    </template>
+    <record id="action_report_form16" model="ir.actions.report">
+        <field name="name">Form 16</field>
+        <field name="model">indian.form16</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">indian_form16.form16_report_template</field>
+        <field name="report_file">indian_form16.form16_report_template</field>
+        <field name="binding_model_id" ref="model_indian_form16"/>
+        <field name="binding_type">report</field>
+    </record>
+</odoo>

@@ -170,7 +170,7 @@ QUnit.test("rendering with PWA installation request", async (assert) => {
     );
     assert.strictEqual(
         target.querySelector(".o-mail-NotificationItem-text").textContent,
-        "Come here often? Install Odoo on your device!"
+        "Come here often? Install Effezient on your device!"
     );
 
     await click(".o-mail-NotificationItem a.btn-primary");

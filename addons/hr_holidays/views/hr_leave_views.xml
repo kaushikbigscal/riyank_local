@@ -39,7 +39,7 @@
         <field name="name">hr.holidays.filter</field>
         <field name="model">hr.leave</field>
         <field name="arch" type="xml">
-            <search string="Search Time Off">
+            <search string="Search Leave">
                 <field name="employee_id"/>
                 <field name="holiday_status_id"/>
                 <field name="name"/>
@@ -70,8 +70,8 @@
                 <filter domain="[('state', '=', 'validate1')]" string="Second Approval" name="second_approval"/>
                 <filter string="Approved" domain="[('state', '=', 'validate')]" name="validated"/>
                 <separator/>
-                <filter string="My Time Off" name="my_leaves" domain="[('employee_id.user_id', '=', uid)]"/>
-                <filter string="My Team" name="my_team" domain="['|', ('employee_id.leave_manager_id', '=', uid), ('employee_id.user_id', '=', uid)]" help="Time off of people you are manager of"/>
+                <filter string="My Leave" name="my_leaves" domain="[('employee_id.user_id', '=', uid)]"/>
+                <filter string="My Team" name="my_team" domain="['|', ('employee_id.leave_manager_id', '=', uid), ('employee_id.user_id', '=', uid)]" help="Leave of people you are manager of"/>
                 <filter string="My Department" name="department"
                         domain="[('employee_id.member_of_department', '=', True)]"
                         help="My Department"/>
@@ -81,9 +81,9 @@
                 <filter name="filter_date_from" date="date_from" default_period="this_year" string="Current Year"/>
                 <separator/>
                 <filter name="active_time_off" string="Active"
-                    domain="[('holiday_status_id.active', '=', True)]" help="Active Time Off"/>
+                    domain="[('holiday_status_id.active', '=', True)]" help="Active Leave"/>
                 <filter name="archive" string="Archived"
-                    domain="[('holiday_status_id.active', '=', False)]" help="Archived Time Off"/>
+                    domain="[('holiday_status_id.active', '=', False)]" help="Archived Leave"/>
                 <separator/>
                 <filter name="archived_leaves" string="Cancelled" domain="[('active', '=', False)]" />
                 <filter invisible="1" string="Late Activities" name="activities_overdue"
@@ -126,7 +126,7 @@
                 <field name="supported_attachment_ids_count"/>
                 <templates>
                     <t t-name="kanban-menu" groups="base.group_user">
-                        <a t-if="widget.editable" role="menuitem" type="edit" class="dropdown-item">Edit Time Off</a>
+                        <a t-if="widget.editable" role="menuitem" type="edit" class="dropdown-item">Edit Leave</a>
                         <a t-if="widget.deletable" role="menuitem" type="delete" class="dropdown-item">Delete</a>
                     </t>
                     <t t-name="kanban-box">
@@ -212,7 +212,7 @@
         <field name="name">hr.leave.view.activity</field>
         <field name="model">hr.leave</field>
         <field name="arch" type="xml">
-            <activity string="Time Off Request">
+            <activity string="Leave Request">
                 <field name="employee_id"/>
                 <templates>
                     <div t-name="activity-box">
@@ -238,7 +238,7 @@
         <field name="model">hr.leave</field>
         <field name="priority">32</field>
         <field name="arch" type="xml">
-            <form string="Time Off Request" class="o_hr_leave_form">
+            <form string="Leave Request" class="o_hr_leave_form">
             <field name="active" invisible="1"/>
             <field name="can_reset" invisible="1"/>
             <field name="can_approve" invisible="1"/>
@@ -319,12 +319,12 @@
                                     options="{'end_date_field': 'request_date_to'}"/>
                                 <field name="request_date_to" invisible="1" />
                             </div>
-                            <label for="request_unit_half" string="" invisible="leave_type_request_unit == 'day'"/>
+                            <label for="request_unit_half" class="small-label" string="" invisible="leave_type_request_unit == 'day'"/>
                             <div class="o_row o_row_readonly oe_edit_only" style="margin-left: -2px;" invisible="leave_type_request_unit == 'day'">
                                 <field name="request_unit_half" class="oe_inline" invisible="leave_type_request_unit == 'day'" readonly="state not in ('draft', 'confirm')" />
-                                <label for="request_unit_half" invisible="leave_type_request_unit == 'day'" />
+                                <label for="request_unit_half" class="small-label" invisible="leave_type_request_unit == 'day'" />
                                 <field name="request_unit_hours" invisible="leave_type_request_unit != 'hour'" readonly="state not in ('draft', 'confirm')" class="ms-5" />
-                                <label for="request_unit_hours" invisible="leave_type_request_unit != 'hour'" />
+                                <label for="request_unit_hours" class="small-label" invisible="leave_type_request_unit != 'hour'" />
                             </div>
                             <label for="request_hour_from" string="" invisible="not request_unit_hours"/>
                             <div class="o_row o_row_readonly" invisible="not request_unit_hours">
@@ -353,7 +353,7 @@
                     </div>
                 </div>
                 <div name="duration_warning" invisible="not leave_type_increases_duration" class="alert alert-warning mb-0" role="alert">
-                    <span >You can only take this time off in whole days, so if your schedule has half days, it won't be used efficiently.</span>
+                    <span >You can only take this Leave in whole days, so if your schedule has half days, it won't be used efficiently.</span>
                 </div>
             </sheet>
             <div class="o_attachment_preview"/>
@@ -407,7 +407,7 @@
         <field name="model">hr.leave</field>
         <field name="arch" type="xml">
             <calendar js_class="time_off_calendar_dashboard"
-                    string="Time Off Request"
+                    string="Leave Request"
                     form_view_id="%(hr_holidays.hr_leave_view_form_dashboard_new_time_off)d"
                     event_open_popup="true"
                     date_start="date_from"
@@ -432,7 +432,7 @@
         <field name="name">hr.leave.view.dashboard</field>
         <field name="model">hr.leave</field>
         <field name="arch" type="xml">
-            <calendar string="Time Off Request"
+            <calendar string="Leave Request"
                     js_class="time_off_calendar_dashboard"
                     form_view_id="%(hr_holidays.hr_leave_view_form_dashboard_new_time_off)d"
                     event_open_popup="true"
@@ -491,7 +491,7 @@
         <field name="model">hr.leave</field>
         <field name="arch" type="xml">
             <calendar js_class="time_off_calendar"
-                    string="Time Off Request"
+                    string="Leave Request"
                     form_view_id="%(hr_holidays.hr_leave_view_form_dashboard_new_time_off)d"
                     event_open_popup="true"
                     date_start="date_from"
@@ -514,7 +514,7 @@
         <field name="name">hr.holidays.view.tree</field>
         <field name="model">hr.leave</field>
         <field name="arch" type="xml">
-            <tree string="Time Off Requests" sample="1">
+            <tree string="Leave Requests" sample="1">
                 <field name="employee_id" column_invisible="True" readonly="state in ['cancel', 'refuse', 'validate', 'validate1']" />
                 <field name="all_employee_ids" widget="many2many_tags_avatar" decoration-muted="not active_employee" string="Employees" />
                 <field name="department_id" optional="hidden" readonly="state in ['cancel', 'refuse', 'validate', 'validate1']"/>
@@ -525,6 +525,8 @@
                 <field name="date_to" readonly="state in ['cancel', 'refuse', 'validate', 'validate1']"/>
                 <field name="duration_display" string="Duration"/>
                 <field name="state" widget="badge" decoration-info="state == 'draft'" decoration-warning="state in ('confirm','validate1')" decoration-success="state == 'validate'"/>
+                <field name="create_date" string="Creation DateTime"/>
+                <field name="leave_manager_id"/>
                 <field name="active_employee" column_invisible="True"/>
                 <field name="category_id" column_invisible="True" readonly="state not in ['confirm', 'draft']"/>
                 <field name="user_id" column_invisible="True"/>
@@ -540,7 +542,7 @@
                 <button string="Refuse" name="action_refuse" type="object"
                     icon="fa-times"
                     invisible="state not in ('confirm', 'validate1')"
-                    groups="hr_holidays.group_hr_holidays_user"/>
+                    groups="hr_holidays.group_hr_holidays_user, hr_holidays.group_hr_holidays_responsible"/>
                 <field name="activity_exception_decoration" widget="activity_exception"/>
             </tree>
         </field>
@@ -630,7 +632,7 @@
             <p class="o_view_nocontent_smiling_face">
                 Keep track of your PTOs.
             </p><p>
-                A great way to keep track on your time off requests, sick days, and approval status.
+                A great way to keep track on your Leave requests, sick days, and approval status.
             </p>
         </field>
     </record>
@@ -657,7 +659,7 @@
     </record>
 
     <record id="hr_leave_action_my_request" model="ir.actions.act_window">
-        <field name="name">Time Off Request</field>
+        <field name="name">Leave Request</field>
         <field name="res_model">hr.leave</field>
         <field name="view_mode">form</field>
         <field name="target">new</field>
@@ -681,7 +683,7 @@
     </record>
 
     <record id="hr_leave_action_my" model="ir.actions.act_window">
-        <field name="name">My Time Off</field>
+        <field name="name">My Leave</field>
         <field name="res_model">hr.leave</field>
         <field name="view_mode">tree,form,kanban,activity</field>
         <field name="context">{}</field>
@@ -693,7 +695,7 @@
             <p class="o_view_nocontent_smiling_face">
                 Keep track of your PTOs.
             </p><p>
-                A great way to keep track on your time off requests, sick days, and approval status.
+                A great way to keep track on your Leave requests, sick days, and approval status.
             </p>
         </field>
     </record>
@@ -713,7 +715,7 @@
     </record>
 
     <record id="hr_leave_action_action_approve_department" model="ir.actions.act_window">
-        <field name="name">All Time Off</field>
+        <field name="name">All Leave</field>
         <field name="res_model">hr.leave</field>
         <field name="view_mode">tree,kanban,form,calendar,activity</field>
         <field name="search_view_id" ref="hr_holidays.hr_leave_view_search_manager"/>
@@ -728,7 +730,7 @@
                                     ('employee_ids.company_id', 'in', allowed_company_ids)]</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
-                Meet the time off dashboard.
+                Meet the Leave dashboard.
             </p><p>
                 A great way to keep track on employee’s PTOs, sick days, and approval status.
             </p>
@@ -736,7 +738,7 @@
     </record>
 
     <record id="hr_leave_action_holiday_allocation_id" model="ir.actions.act_window">
-        <field name="name">Time Off</field>
+        <field name="name">Leave</field>
         <field name="res_model">hr.leave</field>
         <field name="view_mode">tree,kanban,form,calendar,activity</field>
         <field name="search_view_id" ref="hr_holidays.hr_leave_view_search_manager"/>
@@ -746,7 +748,7 @@
         </field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
-                Meet the time off dashboard.
+                Meet the Leave dashboard.
             </p><p>
                 A great way to keep track on employee’s PTOs, sick days, and approval status.
             </p>
@@ -785,7 +787,7 @@
     </record>
 
     <record id="hr_leave_action_action_department" model="ir.actions.act_window">
-        <field name="name">Time Off Analysis</field>
+        <field name="name">Leave Analysis</field>
         <field name="res_model">hr.leave</field>
         <field name="view_mode">graph,pivot</field>
         <field name="context">{
@@ -805,7 +807,7 @@
         <field name="model">hr.leave</field>
         <field name="priority">20</field>
         <field name="arch" type="xml">
-            <pivot string="Time Off Summary" sample="1">
+            <pivot string="Leave Summary" sample="1">
                 <field name="employee_id" type="row"/>
                 <field name="date_from" type="col"/>
                 <field name="number_of_days" type="measure"/>
@@ -818,7 +820,7 @@
         <field name="model">hr.leave</field>
         <field name="priority">20</field>
         <field name="arch" type="xml">
-            <graph string="Time Off Summary" sample="1">
+            <graph string="Leave Summary" sample="1">
                 <field name="employee_id"/>
                 <field name="number_of_days" type="measure"/>
             </graph>
@@ -830,7 +832,7 @@
         <field name="model">hr.leave</field>
         <field name="priority">20</field>
         <field name="arch" type="xml">
-            <tree string="Time Off Summary" sample="1">
+            <tree string="Leave Summary" sample="1">
                 <field name="employee_id"/>
                 <field name="number_of_days" string="Number of Days" type="measure"/>
                 <field name="date_from"/>
@@ -854,7 +856,7 @@
     </record>
 
     <record id="action_hr_available_holidays_report" model="ir.actions.act_window">
-        <field name="name">Time Off Analysis</field>
+        <field name="name">Leave Analysis</field>
         <field name="res_model">hr.leave</field>
         <field name="view_mode">tree,graph,pivot,calendar,form</field>
         <field name="search_view_id" ref="hr_leave_report_search_view"/>

@@ -15,10 +15,10 @@ class AccrualPlan(models.Model):
 
     active = fields.Boolean(default=True)
     name = fields.Char('Name', required=True)
-    time_off_type_id = fields.Many2one('hr.leave.type', string="Time Off Type",
+    time_off_type_id = fields.Many2one('hr.leave.type', string="Leave Type",
         check_company=True,
-        help="""Specify if this accrual plan can only be used with this Time Off Type.
-                Leave empty if this accrual plan can be used with any Time Off Type.""")
+        help="""Specify if this accrual plan can only be used with this Leave Type.
+                Leave empty if this accrual plan can be used with any Leave Type.""")
     employees_count = fields.Integer("Employees", compute='_compute_employee_count')
     level_ids = fields.One2many('hr.leave.accrual.level', 'accrual_plan_id', copy=True, string="Milestone")
     allocation_ids = fields.One2many('hr.leave.allocation', 'accrual_plan_id')

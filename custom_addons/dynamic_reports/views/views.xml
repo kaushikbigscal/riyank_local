@@ -1,0 +1,74 @@
+<odoo>
+    <data>
+    <record id="xml_upload_tree" model="ir.ui.view">
+        <field name="name">Uploaded XML File Tree</field>
+        <field name="model">xml.upload</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="xml_file"/>
+            </tree>
+        </field>
+    </record>
+
+<record id="xml_upload_form" model="ir.ui.view">
+    <field name="name">Uploaded XML File Form</field>
+    <field name="model">xml.upload</field>
+    <field name="arch" type="xml">
+        <form>
+            <sheet>
+                <group col="2">
+
+                    <group>
+                        <field name="name" string="File Name"/>
+                        <field name="xml_file" string="File"/>
+                        <field name="model_id" string="Model"/>
+
+                        <field name="report_action" string="Report Template"/>
+
+
+                            <button
+                                    string="Code"
+                                    type="object"
+                                    name="upload_and_parse_xml"
+                                    class="btn-primary"
+                                    />
+
+
+                            <button
+                                    type="object"
+                                    name="download_report"
+                                    class="btn-primary"
+                                    icon="fa-download"
+                                    style="margin-left: 10px;"/>
+
+                    </group>
+
+<sheet>
+                    <group>
+                        <field name="xml_content"
+                               widget="text"
+                               readonly="0"
+                               style="min-height: 350px; width: 100%;"/>
+                    </group>
+</sheet>
+                </group>
+            </sheet>
+        </form>
+    </field>
+</record>
+
+
+
+    <record id="xml_upload_mapping" model="ir.actions.act_window">
+        <field name="name">Custom XML</field>
+        <field name="res_model">xml.upload</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="xml_upload_mapping_root"
+              name="Dynamic Report"
+              sequence="11"
+              action="dynamic_reports.xml_upload_mapping"/>
+    </data>
+</odoo>

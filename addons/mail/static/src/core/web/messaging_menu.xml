@@ -4,7 +4,9 @@
 <t t-name="mail.MessagingMenu">
     <Dropdown t-if="!env.inDiscussApp" autoOpen="false" beforeOpen.bind="beforeOpen" onStateChanged="state => this.state.isOpen = state.open" position="'bottom-end'" menuClass="discussSystray.menuClass" class="discussSystray.class">
         <t t-set-slot="toggler">
-            <i class="fa fa-lg fa-comments" role="img" aria-label="Messages" t-on-click="() => store.discuss.activeTab = ui.isSmall and store.discuss.activeTab === 'main' ? 'main' : store.discuss.activeTab"></i>
+            <i class="fa fa-bell"
+               style="color: white; display: flex; justify-content: center; align-items: center; height: 100%; padding: 5px;"
+               aria-label="Reminders" t-on-click="() => store.discuss.activeTab = ui.isSmall and store.discuss.activeTab === 'main' ? 'main' : store.discuss.activeTab"/>
             <span t-if="counter" class="o-mail-MessagingMenu-counter badge rounded-pill"><t t-esc="counter"/></span>
         </t>
         <t t-set-slot="default">

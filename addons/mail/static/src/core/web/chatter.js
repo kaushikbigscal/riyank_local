@@ -225,6 +225,16 @@ export class Chatter extends Component {
         return this.state.thread?.attachments ?? [];
     }
 
+    get checklistAttachments() {
+        return this.attachments.filter(att => att.name.startsWith("Checklist"));
+    }
+
+    get normalAttachments() {
+        return this.attachments.filter(att => !att.name.startsWith("Checklist"));
+    }
+
+
+
     /**
      * @returns {string}
      */

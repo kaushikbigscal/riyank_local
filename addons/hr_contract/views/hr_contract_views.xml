@@ -37,34 +37,34 @@
                 <data>
                     <div name="button_box" position="inside">
                         <field name="contract_warning" invisible="1"/>
-                        <field name="employee_type" invisible="1"/>
+                        <field name="employee_type" invisible="0"/>
                         <button name="action_open_contract"
                             class="oe_stat_button"
                             icon="fa-book"
                             type="object"
                             groups="hr_contract.group_hr_contract_manager"
                             context="{'default_employee_id': id}"
-                            invisible="employee_type not in ['employee', 'student', 'trainee']">
-                            <div invisible="not first_contract_date" class="o_stat_info">
-                                <span class="o_stat_text text-success" invisible="contract_warning" title="In Contract Since"> In Contract Since</span>
-                                <span class="o_stat_value text-success" invisible="contract_warning">
+                            >
+                            <div  class="o_stat_info">
+                                <span class="o_stat_text text-success" title="In Contract Since"> In Contract Since</span>
+                                <span class="o_stat_value text-success" >
                                     <field name="first_contract_date" readonly="1"/>
                                 </span>
-                                <span class="o_stat_text text-danger" invisible="not contract_warning" title="In Contract Since">
+                                <span class="o_stat_text text-danger" title="In Contract Since">
                                     In Contract Since
                                 </span>
-                                <span class="o_stat_value text-danger" invisible="not contract_warning">
+                                <span class="o_stat_value text-danger" >
                                     <field name="first_contract_date" readonly="1"/>
                                 </span>
                             </div>
-                            <div invisible="first_contract_date" class="o_stat_info">
+                            <div  class="o_stat_info">
                                 <span class="o_stat_value text-danger">
                                     <field name="contracts_count"/>
                                 </span>
-                                <span invisible="contracts_count != 1" class="o_stat_text text-danger" >
+                                <span class="o_stat_text text-danger" >
                                     Contract
                                 </span>
-                                <span invisible="contracts_count == 1" class="o_stat_text text-danger">
+                                <span  class="o_stat_text text-danger">
                                     Contracts
                                 </span>
                             </div>
@@ -232,7 +232,7 @@
                                     <group name="salary">
                                         <label for="wage"/>
                                         <div class="o_row mw-50" name="wage">
-                                            <field name="wage" class="oe_inline o_hr_narrow_field" nolabel="1"/>
+                                            <field name="wage" string="Gross Salary" class="oe_inline o_hr_narrow_field" nolabel="1"/>
                                             <div class="mb-3" name="wage_period_label">/ month</div>
                                         </div>
                                     </group>
@@ -390,7 +390,7 @@
             parent="hr.menu_hr_employee_payroll"
             sequence="6"
             groups="hr_contract.group_hr_contract_manager"/>
-        
+
         <record id="hr.menu_resource_calendar_view" model="ir.ui.menu">
             <field name="parent_id" ref="menu_human_resources_configuration_contract"/>
         </record>

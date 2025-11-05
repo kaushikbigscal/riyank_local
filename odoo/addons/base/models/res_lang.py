@@ -13,7 +13,7 @@ from odoo.exceptions import UserError, ValidationError
 
 _logger = logging.getLogger(__name__)
 
-DEFAULT_DATE_FORMAT = '%m/%d/%Y'
+DEFAULT_DATE_FORMAT = '%d/%m/%Y'
 DEFAULT_TIME_FORMAT = '%H:%M:%S'
 
 

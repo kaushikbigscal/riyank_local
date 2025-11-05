@@ -57,6 +57,11 @@
                                     <span class="ms-1" t-out="view.name"/>
                                 </DropdownItem>
                             </t>
+
+                            <DropdownItem onSelected="() => this.refreshPage()">
+                                <i class="fa fa-refresh oi-fw"/>
+                                <span class="ms-1">Refresh</span>
+                            </DropdownItem>
                         </Dropdown>
                         <nav class="o_cp_switch_buttons d-print-none d-none d-xl-inline-flex btn-group">
                             <t t-foreach="env.config.viewSwitcherEntries" t-as="view" t-key="view.type">
@@ -68,8 +73,13 @@
                                     <i t-att-class="view.icon" />
                                 </button>
                             </t>
+
+                            <button class="btn btn-secondary o_switch_view" type="button" t-on-click="() => this.refreshPage()">
+                                <i class="fa fa-refresh"/>
+                            </button>
+
                         </nav>
-                    </t>
+                       </t>
                     <t t-slot="control-panel-navigation-additional"/>
                 </div>
             </div>

@@ -2,7 +2,7 @@
 <odoo>
 
     <record id="action_report_holidayssummary" model="ir.actions.report">
-        <field name="name">Time Off Summary</field>
+        <field name="name">Leaves Summary</field>
         <field name="model">hr.leave.allocation</field>
         <field name="report_type">qweb-pdf</field>
         <field name="report_name">hr_holidays.report_holidayssummary</field>

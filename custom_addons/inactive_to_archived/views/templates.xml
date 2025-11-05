@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<!--<record id="view_employee_tree_inactive" model="ir.ui.view">-->
+<!--    <field name="name">hr.employee.tree.inactive</field>-->
+<!--    <field name="model">hr.employee</field>-->
+<!--    <field name="arch" type="xml">-->
+<!--        <tree string="Employees">-->
+<!--            &lt;!&ndash; Your existing employee list fields &ndash;&gt;-->
+<!--            <button name="%(INACTIVE)d" string="Mark as Inactive" type="action" class="oe_highlight"/>-->
+<!--        </tree>-->
+<!--    </field>-->
+<!--</record>-->
+
+
+
+</odoo>

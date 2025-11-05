@@ -17,30 +17,36 @@ export class ProjectTaskStateSelection extends StateSelectionField {
             isStateButtonHighlighted: false,
         });
         this.icons = {
-            "01_in_progress": "o_status",
-            "03_approved": "o_status o_status_green",
-            "02_changes_requested": "fa fa-lg fa-exclamation-circle",
-            "1_done": "fa fa-lg fa-check-circle",
-            "1_canceled": "fa fa-lg fa-times-circle",
-            "04_waiting_normal": "fa fa-lg fa-hourglass-o",
+             "05_not_started": "fa fa-lg fa-circle-o",
+             "01_in_progress": "o_status",
+             "03_approved": "o_status o_status_green",
+             "02_changes_requested": "fa fa-lg fa-exclamation-circle",
+             "04_waiting_for_customer": "fa fa-lg fa-circle",
+             "1_done": "fa fa-lg fa-check-circle",
+             "1_canceled": "fa fa-lg fa-times-circle",
+             "04_waiting_normal": "fa fa-lg fa-hourglass-o",
         };
         this.colorIcons = {
-            "01_in_progress": "",
-            "03_approved": "text-success",
-            "02_changes_requested": "o_status_changes_requested",
-            "1_done": "text-success",
-            "1_canceled": "text-danger",
-            "04_waiting_normal": "",
-        };
+             "05_not_started": "o_not_started",
+             "01_in_progress": "",
+             "03_approved": "text-success",
+             "02_changes_requested": "o_status_changes_requested",
+             "04_waiting_for_customer": "o_waiting_for_customer",
+             "1_done": "text-success",
+             "1_canceled": "text-danger",
+             "04_waiting_normal": "",
+        };       
         this.colorButton = {
-            "01_in_progress": "btn-outline-secondary",
-            "03_approved": "btn-outline-success",
-            "02_changes_requested": "btn-outline-warning",
-            "1_done": "btn-outline-success",
-            "1_canceled": "btn-outline-danger",
-            "04_waiting_normal": "btn-outline-secondary",
-        };
-        if (this.props.viewType != 'form') {
+             "05_not_started": "btn-outline-dark",
+             "01_in_progress": "btn-outline-secondary",
+             "03_approved": "btn-outline-success",
+             "02_changes_requested": "btn-outline-warning",
+             "04_waiting_for_customer": "btn-outline-info",
+             "1_done": "btn-outline-success",
+             "1_canceled": "btn-outline-danger",
+             "04_waiting_normal": "btn-outline-secondary",
+        };  
+      if (this.props.viewType != 'form') {
             super.setup();
         } else {
             const commandName = _t("Set state as...");
@@ -79,12 +85,14 @@ export class ProjectTaskStateSelection extends StateSelectionField {
         const currentState = this.props.record.data[this.props.name];
         if (currentState != "04_waiting_normal") {
             return [
-                ["01_in_progress", _t("In Progress")],
-                ["02_changes_requested", _t("Changes Requested")],
-                ["03_approved", _t("Approved")],
-                ...options,
-            ];
-        }
+		 ["05_not_started", _t("Not Started")],
+                 ["01_in_progress", _t("In Progress")],
+                 ["02_changes_requested", _t("Changes Requested")],
+                 ["03_approved", _t("Approved")],
+                 ["04_waiting_for_customer",_t("Waiting For Customer")],
+                 ...options,
+                ];
+          }
         return options;
     }
 

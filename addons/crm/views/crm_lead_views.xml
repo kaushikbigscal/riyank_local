@@ -56,7 +56,7 @@
                                         <field name="company_currency" invisible="1"/>
                                         <field name="expected_revenue" class="o_input_13ch" widget='monetary' options="{'currency_field': 'company_currency'}"/>
                                         <span class="oe_grey p-2" groups="crm.group_use_recurring_revenues"> + </span>
-                                        <span class="oe_grey p-2" groups="!crm.group_use_recurring_revenues"> at </span>
+<!--                                        <span class="oe_grey p-2" groups="!crm.group_use_recurring_revenues"> at </span>-->
                                         <div class="d-flex align-items-baseline gap-3" groups="crm.group_use_recurring_revenues">
                                             <field name="recurring_revenue" class="o_input_10ch" widget="monetary" options="{'currency_field': 'company_currency'}"/>
                                             <div class="d-flex align-items-baseline">
@@ -68,15 +68,15 @@
                                     </div>
                                 </div>
                                 <div class="col-auto">
-                                    <label for="probability" class="d-inline-block"/>
+                                    <label for="probability" class="d-inline-block" invisible="1"/>
                                     <button class="d-inline-block px-2 py-0 btn btn-link" name="action_set_automated_probability" type="object"
-                                            invisible="is_automated_probability">
+                                            invisible="is_automated_probability or True">
                                         <i class="fa fa-gear" role="img" title="Switch to automatic probability" aria-label="Switch to automatic probability"></i>
                                     </button>
-                                    <small class="d-inline-block oe_grey h6 mb-0" invisible="is_automated_probability">
+                                    <small class="d-inline-block oe_grey h6 mb-0" invisible="is_automated_probability or True">
                                         <field class="mb-0" name="automated_probability" force_save="1"/> %
                                     </small>
-                                    <div id="probability" class="d-flex align-items-baseline">
+                                    <div id="probability" class="d-flex align-items-baseline" invisible="1">
                                         <field name="is_automated_probability" invisible="1"/>
                                         <field name="probability" widget="float" class="oe_inline o_input_6ch"/>
                                         <span class="oe_grey p-2"> %</span>
@@ -118,7 +118,7 @@
                                     <field name="zip" placeholder="ZIP" class="o_address_zip"/>
                                     <field name="country_id" placeholder="Country" class="o_address_country" options='{"no_open": True, "no_create": True}'/>
                                 </div>
-                                <field name="website" widget="url" placeholder="e.g. https://www.odoo.com"/>
+                                <field name="website" widget="url" placeholder="e.g. https://www.effezient.com"/>
                                 <field name="lang_active_count" invisible="1"/>
                                 <field name="lang_code" invisible="1"/>
                                 <field name="lang_id" invisible="lang_active_count &lt;= 1"
@@ -153,7 +153,7 @@
                                 />
                                 <field name="is_blacklisted" invisible="1"/>
                                 <field name="partner_is_blacklisted" invisible="1"/>
-                                <field name="phone_blacklisted" invisible="1"/>
+                                <field name="phone_blacklisted" invisible="1" />
                                 <field name="mobile_blacklisted" invisible="1"/>
                                 <field name="email_state" invisible="1"/>
                                 <field name="phone_state" invisible="1"/>
@@ -291,7 +291,7 @@
                                             <field name="zip" placeholder="ZIP" class="o_address_zip"/>
                                             <field name="country_id" placeholder="Country" class="o_address_country" options='{"no_open": True, "no_create": True}'/>
                                         </div>
-                                        <field name="website" widget="url" placeholder="e.g. https://www.odoo.com"/>
+                                        <field name="website" widget="url" placeholder="e.g. https://www.effezient.com"/>
                                         <field name="lang_active_count" invisible="1"/>
                                         <field name="lang_id" invisible="lang_active_count &lt;= 1"
                                             options="{'no_quick_create': True, 'no_create_edit': True, 'no_open': True}"/>
@@ -748,7 +748,7 @@
             <field name="context" eval="{
     'default_composition_mode': 'comment',
                 }"/>
-            <field name="binding_model_id" ref="model_crm_lead"/>
+            <field name="binding_model_id" eval="False"/>
             <field name="binding_view_types">form</field>
         </record>
 
@@ -760,7 +760,7 @@
             <field name="context" eval="{
     'default_composition_mode': 'mass_mail',
                 }"/>
-            <field name="binding_model_id" ref="model_crm_lead"/>
+            <field name="binding_model_id" eval="False"/>
             <field name="binding_view_types">list</field>
         </record>
 
@@ -812,7 +812,7 @@
                     <field name="recurring_plan" optional="hide" groups="crm.group_use_recurring_revenues"/>
                     <field name="stage_id" optional="show" decoration-bf="1"/>
                     <field name="active" column_invisible="True"/>
-                    <field name="probability" string="Probability (%)" optional="hide"/>
+                    <field name="probability" string="Probability (%)" column_invisible="True"/>
                     <field name="lost_reason_id" optional="hide"/>
                     <field name="tag_ids" optional="hide" widget="many2many_tags" options="{'color_field': 'color'}"/>
                     <field name="referred" column_invisible="True"/>

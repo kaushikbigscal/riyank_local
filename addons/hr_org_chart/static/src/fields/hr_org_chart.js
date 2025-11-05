@@ -73,7 +73,7 @@ export class HrOrgChart extends Component {
         } else if (employeeId !== this.view_employee_id || force) {
             this.view_employee_id = employeeId;
             let orgData = await this.rpc(
-                '/hr/get_org_chart',
+                '/web/hr/get_org_chart',
                 {
                     employee_id: employeeId,
                     context: this.user.context,

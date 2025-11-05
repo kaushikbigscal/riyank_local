@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="my_module.MultiSelectFieldTemplate">
+        <!-- use props.name to bind the field name properly -->
+        <select t-att-name="props.name"
+                t-on-change="onChange"
+                multiple="true"
+                class="o_input">
+            <t t-foreach="selectionOptions" t-as="opt" t-key="opt[0]">
+                <option t-att-value="opt[0]" t-att-selected="state.selected.includes(opt[0])">
+                    <t t-esc="opt[1]"/>
+                </option>
+            </t>
+        </select>
+    </t>
+</templates>

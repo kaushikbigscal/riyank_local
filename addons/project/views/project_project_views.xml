@@ -15,7 +15,7 @@
             </field>
         </record>
 
-        <record id="action_send_mail_project_project" model="ir.actions.act_window">
+<!--        <record id="action_send_mail_project_project" model="ir.actions.act_window">
             <field name="name">Send Email</field>
             <field name="res_model">mail.compose.message</field>
             <field name="view_mode">form</field>
@@ -25,7 +25,7 @@
             }"/>
             <field name="binding_model_id" ref="project.model_project_project"/>
             <field name="binding_view_types">list</field>
-        </record>
+        </record>-->
 
         <record id="edit_project" model="ir.ui.view">
             <field name="name">project.project.form</field>
@@ -176,6 +176,7 @@
                 </form>
             </field>
         </record>
+ 
 
         <record id="view_project_project_filter" model="ir.ui.view">
             <field name="name">project.project.select</field>
@@ -190,6 +191,7 @@
                     <filter string="My Projects" name="own_projects" domain="[('user_id', '=', uid)]"/>
                     <filter string="My Favorites" name="my_projects" domain="[('favorite_user_ids', 'in', uid)]"/>
                     <filter string="Unassigned" name="unassigned_projects" domain="[('user_id', '=', False)]"/>
+                    <filter string="Assign by Me" name="created_by_me" domain="[('create_uid', '=', uid), ('user_id', '!=', uid)]"/>
                     <separator/>
                     <filter string="Late Milestones" name="late_milestones" domain="[('is_milestone_exceeded', '=', True)]" groups="project.group_project_milestone"/>
                     <separator/>
@@ -228,9 +230,9 @@
                     <field name="is_favorite" string="Favorite" nolabel="1" widget="boolean_favorite" optional="hide"/>
                     <field name="display_name" string="Name" class="fw-bold"/>
                     <field name="partner_id" optional="show" string="Customer"/>
-                    <field name="company_id" optional="show" groups="base.group_multi_company" options="{'no_create': True, 'no_open': True}"/>
+                    <field name="company_id" optional="hide" groups="base.group_multi_company" options="{'no_create': True, 'no_open': True}"/>
                     <field name="company_id" column_invisible="True"/>
-                    <field name="date_start" string="Planned Date" widget="daterange" options="{'end_date_field': 'date', 'always_range': '1'}" optional="hide"/>
+                    <field name="date_start" string="Planned Date" widget="daterange" options="{'end_date_field': 'date', 'always_range': '1'}" optional="show"/>
                     <field name="date" column_invisible="True" />
                     <field name="user_id" optional="show" string="Project Manager" widget="many2one_avatar_user" options="{'no_open':True, 'no_create': True, 'no_create_edit': True}"/>
                     <field name="last_update_color" column_invisible="True"/>
@@ -701,6 +703,31 @@
                     <div role="menuitem" groups="project.group_project_user">
                         <a name="project_update_all_action" type="object" t-attf-context="{'active_id': #{record.id.raw_value} }">Project Updates</a>
                     </div>
+                </xpath>
+            </field>
+        </record>
+    	<record id="view_project_form_custom" model="ir.ui.view">
+        <field name="name">project.project.form.inherit</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="project.edit_project"/>
+        <field name="arch" type="xml">
+            <!-- Add the field below the existing project name field -->
+            <xpath expr="//field[@name='tag_ids']" position="after">
+                <field name="x_department" widget="selection" placeholder="Select Department"/>
+            </xpath>
+        </field>
+    	</record>
+
+	<record id="view_project_project_list_inherit_done_tasks" model="ir.ui.view">
+            <field name="name">project.project.list.inherit.done.tasks</field>
+            <field name="model">project.project</field>
+            <field name="inherit_id" ref="project.view_project"/>
+            <field name="arch" type="xml">
+                <xpath expr="//tree" position="inside">
+                    <field name="done_tasks_count" optional="show"/>
+                    <field name="last_done_task_name" optional="show"/>
+            	    <field name="last_done_task_datetime" string="Last Done Task DateTime" widget="datetime" optional="show"/>
+		    <field name="ongoing_task_name" optional="show"/>
                 </xpath>
             </field>
         </record>

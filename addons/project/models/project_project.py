@@ -82,6 +82,69 @@ class Project(models.Model):
             raise NotImplementedError(_('Operation not supported'))
         return [('favorite_user_ids', 'in' if (operator == '=') == value else 'not in', self.env.uid)]
 
+    done_tasks_count = fields.Integer(string="Done Tasks", compute='_compute_done_tasks_info', store=True)
+    last_done_task_name = fields.Char(string="Last Done Task", compute='_compute_done_tasks_info', store=True)
+    last_done_task_datetime = fields.Datetime(
+        string="Last Done Task DateTime",
+        store=True,
+        compute="_compute_done_tasks_datetime_info"
+    )
+    ongoing_task_name = fields.Char(string="Ongoing Task", compute="_compute_ongoing_task_name", store=True)
+
+    @api.depends('task_ids', 'task_ids.state')
+    def _compute_ongoing_task_name(self):
+        for project in self:
+            ongoing_tasks = project.task_ids.filtered(lambda t: t.state not in ['1_done', '04_waiting_normal'])
+
+            if not ongoing_tasks:
+                project.ongoing_task_name = False
+            elif len(ongoing_tasks) == 1:
+                project.ongoing_task_name = ongoing_tasks[0].name
+            else:
+                project.ongoing_task_name = "Multiple Tasks Ongoing"
+
+    @api.depends('task_ids.state', 'task_ids.write_date')
+    def _compute_done_tasks_datetime_info(self):
+        for project in self:
+            all_tasks = self.env['project.task'].with_context(active_test=False).search([
+                ('project_id', '=', project.id)
+            ])
+
+            done_states = ['1_done']  # Add more 'done' states if needed
+            done_tasks = all_tasks.filtered(lambda task: task.state in done_states)
+
+            if done_tasks:
+                last_done_task = max(done_tasks, key=lambda t: t.write_date)
+                project.last_done_task_datetime = last_done_task.write_date
+            else:
+                project.last_done_task_datetime = False
+
+    @api.depends('task_ids.state', 'task_ids.write_date')
+    def _compute_done_tasks_info(self):
+        for project in self:
+
+            # Retrieve all tasks including archived ones
+            all_tasks = self.env['project.task'].with_context(active_test=False).search([
+            ('project_id', '=', project.id)
+            ])
+
+            # Log all task states
+            task_states = all_tasks.mapped('state')
+
+            # Consider tasks as done if they are in any of these states
+            # Modify this list based on which states you consider as 'done'
+            done_states = ['1_done']  # Add other 'done' states as needed
+
+            done_tasks = all_tasks.filtered(lambda task: task.state in done_states)
+
+            project.done_tasks_count = len(done_tasks)
+
+            if done_tasks:
+                last_done_task = done_tasks.sorted(key=lambda t: t.date_last_stage_update, reverse=True)[0]
+                project.last_done_task_name = last_done_task.name
+            else:
+                project.last_done_task_name = False
+
     def _compute_is_favorite(self):
         for project in self:
             project.is_favorite = self.env.user in project.favorite_user_ids
@@ -104,6 +167,9 @@ class Project(models.Model):
     @api.model
     def _read_group_stage_ids(self, stages, domain, order):
         return self.env['project.project.stage'].search([], order=order)
+
+    is_fsm = fields.Boolean("Field Service", default=False, help="Display tasks in the Field Service module and allow planning with start/end dates.")
+    x_department = fields.Many2one('hr.department', string='Department')
 
     name = fields.Char("Name", index='trigram', required=True, tracking=True, translate=True, default_export_compatible=True)
     description = fields.Html(help="Description to provide more information and context about this project")
@@ -537,6 +603,19 @@ class Project(models.Model):
                 analytic_account.id for [analytic_account] in projects_read_group
             ])
             analytic_account_to_update.write({'name': self.name})
+        if 'stage_id' not in vals:
+            return res
+        canceled_stage = self.env['project.project.stage'].sudo().search([('name', '=', 'Canceled')], limit=1)
+        if not canceled_stage:
+            return res
+        for project in self:
+            all_tasks = self.env['project.task'].with_context(active_test=False).sudo().search(
+                [('project_id', '=', project.id)])
+            all_tasks.filtered(lambda t: not t.active).sudo().write({'active': True})
+            if project.stage_id.id == canceled_stage.id:
+                all_tasks.sudo().write({'state': '1_canceled'})
+            else:
+                all_tasks.filtered(lambda t: t.state == '1_canceled').sudo().write({'state': '01_in_progress'})
         return res
 
     def unlink(self):

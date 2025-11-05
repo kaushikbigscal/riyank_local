@@ -6,9 +6,9 @@ from odoo import fields, models, _
 
 class HrHolidaysCancelLeave(models.TransientModel):
     _name = 'hr.holidays.cancel.leave'
-    _description = 'Cancel Time Off Wizard'
+    _description = 'Cancel Leave Wizard'
 
-    leave_id = fields.Many2one('hr.leave', string="Time Off Request", required=True)
+    leave_id = fields.Many2one('hr.leave', string="Leave Request", required=True)
     reason = fields.Text(required=True)
 
     def action_cancel_leave(self):
@@ -21,7 +21,7 @@ class HrHolidaysCancelLeave(models.TransientModel):
             'tag': 'display_notification',
             'params': {
                 'type': 'success',
-                'message': _("Your time off has been canceled."),
+                'message': _("Your Leave has been canceled."),
                 'next': {'type': 'ir.actions.act_window_close'},
             }
         }

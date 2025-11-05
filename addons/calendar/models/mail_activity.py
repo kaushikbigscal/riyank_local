@@ -25,6 +25,8 @@ class MailActivity(models.Model):
             'initial_date': self.date_deadline,
             'default_calendar_event_id': self.calendar_event_id.id,
         }
+
+        action['views'] = [(self.env.ref('calendar.view_calendar_event_calendar_activity').id, 'calendar')]
         return action
 
     def _action_done(self, feedback=False, attachment_ids=False):

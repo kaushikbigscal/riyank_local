@@ -45,10 +45,10 @@ class WebManifest(http.Controller):
         Using this metadata, user agents can provide developers with means to create user
         experiences that are more comparable to that of a native application.
         """
-        web_app_name = request.env['ir.config_parameter'].sudo().get_param('web.web_app_name', 'Odoo')
+        web_app_name = request.env['ir.config_parameter'].sudo().get_param('web.web_app_name', 'Effezient')
         manifest = {
             'name': web_app_name,
-            'scope': '/web',
+            'scope': '/',
             'start_url': '/web',
             'display': 'standalone',
             'background_color': '#714B67',

@@ -1,0 +1,24 @@
+<odoo>
+    <data noupdate="1">
+        <record id="reminder_type_10m" model="reminder.types">
+            <field name="name">10 Minutes Before</field>
+            <field name="reminder_minutes">10</field>
+        </record>
+
+        <record id="reminder_type_1h" model="reminder.types">
+            <field name="name">1 Hour Before</field>
+            <field name="reminder_minutes">60</field>
+        </record>
+
+        <record id="reminder_type_1d" model="reminder.types">
+            <field name="name">1 Day Before</field>
+            <field name="reminder_minutes">1440</field>
+        </record>
+
+        <record id="reminder_type_custom" model="reminder.types">
+            <field name="name">Custom</field>
+            <field name="reminder_minutes">0</field>
+        </record>
+    </data>
+</odoo>
+ 

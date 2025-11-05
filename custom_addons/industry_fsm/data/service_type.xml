@@ -1,0 +1,18 @@
+<odoo>
+    <record id="service_type_onsite" model="service.type">
+        <field name="name">On-Site</field>
+        <field name="default_in_call">True</field>
+    </record>
+
+    <record id="service_type_online" model="service.type">
+        <field name="name">Online</field>
+    </record>
+
+    <record id="service_type_inhouse" model="service.type">
+        <field name="name">In-House</field>
+    </record>
+
+    <record id="service_type_carryon" model="service.type">
+        <field name="name">Carry-On</field>
+    </record>
+</odoo>

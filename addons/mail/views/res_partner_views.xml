@@ -101,7 +101,7 @@
             <field name="view_mode">kanban,tree,form,activity</field>
         </record>
 
-        <!--  Replace the default mass-mailing wizard in base with the composition wizard -->
+        <!--  Replace the default mass-mailing wizard in base with the composition wizard 
         <record id="action_partner_mass_mail" model="ir.actions.act_window">
             <field name="name">Send email</field>
             <field name="res_model">mail.compose.message</field>
@@ -115,7 +115,7 @@
             }"/>
             <field name="binding_model_id" ref="base.model_res_partner"/>
             <field name="binding_view_types">list</field>
-        </record>
+        </record>-->
 
     </data>
 </odoo>

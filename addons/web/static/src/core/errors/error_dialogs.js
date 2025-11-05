@@ -51,20 +51,20 @@ export class ErrorDialog extends Component {
 }
 ErrorDialog.template = "web.ErrorDialog";
 ErrorDialog.components = { Dialog };
-ErrorDialog.title = _t("Odoo Error");
+ErrorDialog.title = _t("Effezzient Error");
 ErrorDialog.props = { ...standardErrorDialogProps };
 
 // -----------------------------------------------------------------------------
 // Client Error Dialog
 // -----------------------------------------------------------------------------
 export class ClientErrorDialog extends ErrorDialog {}
-ClientErrorDialog.title = _t("Odoo Client Error");
+ClientErrorDialog.title = _t("Effezzient Client Error");
 
 // -----------------------------------------------------------------------------
 // Network Error Dialog
 // -----------------------------------------------------------------------------
 export class NetworkErrorDialog extends ErrorDialog {}
-NetworkErrorDialog.title = _t("Odoo Network Error");
+NetworkErrorDialog.title = _t("Effezzient Network Error");
 
 // -----------------------------------------------------------------------------
 // RPC Error Dialog
@@ -90,13 +90,13 @@ export class RPCErrorDialog extends ErrorDialog {
         }
         switch (this.props.type) {
             case "server":
-                this.title = _t("Odoo Server Error");
+                this.title = _t("Effezzient Server Error");
                 break;
             case "script":
-                this.title = _t("Odoo Client Error");
+                this.title = _t("Effezzient Client Error");
                 break;
             case "network":
-                this.title = _t("Odoo Network Error");
+                this.title = _t("Effezzient Network Error");
                 break;
         }
     }
@@ -112,20 +112,46 @@ export class RPCErrorDialog extends ErrorDialog {
 // Warning Dialog
 // -----------------------------------------------------------------------------
 export class WarningDialog extends Component {
+//    setup() {
+//        this.title = this.inferTitle();
+//        const { data, message } = this.props;
+//        if (data && data.arguments && data.arguments.length > 0) {
+//            this.message = data.arguments[0];
+//        } else {
+//            this.message = message;
+//        }
+//    }
     setup() {
         this.title = this.inferTitle();
         const { data, message } = this.props;
+        let rawMessage = "";
+
         if (data && data.arguments && data.arguments.length > 0) {
-            this.message = data.arguments[0];
+            rawMessage = data.arguments[0];
         } else {
-            this.message = message;
+            rawMessage = message;
         }
+
+        this.message = this.formatDates(rawMessage);
     }
+
+    formatDates(text) {
+    const dateRegex = /\b(\d{4})-(\d{2})-(\d{2})(?: (\d{2}):(\d{2})(?::(\d{2}))?)?\b/g;
+    return text.replace(dateRegex, (match, year, month, day, hour, minute, second) => {
+        const formattedDate = `${day}/${month}/${year}`;
+        if (hour && minute) {
+            const formattedTime = `${hour}:${minute}` + (second ? `:${second}` : "");
+            return `${formattedDate} ${formattedTime}`;
+        }
+        return formattedDate;
+    });
+    }
+
     inferTitle() {
         if (this.props.exceptionName && odooExceptionTitleMap.has(this.props.exceptionName)) {
             return odooExceptionTitleMap.get(this.props.exceptionName).toString();
         }
-        return this.props.title || _t("Odoo Warning");
+        return this.props.title || _t("Effezzient Warning");
     }
 }
 WarningDialog.template = "web.WarningDialog";
@@ -143,7 +169,7 @@ export class RedirectWarningDialog extends Component {
         this.actionService = useService("action");
         const { data, subType } = this.props;
         const [message, actionId, buttonText, additionalContext] = data.arguments;
-        this.title = capitalize(subType) || _t("Odoo Warning");
+        this.title = capitalize(subType) || _t("Effezzient Warning");
         this.message = message;
         this.actionId = actionId;
         this.buttonText = buttonText;
@@ -184,7 +210,7 @@ export class SessionExpiredDialog extends Component {
 }
 SessionExpiredDialog.template = "web.SessionExpiredDialog";
 SessionExpiredDialog.components = { Dialog };
-SessionExpiredDialog.title = _t("Odoo Session Expired");
+SessionExpiredDialog.title = _t("Effezzient Session Expired");
 SessionExpiredDialog.props = { ...standardErrorDialogProps };
 
 registry

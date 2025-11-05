@@ -1,0 +1,107 @@
+<odoo>
+    <data>
+        <record id="inherit_field_visit_form_view" model="ir.ui.view">
+            <field name="name">inherit.field.visit.form</field>
+            <field name="model">field.visit</field>
+            <field name="inherit_id" ref="field_visit_form_view"/>
+            <field name="arch" type="xml">
+                <div class="oe_button_box" name="button_box" position="inside">
+                    <field name="show_time_control" invisible="1"/>
+                    <field name="can_start_timer" invisible="1"/>
+                    <field name="can_stop_timer" invisible="1"/>
+                    <button
+                            name="button_start_work"
+                            string="Start Work"
+                            type="object"
+                            icon="fa-play-circle text-success"
+                            invisible="not can_start_timer"
+                            class="oe_stat_button"
+                            widget="stateinfo"
+                    />
+                    <button
+                            name="button_end_work"
+                            string="Stop Work"
+                            type="object"
+                            icon="fa-stop-circle text-warning"
+                            invisible="not can_stop_timer"
+                            class="oe_stat_button"
+                            widget="stateinfo"
+                    />
+                </div>
+            </field>
+        </record>
+        <record id="end_work_wizard_form_view" model="ir.ui.view">
+            <field name="name">end.work.wizard.form</field>
+            <field name="model">end.work.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Stop Work">
+                                <group>
+                                    <group string="Call Information">
+                                        <field name="is_productive_call"/>
+                                        <field name="visit_objective_ids" invisible="1"/>
+                                    </group>
+                                    <group string="Rating &amp; Follow-up" invisible="not is_productive_call">
+                                        <field name="rating" widget="priority"/>
+                                        <field name="schedule_next_visit"/>
+                                        <field name="next_visit_datetime" invisible="not schedule_next_visit"/>
+                                        <field name="place_order"/>
+                                    </group>
+                                </group>
+
+                                <group invisible="not is_productive_call">
+                                    <group string="Objectives &amp; Products">
+                                        <field name="is_objective_met"/>
+                                        <field name="sub_objective_ids" widget="many2many_tags"
+                                               placeholder="Select sub-objectives achieved..."/>
+                                        <field name="product_ids" widget="many2many_tags"
+                                               placeholder="Select products demonstrated..."/>
+                                    </group>
+                                </group>
+
+                                <!-- ✅ Sample Products Section -->
+                                <separator string="Sample Products" invisible="not is_productive_call"/>
+                                <group invisible="not is_productive_call" colspan="2">
+                                    <field name="sample_product_lines" nolabel="1" colspan="2"
+                                           context="{'parent_product_ids': product_ids}">
+                                        <tree editable="bottom" decoration-muted="not product_id">
+                                            <field name="product_id" required="1"
+                                                   options="{'no_create': True, 'no_open': True}"/>
+                                            <field name="quantity" sum="Total Quantity"/>
+                                        </tree>
+                                        <form>
+                                            <group>
+                                                <field name="product_id" required="1"
+                                                       domain="[('id', 'in', parent.product_ids)]"
+                                                       options="{'no_create': True, 'no_open': True}"/>
+                                                <field name="quantity"/>
+                                            </group>
+                                        </form>
+                                    </field>
+
+                                </group>
+
+
+                                <!-- ✅ End Sample Products -->
+
+                                <!-- Call Conclusion -->
+                                <group string="Call Conclusion"/>
+                                <field name="call_conclusion" required="1" placeholder="Enter call conclusion..."/>
+
+
+                    <footer>
+                        <button name="action_end_work"
+                                string="Check Out"
+                                type="object"
+                                class="btn-primary"/>
+                        <button string="Cancel"
+                                class="btn-secondary"
+                                special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+
+
+    </data>
+</odoo>

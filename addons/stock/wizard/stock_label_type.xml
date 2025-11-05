@@ -9,6 +9,7 @@
             <form>
                 <group>
                     <field name="label_type" widget="radio"/>
+<!--                    <field name="enable_customer_product_mapping"/>-->
                 </group>
                 <footer>
                     <button name="process" string="Confirm" type="object" class="btn-primary" data-hotkey="q"/>

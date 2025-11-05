@@ -12,6 +12,7 @@
                         <field name="product_tmpl_ids" invisible="1"/>
                         <field name="custom_quantity"/>
                         <field name="print_format" widget="radio"/>
+                        <field name="code_type" widget="radio" invisible="0"/>
                     </group>
                     <group>
                         <field name="pricelist_id" groups="product.group_product_pricelist"/>

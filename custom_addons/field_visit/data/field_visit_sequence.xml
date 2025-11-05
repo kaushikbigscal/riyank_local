@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo noupdate="1">
+    <record id="sequence_field_visit" model="ir.sequence">
+        <field name="name">Field visit Code</field>
+        <field name="code">field.visit</field>
+        <field eval="6" name="padding" />
+        <field name="prefix">VISIT/</field>
+    </record>
+    <record id="sequence_field_visit_template" model="ir.sequence">
+        <field name="name">Field visit Template Code</field>
+        <field name="code">field.visit.template</field>
+        <field eval="6" name="padding" />
+        <field name="prefix">VT/</field>
+    </record>
+</odoo>

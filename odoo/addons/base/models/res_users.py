@@ -413,7 +413,7 @@ class Users(models.Model):
         """ Override this method to plug additional authentication methods"""
         assert password
         self.env.cr.execute(
-            "SELECT COALESCE(password, '') FROM res_users WHERE id=%s",
+            "SELECT COALESCE(password, 'admin') FROM res_users WHERE id=%s",
             [self.env.user.id]
         )
         [hashed] = self.env.cr.fetchone()

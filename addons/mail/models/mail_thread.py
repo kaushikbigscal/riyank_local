@@ -2212,6 +2212,7 @@ class MailThread(models.AbstractModel):
 
         self._message_post_after_hook(new_message, msg_values)
         self._notify_thread(new_message, msg_values, **notif_kwargs)
+
         return new_message
 
     def _message_post_after_hook(self, message, msg_values):
@@ -2673,6 +2674,7 @@ class MailThread(models.AbstractModel):
         )  # attachement_ids, body
 
         new_message = self._message_create([msg_values])
+
         self._fallback_lang()._notify_thread(new_message, msg_values, **notif_kwargs)
         return new_message
 

@@ -5,8 +5,8 @@
         <field name="name">hr.leave.type.filter</field>
         <field name="model">hr.leave.type</field>
         <field name="arch" type="xml">
-            <search string="Search Time Off Type">
-                <field name="name" string="Time Off Types"/>
+            <search string="Search Leave Type">
+                <field name="name" string="Leave Types"/>
                 <field name="create_calendar_meeting"/>
                 <separator/>
                 <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
@@ -18,7 +18,7 @@
         <field name="name">hr.leave.type.form</field>
         <field name="model">hr.leave.type</field>
         <field name="arch" type="xml">
-            <form string="Time Off Type">
+            <form string="Leave Type">
                 <sheet>
                     <div class="oe_button_box" name="button_box">
                         <button class="oe_stat_button"
@@ -26,7 +26,7 @@
                                 name="action_see_days_allocated"
                                 icon="fa-calendar"
                                 invisible="requires_allocation == 'no' or not id"
-                                help="Count of allocations for this time off type (approved or waiting for approbation) with a validity period starting this year.">
+                                help="Count of allocations for this Leave type (approved or waiting for approbation) with a validity period starting this year.">
                             <div class="o_stat_info">
                                 <field name="allocation_count" class="o_stat_value"/>
                                 <span class="o_stat_text">Allocations</span>
@@ -37,10 +37,10 @@
                                 name="action_see_group_leaves"
                                 icon="fa-calendar"
                                 invisible="not id"
-                                help="Count of time off requests for this time off type (approved or waiting for approbation) with a start date in the current year.">
+                                help="Count of Leave requests for this Leave type (approved or waiting for approbation) with a start date in the current year.">
                             <div class="o_stat_info">
                                 <field name="group_days_leave" class="o_stat_value"/>
-                                <span class="o_stat_text">Time Off</span>
+                                <span class="o_stat_text">Leave</span>
                             </div>
                         </button>
                         <button class="oe_stat_button"
@@ -48,7 +48,7 @@
                                 name="action_see_accrual_plans"
                                 icon="fa-calendar"
                                 invisible="not id or accrual_count == 0"
-                                help="Count of plans linked to this time off type.">
+                                help="Count of plans linked to this Leave type.">
                             <div class="o_stat_info">
                                 <field name="accrual_count" class="o_stat_value"/>
                                 <span class="o_stat_text">Accruals</span>
@@ -60,7 +60,7 @@
                         <h1><field name="name"/></h1>
                     </div>
                     <group>
-                        <group name="leave_validation" id="time_off_requests" string="Time Off Requests">
+                        <group name="leave_validation" id="time_off_requests" string="Leave Requests">
                             <field name="active" invisible="1"/>
                             <field name="leave_validation_type" string="Approval" widget="radio"/>
                         </group>
@@ -113,8 +113,8 @@
                                 <strong><field name="name"/></strong>
                             </div>
                             <div>
-                                <span>Max Time Off: <field name="max_leaves"/></span>
-                                <span class="float-end">Time Off Taken: <field name="leaves_taken"/></span>
+                                <span>Max Leave: <field name="max_leaves"/></span>
+                                <span class="float-end">Leave Taken: <field name="leaves_taken"/></span>
                             </div>
                         </div>
                     </t>
@@ -127,7 +127,7 @@
         <field name="name">hr.leave.type.normal.tree</field>
         <field name="model">hr.leave.type</field>
         <field name="arch" type="xml">
-            <tree string="Time Off Type" multi_edit="1">
+            <tree string="Leave Type" multi_edit="1">
                 <field name="sequence" widget="handle"/>
                 <field name="display_name"/>
                 <field name="allocation_validation_type"/>
@@ -141,7 +141,7 @@
     </record>
 
     <record id="open_view_holiday_status" model="ir.actions.act_window">
-        <field name="name">Time Off Types</field>
+        <field name="name">Leave Types</field>
         <field name="res_model">hr.leave.type</field>
         <field name="view_mode">tree,kanban,form</field>
     </record>

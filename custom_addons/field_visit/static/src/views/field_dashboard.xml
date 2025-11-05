@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="field_visit.FieldVisitDashboard" owl="1">
+        <t t-if="showDashboard">
+            <div class="o_visit_dashboard container-fluid py-4 border-bottom bg-white">
+                <div class="row justify-content-center gap-3 gap-lg-0">
+                    <div class="col-12 col-lg-8 col-xl-8 col-xxl-6 flex-grow-1 flex-lg-grow-0 flex-shrink-0">
+                        <!-- My Visits -->
+                        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem;">
+                            <div title="My All Visits" filter_name="assigned_to_me" t-on-click="setSearchContext" style="cursor: pointer;">
+                                <div class="d-flex flex-column align-items-center w-100 h-100 p-2">
+                                    <div class="w-100 text-white text-center bg-primary py-3 fw-bold">All Visits</div>
+                                    <div class="w-100 text-center bg-light py-2"
+                                         t-out="visitData['my_visits']"/>
+                                </div>
+                            </div>
+
+                            <div title="My Draft Visits" filter_name="my_draft_visit" t-on-click="setSearchContext" style="cursor: pointer;">
+                                <div class="d-flex flex-column align-items-center w-100 h-100 p-2">
+                                    <div class="w-100 text-white text-center bg-primary py-3 fw-bold">Draft</div>
+                                    <div class="w-100 text-center bg-light py-2"
+                                         t-out="visitData['my_draft_visits_count']"/>
+                                </div>
+                            </div>
+
+                            <div title="My Completed Visits" filter_name="my_completed_visit" t-on-click="setSearchContext" style="cursor: pointer;">
+                                <div class="d-flex flex-column align-items-center w-100 h-100 p-2">
+                                    <div class="w-100 text-white text-center bg-primary py-3 fw-bold">Completed</div>
+                                    <div class="w-100 text-center bg-light py-2"
+                                         t-out="visitData['my_completed_visits_count']"/>
+                                </div>
+                            </div>
+
+                            <div title="My Cancelled Visits" filter_name="my_cancelled_visit" t-on-click="setSearchContext" style="cursor: pointer;">
+                                <div class="d-flex flex-column align-items-center w-100 h-100 p-2">
+                                    <div class="w-100 text-white text-center bg-primary py-3 fw-bold">Cancelled</div>
+                                    <div class="w-100 text-center bg-light py-2"
+                                         t-out="visitData['my_cancelled_visits_count']"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </t>
+</templates>
+<!--<templates>-->
+<!--  <t t-name="field_visit.FieldVisitDashboard" owl="1">-->
+<!--    <t t-if="showDashboard">-->
+<!--      <div class="o_visit_dashboard container-fluid py-4 border-bottom bg-white">-->
+<!--        <div class="row justify-content-center">-->
+<!--          <div class="col-12 col-lg-8 col-xl-8 col-xxl-6">-->
+<!--            &lt;!&ndash; My Visits &ndash;&gt;-->
+<!--            <div class="visit-cards-grid">-->
+
+<!--              &lt;!&ndash; All Visits &ndash;&gt;-->
+<!--              <div title="My All Visits" filter_name="assigned_to_me"-->
+<!--                   t-on-click="setSearchContext" class="visit-card">-->
+<!--                <div class="visit-card-header">All Visits</div>-->
+<!--                <div class="visit-card-body" t-out="visitData['my_visits']"/>-->
+<!--              </div>-->
+
+<!--              &lt;!&ndash; Draft Visits &ndash;&gt;-->
+<!--              <div title="My Draft Visits" filter_name="my_draft_visit"-->
+<!--                   t-on-click="setSearchContext" class="visit-card">-->
+<!--                <div class="visit-card-header">Draft</div>-->
+<!--                <div class="visit-card-body" t-out="visitData['my_draft_visits_count']"/>-->
+<!--              </div>-->
+
+<!--              &lt;!&ndash; Completed Visits &ndash;&gt;-->
+<!--              <div title="My Completed Visits" filter_name="my_completed_visit"-->
+<!--                   t-on-click="setSearchContext" class="visit-card">-->
+<!--                <div class="visit-card-header">Completed</div>-->
+<!--                <div class="visit-card-body" t-out="visitData['my_completed_visits_count']"/>-->
+<!--              </div>-->
+
+<!--              &lt;!&ndash; Cancelled Visits &ndash;&gt;-->
+<!--              <div title="My Cancelled Visits" filter_name="my_cancelled_visit"-->
+<!--                   t-on-click="setSearchContext" class="visit-card">-->
+<!--                <div class="visit-card-header">Cancelled</div>-->
+<!--                <div class="visit-card-body" t-out="visitData['my_cancelled_visits_count']"/>-->
+<!--              </div>-->
+
+<!--            </div>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--      </div>-->
+<!--    </t>-->
+<!--  </t>-->
+<!--</templates>-->

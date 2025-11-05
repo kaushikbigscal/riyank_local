@@ -65,6 +65,7 @@
     'post_init_hook': '_project_post_init',
     'assets': {
         'web.assets_backend': [
+            'project/static/src/css/custom_styles.css',
             'project/static/src/css/project.css',
             'project/static/src/utils/**/*',
             'project/static/src/components/**/*',

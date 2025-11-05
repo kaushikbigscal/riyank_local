@@ -152,7 +152,12 @@
                             invisible="not id or picking_type_code != 'outgoing' or state == 'done'"
                             full_name="partner_id" groups="stock.group_stock_sign_delivery"/>
                     <button name="do_print_picking" string="Print" groups="stock.group_stock_user" type="object" invisible="state != 'assigned'" data-hotkey="o"/>
-                    <button string="Print Labels" type="object" name="action_open_label_type"/>
+                    <field name="is_done" invisible="1"/>
+                    <field name="code_type" invisible="1"/>
+                    <button string="Print Labels"
+                            type="object"
+                            name="action_open_label_type"
+                            invisible="code_type == 'none' or not is_done"/>
                     <button name="%(action_report_delivery)d" string="Print" invisible="state != 'done'" type="action" groups="base.group_user" data-hotkey="o"/>
                     <button name="%(act_stock_return_picking)d" string="Return" invisible="state != 'done'" type="action" groups="base.group_user" data-hotkey="k"/>
                     <field name="state" widget="statusbar" invisible="picking_type_code != 'incoming'" statusbar_visible="draft,assigned,done"/>
@@ -233,9 +238,9 @@
                                    readonly="state != 'draft' and id"
                                    domain="context.get('restricted_picking_type_code') and [('code', '=', context.get('restricted_picking_type_code'))] or [(1,'=',1)]"/>
                             <field name="location_id" groups="!stock.group_stock_multi_locations" invisible="1" readonly="state == 'done'"/>
-                            <field name="location_dest_id" groups="!stock.group_stock_multi_locations" invisible="1" readonly="state == 'done'"/>
+                            <field name="location_dest_id" readonly="state == 'done'"/>
                             <field name="location_id" options="{'no_create': True}" groups="stock.group_stock_multi_locations" invisible="picking_type_code == 'incoming'" readonly="state == 'done'"/>
-                            <field name="location_dest_id" options="{'no_create': True}" groups="stock.group_stock_multi_locations" invisible="picking_type_code == 'outgoing'" readonly="state == 'done'"/>
+                            <field name="location_dest_id" options="{'no_create': True}"  readonly="state == 'done'"/>
                             <field name="backorder_id" invisible="not backorder_id"/>
                         </group>
                         <group>
@@ -320,7 +325,7 @@
                                         column_invisible="parent.state == 'draft'"
                                         groups="stock.group_production_lot"
                                         invisible="not show_details_visible or has_tracking != 'serial'"
-                                        optional="hide"
+                                        optional="show"
                                         options="{'create': [('parent.use_create_lots', '=', True)]}"
                                         context="{'default_company_id': company_id, 'default_product_id': product_id, 'active_picking_id': parent.id}"
                                         domain="[('product_id','=',product_id)]"

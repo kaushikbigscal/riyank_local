@@ -123,6 +123,17 @@ class Task(models.Model):
     def _read_group_personal_stage_type_ids(self, stages, domain, order):
         return stages.search(['|', ('id', 'in', stages.ids), ('user_id', '=', self.env.user.id)])
 
+    # custom changes
+    is_fsm = fields.Boolean(string="Is FSM", default=False)
+    planned_date_begin = fields.Datetime(string="Planned Date", tracking=True, index=True)
+    done_tasks_count = fields.Integer(string="Done Tasks", related='project_id.done_tasks_count', store=True)
+    last_done_task_name = fields.Char(string="Last Done Task", related='project_id.last_done_task_name', store=True)
+    last_done_task_datetime = fields.Datetime(string="Last Done Task Date Time",
+                                              related='project_id.last_done_task_datetime', store=True)
+    project_ongoing_task_name = fields.Char(string="Ongoing Task", related='project_id.ongoing_task_name', store=True)
+    expired_date = fields.Date(string="Project Expire Date", related='project_id.date')
+
+
     active = fields.Boolean(default=True)
     name = fields.Char(string='Title', tracking=True, required=True, index='trigram')
     description = fields.Html(string='Description', sanitize_attributes=False)
@@ -135,16 +146,18 @@ class Task(models.Model):
         store=True, readonly=False, ondelete='restrict', tracking=True, index=True,
         default=_get_default_stage_id, group_expand='_read_group_stage_ids',
         domain="[('project_ids', '=', project_id)]")
-    tag_ids = fields.Many2many('project.tags', string='Tags')
-
+    tag_ids = fields.Many2many('project.tags', string='Tags', tracking=True)
+     
     state = fields.Selection([
-        ('01_in_progress', 'In Progress'),
-        ('02_changes_requested', 'Changes Requested'),
-        ('03_approved', 'Approved'),
-        *CLOSED_STATES.items(),
-        ('04_waiting_normal', 'Waiting'),
-    ], string='State', copy=False, default='01_in_progress', required=True, compute='_compute_state', inverse='_inverse_state', readonly=False, store=True, index=True, recursive=True, tracking=True)
-
+    ('05_not_started', 'Not Started'),
+    ('01_in_progress', 'In Progress'),
+    ('02_changes_requested', 'Changes Requested'),
+    ('03_approved', 'Approved'),
+    ('04_waiting_for_customer', 'Waiting For Customer' ),
+    *CLOSED_STATES.items(),
+    ('04_waiting_normal', 'Waiting'),
+    ], string='State', copy=False, default='05_not_started', required=True, compute='_compute_state', inverse='_inverse_state', readonly=False, store=True, index=True, recursive=True, tracking=True)
+        
     create_date = fields.Datetime("Created On", readonly=True, index=True)
     write_date = fields.Datetime("Last Updated On", readonly=True)
     date_end = fields.Datetime(string='Ending Date', index=True, copy=False)
@@ -185,9 +198,11 @@ class Task(models.Model):
         compute='_compute_personal_stage_type_id', inverse='_inverse_personal_stage_type_id', store=False,
         search='_search_personal_stage_type_id', default=_default_personal_stage_type_id,
         help="The current user's personal task stage.", domain="[('user_id', '=', uid)]")
+
     partner_id = fields.Many2one('res.partner',
         string='Customer', recursive=True, tracking=True, compute='_compute_partner_id', store=True, readonly=False,
-        domain="['|', ('company_id', '=?', company_id), ('company_id', '=', False)]", )
+        domain="['&', '|', ('company_id', '=?', company_id), ('company_id', '=', False), ('parent_id', '=', False)]")
+
     email_cc = fields.Char(help='Email addresses that were in the CC of the incoming emails from this task and that are not currently linked to an existing customer.')
     company_id = fields.Many2one('res.company', string='Company', compute='_compute_company_id', store=True, readonly=False, recursive=True, copy=True, default=_default_company_id)
     color = fields.Integer(string='Color Index')
@@ -310,7 +325,7 @@ class Task(models.Model):
                     task.state = '04_waiting_normal'
             # if the task as no blocking dependencies and is in waiting_normal, the task goes back to in progress
             elif task.state not in CLOSED_STATES:
-                task.state = '01_in_progress'
+                task.state = '05_not_started'
 
     @property
     def OPEN_STATES(self):
@@ -320,7 +335,7 @@ class Task(models.Model):
     @api.onchange('project_id')
     def _onchange_project_id(self):
         if self.state != '04_waiting_normal':
-            self.state = '01_in_progress'
+            self.state = '05_not_started'
 
     def is_blocked_by_dependences(self):
         return any(blocking_task.state not in CLOSED_STATES for blocking_task in self.depend_on_ids)
@@ -1148,7 +1163,7 @@ class Task(models.Model):
                         task.state = '04_waiting_normal'
                 task.date_last_stage_update = now
         elif 'project_id' in vals:
-            self.filtered(lambda t: t.state != '04_waiting_normal').state = '01_in_progress'
+            self.filtered(lambda t: t.state != '04_waiting_normal').state = '05_not_started'
 
         self._task_message_auto_subscribe_notify({task: task.user_ids - old_user_ids[task] - self.env.user for task in self})
         return result
@@ -1277,7 +1292,7 @@ class Task(models.Model):
             return
         task_model_description = self.env['ir.model']._get(self._name).display_name
         for task, users in users_per_task.items():
-            if not users:
+            if not users or task.is_fsm:
                 continue
             values = {
                 'object': task,
@@ -1333,14 +1348,15 @@ class Task(models.Model):
     def _track_subtype(self, init_values):
         self.ensure_one()
         mail_message_subtype_per_state = {
-            '1_done': 'project.mt_task_done',
-            '1_canceled': 'project.mt_task_canceled',
-            '01_in_progress': 'project.mt_task_in_progress',
-            '03_approved': 'project.mt_task_approved',
-            '02_changes_requested': 'project.mt_task_changes_requested',
-            '04_waiting_normal': 'project.mt_task_waiting',
+          '05_not_started': 'project.mt_task_in_progress',
+          '1_done': 'project.mt_task_done',
+          '1_canceled': 'project.mt_task_canceled',
+          '01_in_progress': 'project.mt_task_in_progress',
+          '03_approved': 'project.mt_task_approved',
+          '02_changes_requested': 'project.mt_task_changes_requested',
+          '04_waiting_normal': 'project.mt_task_waiting',
+          '04_waiting_for_customer': 'project.mt_task_in_progress',
         }
-
         if 'stage_id' in init_values:
             return self.env.ref('project.mt_task_stage')
         elif 'state' in init_values and self.state in mail_message_subtype_per_state:

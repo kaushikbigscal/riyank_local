@@ -10,11 +10,11 @@
                 <xpath expr="//form" position="inside" >
                     <app data-string="Inventory" string="Inventory" name="stock" groups="stock.group_stock_manager">
                         <block title="Operations" name="operations_setting_container">
-                            <setting id="product_packs_tracking" documentation="/applications/inventory_and_mrp/inventory/management/products/usage.html#packages" title="Put your products in packs (e.g. parcels, boxes) and track them" help="Put your products in packs (e.g. parcels, boxes) and track them">
+                            <setting id="product_packs_tracking" title="Put your products in packs (e.g. parcels, boxes) and track them" help="Put your products in packs (e.g. parcels, boxes) and track them">
                                 <field name="group_stock_tracking_lot"/>
                             </setting>
                             <setting id="process_transfers" help="Process transfers in batch per worker"
-                                     documentation="/applications/inventory_and_mrp/inventory/management/misc/batch_transfers.html">
+                                     >
                                 <field name="module_stock_picking_batch"/>
                                 <div class="row mt-2" invisible="not module_stock_picking_batch">
                                     <field name="group_stock_picking_wave" class="col flex-grow-0 ml16 mr0 pe-2"/>
@@ -27,19 +27,19 @@
                             <setting id="warning_info" string="Warnings" help="Get informative or blocking warnings on partners">
                                 <field name="group_warning_stock"/>
                             </setting>
-                            <setting id="quality_control" help="Add quality checks to your transfer operations"
-                                     documentation="/applications/inventory_and_mrp/manufacturing/management/quality_control.html">
-                                <field name="module_quality_control" widget="upgrade_boolean"/>
-                                <div class="row mt-2" invisible="not module_quality_control">
-                                    <field name="module_quality_control_worksheet" widget="upgrade_boolean" class="col flex-grow-0 ml16 mr0 pe-2"/>
-                                    <div class="col ps-0">
-                                        <label for="module_quality_control_worksheet"/>
-                                        <div class="text-muted">
-                                            Create customizable worksheets for your quality checks
-                                        </div>
-                                    </div>
-                                </div>
-                            </setting>
+<!--                            <setting id="quality_control" help="Add quality checks to your transfer operations"-->
+<!--                                     documentation="/applications/inventory_and_mrp/manufacturing/management/quality_control.html">-->
+<!--                                <field name="module_quality_control" widget="upgrade_boolean"/>-->
+<!--                                <div class="row mt-2" invisible="not module_quality_control">-->
+<!--                                    <field name="module_quality_control_worksheet" widget="upgrade_boolean" class="col flex-grow-0 ml16 mr0 pe-2"/>-->
+<!--                                    <div class="col ps-0">-->
+<!--                                        <label for="module_quality_control_worksheet"/>-->
+<!--                                        <div class="text-muted">-->
+<!--                                            Create customizable worksheets for your quality checks-->
+<!--                                        </div>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                            </setting>-->
                             <setting id="annual_inventory_date" groups='stock.group_stock_manager' string="Annual Inventory Day and Month" help="Day and month that annual inventory counts should occur.">
                                 <div class="content-group">
                                     <field name="annual_inventory_day" class="o_light_label" style="width: 30px;"/>
@@ -50,11 +50,11 @@
                                 <field name="group_stock_reception_report"/>
                             </setting>
                         </block>
-                        <block title="Barcode" name="barcode_setting_container">
-                            <setting id="process_operations_barcodes" help="Process operations faster with barcodes" company_dependent="1" documentation="/applications/inventory_and_mrp/inventory/barcode/setup/software.html">
-                                <field name="module_stock_barcode" widget="upgrade_boolean"/>
-                            </setting>
-                        </block>
+<!--                        <block title="Barcode" name="barcode_setting_container">-->
+<!--                            <setting id="process_operations_barcodes" help="Process operations faster with barcodes" company_dependent="1" documentation="/applications/inventory_and_mrp/inventory/barcode/setup/software.html">-->
+<!--                                <field name="module_stock_barcode" widget="upgrade_boolean"/>-->
+<!--                            </setting>-->
+<!--                        </block>-->
                         <block title="Shipping" name="shipping_setting_container">
                             <setting id="stock_move_email" company_dependent="1" string="Email Confirmation" help="Send an automatic confirmation email when Delivery Orders are done">
                                 <field name="stock_move_email_validation"/>
@@ -69,35 +69,35 @@
                                 <field name="module_delivery"/>
                             </setting>
                         </block>
-                        <block title="Shipping Connectors" name="shipping_connectors_setting_container">
-                            <setting id="compute_shipping_costs_ups" documentation="/applications/inventory_and_mrp/inventory/shipping/setup/third_party_shipper.html" help="Compute shipping costs and ship with UPS">
-                                <field name="module_delivery_ups" widget="upgrade_boolean"/>
-                            </setting>
-                            <setting id="compute_shipping_costs_dhl" help=" Compute shipping costs and ship with DHL" documentation="/applications/inventory_and_mrp/inventory/shipping/setup/third_party_shipper.html">
-                                <field name="module_delivery_dhl" widget="upgrade_boolean"/>
-                            </setting>
-                            <setting id="compute_shipping_costs_fedex" help="Compute shipping costs and ship with FedEx" documentation="/applications/inventory_and_mrp/inventory/shipping/setup/third_party_shipper.html">
-                                <field name="module_delivery_fedex" widget="upgrade_boolean"/>
-                            </setting>
-                            <setting id="compute_shipping_costs_usps" help="Compute shipping costs and ship with USPS" documentation="/applications/inventory_and_mrp/inventory/shipping/setup/third_party_shipper.html">
-                                <field name="module_delivery_usps" widget="upgrade_boolean"/>
-                            </setting>
-                            <setting id="compute_shipping_costs_bpost" help="Compute shipping costs and ship with bpost" documentation="/applications/inventory_and_mrp/inventory/shipping/setup/third_party_shipper.html">
-                                <field name="module_delivery_bpost" widget="upgrade_boolean"/>
-                            </setting>
+<!--                        <block title="Shipping Connectors" name="shipping_connectors_setting_container">-->
+<!--                            <setting id="compute_shipping_costs_ups" documentation="/applications/inventory_and_mrp/inventory/shipping/setup/third_party_shipper.html" help="Compute shipping costs and ship with UPS">-->
+<!--                                <field name="module_delivery_ups" widget="upgrade_boolean"/>-->
+<!--                            </setting>-->
+<!--                            <setting id="compute_shipping_costs_dhl" help=" Compute shipping costs and ship with DHL" documentation="/applications/inventory_and_mrp/inventory/shipping/setup/third_party_shipper.html">-->
+<!--                                <field name="module_delivery_dhl" widget="upgrade_boolean"/>-->
+<!--                            </setting>-->
+<!--                            <setting id="compute_shipping_costs_fedex" help="Compute shipping costs and ship with FedEx" documentation="/applications/inventory_and_mrp/inventory/shipping/setup/third_party_shipper.html">-->
+<!--                                <field name="module_delivery_fedex" widget="upgrade_boolean"/>-->
+<!--                            </setting>-->
+<!--                            <setting id="compute_shipping_costs_usps" help="Compute shipping costs and ship with USPS" documentation="/applications/inventory_and_mrp/inventory/shipping/setup/third_party_shipper.html">-->
+<!--                                <field name="module_delivery_usps" widget="upgrade_boolean"/>-->
+<!--                            </setting>-->
+<!--                            <setting id="compute_shipping_costs_bpost" help="Compute shipping costs and ship with bpost" documentation="/applications/inventory_and_mrp/inventory/shipping/setup/third_party_shipper.html">-->
+<!--                                <field name="module_delivery_bpost" widget="upgrade_boolean"/>-->
+<!--                            </setting>-->
 
-                            <setting id="compute_shipping_costs_easypost" help="Compute shipping costs and ship with Easypost" documentation="/applications/inventory_and_mrp/inventory/shipping/setup/third_party_shipper.html">
-                                <field name="module_delivery_easypost" widget="upgrade_boolean"/>
-                            </setting>
-                            <setting id="compute_shipping_costs_sendcloud" help="Compute shipping costs and ship with Sendcloud" documentation="/applications/inventory_and_mrp/inventory/shipping/setup/third_party_shipper.html">
-                                <field name="module_delivery_sendcloud" widget="upgrade_boolean"/>
-                            </setting>
-                            <setting id="compute_shipping_costs_shiprocket" help="Compute shipping costs and ship with Shiprocket" documentation="/applications/inventory_and_mrp/inventory/shipping/setup/third_party_shipper.html">
-                                <field name="module_delivery_shiprocket" widget="upgrade_boolean"/>
-                            </setting>
-                        </block>
+<!--                            <setting id="compute_shipping_costs_easypost" help="Compute shipping costs and ship with Easypost" documentation="/applications/inventory_and_mrp/inventory/shipping/setup/third_party_shipper.html">-->
+<!--                                <field name="module_delivery_easypost" widget="upgrade_boolean"/>-->
+<!--                            </setting>-->
+<!--                            <setting id="compute_shipping_costs_sendcloud" help="Compute shipping costs and ship with Sendcloud" documentation="/applications/inventory_and_mrp/inventory/shipping/setup/third_party_shipper.html">-->
+<!--                                <field name="module_delivery_sendcloud" widget="upgrade_boolean"/>-->
+<!--                            </setting>-->
+<!--                            <setting id="compute_shipping_costs_shiprocket" help="Compute shipping costs and ship with Shiprocket" documentation="/applications/inventory_and_mrp/inventory/shipping/setup/third_party_shipper.html">-->
+<!--                                <field name="module_delivery_shiprocket" widget="upgrade_boolean"/>-->
+<!--                            </setting>-->
+<!--                        </block>-->
                         <block title="Products" name="product_setting_container">
-                            <setting id="product_attributes" help="Set product attributes (e.g. color, size) to manage variants" documentation="/applications/sales/sales/products_prices/products/variants.html">
+                            <setting id="product_attributes" help="Set product attributes (e.g. color, size) to manage variants" >
                                 <field name="group_product_variant"/>
                                 <div class="content-group">
                                     <div class="mt8" invisible="not group_product_variant">
@@ -105,7 +105,7 @@
                                     </div>
                                 </div>
                             </setting>
-                            <setting id="sell_purchase_uom" help="Sell and purchase products in different units of measure" documentation="/applications/inventory_and_mrp/inventory/management/products/uom.html">
+                            <setting id="sell_purchase_uom" help="Sell and purchase products in different units of measure">
                                 <field name="group_uom"/>
                                 <div class="content-group">
                                     <div class="mt8" invisible="not group_uom">
@@ -113,7 +113,7 @@
                                     </div>
                                 </div>
                             </setting>
-                            <setting id="manage_product_packaging" title="Manage product packagings (e.g. pack of 6 bottles, box of 10 pieces)" help="Manage product packagings (e.g. pack of 6 bottles, box of 10 pieces)" documentation="/applications/inventory_and_mrp/inventory/management/products/usage.html#packaging">
+                            <setting id="manage_product_packaging" title="Manage product packagings (e.g. pack of 6 bottles, box of 10 pieces)" help="Manage product packagings (e.g. pack of 6 bottles, box of 10 pieces)">
                                 <field name="group_stock_packaging"/>
                                 <div class="content-group">
                                     <div class="mt8" invisible="not group_stock_packaging">
@@ -123,7 +123,7 @@
                             </setting>
                         </block>
                         <block title="Traceability" id="production_lot_info">
-                            <setting id="full_traceability" help="Get a full traceability from vendors to customers" documentation="/applications/inventory_and_mrp/inventory/management/lots_serial_numbers/differences.html">
+                            <setting id="full_traceability" help="Get a full traceability from vendors to customers">
                                 <field name="group_stock_production_lot"/>
                                 <div class="row mt-2" invisible="not group_stock_production_lot">
                                     <field name="group_stock_lot_print_gs1" class="col flex-grow-0 ml16 mr0 pe-2"/>
@@ -134,18 +134,18 @@
                                 </div>
                             </setting>
                             <setting id="expiration_dates_serial_numbers" help="Set expiration dates on lots &amp; serial numbers" invisible="not group_stock_production_lot" title="Track following dates on lots &amp; serial numbers: best before, removal, end of life, alert. Such dates are set automatically at lot/serial number creation based on values set on the product (in days)."
-                                     documentation="/applications/inventory_and_mrp/inventory/management/lots_serial_numbers/expiration_dates.html">
+                                     >
                                 <field name="module_product_expiry"/>
                             </setting>
                             <setting help="Lots &amp; Serial numbers will appear on the delivery slip" invisible="not group_stock_production_lot" id="group_lot_on_delivery_slip">
                                 <field name="group_lot_on_delivery_slip"/>
                             </setting>
-                            <setting id="owner_stored_products" help="Set owner on stored products" documentation="/applications/inventory_and_mrp/inventory/management/misc/owned_stock.html">
+                            <setting id="owner_stored_products" help="Set owner on stored products">
                                 <field name="group_stock_tracking_owner"/>
                             </setting>
                         </block>
                         <block title="Warehouse" name="warehouse_setting_container">
-                            <setting id="track_product_location" help="Track product location in your warehouse" documentation="/applications/inventory_and_mrp/inventory/management/warehouses/warehouses_locations.html" title="Store products in specific locations of your warehouse (e.g. bins, racks) and to track inventory accordingly.">
+                            <setting id="track_product_location" help="Track product location in your warehouse" title="Store products in specific locations of your warehouse (e.g. bins, racks) and to track inventory accordingly.">
                                 <field name="group_stock_multi_locations"/>
                                 <div class="content-group">
                                     <div class="mt8" invisible="not group_stock_multi_locations">
@@ -154,7 +154,7 @@
                                     </div>
                                 </div>
                             </setting>
-                            <setting id="use_own_routes" help="Use your own routes" documentation="/applications/inventory_and_mrp/inventory/routes/concepts/use_routes.html" title="Add and customize route operations to process product moves in your warehouse(s): e.g. unload &gt; quality control &gt; stock for incoming products, pick &gt; pack &gt; ship for outgoing products. You can also set putaway strategies on warehouse locations in order to send incoming products into specific child locations straight away (e.g. specific bins, racks).">
+                            <setting id="use_own_routes" help="Use your own routes" title="Add and customize route operations to process product moves in your warehouse(s): e.g. unload &gt; quality control &gt; stock for incoming products, pick &gt; pack &gt; ship for outgoing products. You can also set putaway strategies on warehouse locations in order to send incoming products into specific child locations straight away (e.g. specific bins, racks).">
                                 <field name="group_stock_adv_location"/>
                                 <div class="content-group">
                                     <div class="mt8" invisible="not group_stock_adv_location">
@@ -180,7 +180,7 @@
                         </block>
                         <block title="Logistics" name="request_vendor_setting_container">
                             <setting title="This adds a dropshipping route to apply on products in order to request your vendors to deliver to your customers. A product to dropship will generate a purchase request for quotation once the sales order confirmed. This is a on-demand flow. The requested delivery address will be the customer delivery address and not your warehouse." help="Request your vendors to deliver to your customers"
-                            documentation="/applications/inventory_and_mrp/inventory/management/delivery/dropshipping.html">
+                            >
                                 <field name="module_stock_dropshipping"/>
                             </setting>
                         </block>

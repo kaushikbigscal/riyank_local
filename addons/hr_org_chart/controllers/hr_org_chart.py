@@ -50,7 +50,7 @@ class HrOrgChartController(http.Controller):
             return 'hr.employee'
         return 'hr.employee.public'
 
-    @http.route('/hr/get_org_chart', type='json', auth='user')
+    @http.route('/web/hr/get_org_chart', type='json', auth='user')
     def get_org_chart(self, employee_id, **kw):
 
         employee = self._check_employee(employee_id, **kw)

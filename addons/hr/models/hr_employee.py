@@ -64,23 +64,23 @@ class HrEmployeePrivate(models.Model):
         ('male', 'Male'),
         ('female', 'Female'),
         ('other', 'Other')
-    ], groups="hr.group_hr_user", tracking=True)
+    ], tracking=True)
     marital = fields.Selection([
         ('single', 'Single'),
         ('married', 'Married'),
         ('cohabitant', 'Legal Cohabitant'),
         ('widower', 'Widower'),
         ('divorced', 'Divorced')
-    ], string='Marital Status', groups="hr.group_hr_user", default='single', tracking=True)
+    ], string='Marital Status', default='single', tracking=True)
     spouse_complete_name = fields.Char(string="Spouse Complete Name", groups="hr.group_hr_user", tracking=True)
     spouse_birthdate = fields.Date(string="Spouse Birthdate", groups="hr.group_hr_user", tracking=True)
     children = fields.Integer(string='Number of Dependent Children', groups="hr.group_hr_user", tracking=True)
     place_of_birth = fields.Char('Place of Birth', groups="hr.group_hr_user", tracking=True)
     country_of_birth = fields.Many2one('res.country', string="Country of Birth", groups="hr.group_hr_user", tracking=True)
-    birthday = fields.Date('Date of Birth', groups="hr.group_hr_user", tracking=True)
-    ssnid = fields.Char('SSN No', help='Social Security Number', groups="hr.group_hr_user", tracking=True)
+    birthday = fields.Date('Date of Birth', groups="base.group_user", tracking=True)
+    ssnid = fields.Char('PAN Number', help='Social Security Number', tracking=True)
     sinid = fields.Char('SIN No', help='Social Insurance Number', groups="hr.group_hr_user", tracking=True)
-    identification_id = fields.Char(string='Identification No', groups="hr.group_hr_user", tracking=True)
+    identification_id = fields.Char(string='Aadhar Number', groups="hr.group_hr_user", tracking=True)
     passport_id = fields.Char('Passport No', groups="hr.group_hr_user", tracking=True)
     bank_account_id = fields.Many2one(
         'res.partner.bank', 'Bank Account Number',
@@ -324,14 +324,12 @@ class HrEmployeePrivate(models.Model):
         return self.env.ref('hr.hr_employee_public_view_form').id
 
     def get_formview_action(self, access_uid=None):
-        """ Override this method in order to redirect many2one towards the right model depending on access_uid """
+        """Redirect many2one towards the right model depending on user group."""
         res = super(HrEmployeePrivate, self).get_formview_action(access_uid=access_uid)
-        if access_uid:
-            self_sudo = self.with_user(access_uid)
-        else:
-            self_sudo = self
 
-        if not self_sudo.check_access_rights('read', raise_exception=False):
+        user = self.env['res.users'].browse(access_uid) if access_uid else self.env.user
+
+        if not (user.has_group('hr.group_hr_user') or user.has_group('hr.group_hr_manager')):
             res['res_model'] = 'hr.employee.public'
 
         return res

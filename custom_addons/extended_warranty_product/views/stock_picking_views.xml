@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="view_customer_product_mapping_form_inherit_extended" model="ir.ui.view">
+            <field name="name">customer.product.mapping.form.inherit.extended.warranty</field>
+            <field name="model">customer.product.mapping</field>
+            <field name="inherit_id" ref="industry_fsm.view_customer_product_mapping_form"/>
+            <field name="arch" type="xml">
+
+                <!-- Add extended warranty dates after end_date -->
+                <xpath expr="//field[@name='end_date']" position="after">
+                    <field name="extended_start_date"/>
+                    <field name="extended_end_date"/>
+                </xpath>
+
+            </field>
+        </record>
+
+    </data>
+</odoo>

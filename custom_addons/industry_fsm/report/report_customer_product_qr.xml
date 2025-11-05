@@ -1,0 +1,436 @@
+<odoo>
+    <!-- Main report template -->
+    <template id="report_customer_product_label_dymo">
+        <t t-call="web.basic_layout">
+            <t t-foreach="docs" t-as="o">
+
+                <t t-set="wizard_extra_html" t-value="context.get('wizard_extra_html', '')"/>
+                <t t-foreach="range(context.get('quantity',1))" t-as="i">
+
+                    <!-- Full-page Dymo label (adjust width/height as needed) -->
+                    <div t-att-style="'width:80mm; height:43mm; padding:0; margin:0; page-break-after:always; position:relative;'">
+
+                        <!-- QR / Barcode positioned absolutely -->
+                        <div style="position:absolute; left:0; top:0; width:18mm; height:100%; text-align:center; display:flex; align-items:center; justify-content:center; margin-top:5px;">
+                            <t t-set="code_type" t-value="o.label_type or 'barcode'"/>
+
+                            <t t-if="code_type == 'qr_code'">
+                                <t t-set="base_url"
+                                   t-value="env['ir.config_parameter'].sudo().get_param('web.base.url')"/>
+                                <t t-set="ticket"
+                                   t-value="base_url + '/my/ticket/create?product_mapping_id=' + str(o.id)"/>
+                                <span t-out="ticket"
+                                      t-options="{'widget':'barcode','symbology':'QR','img_style':'width:30mm;height:30mm'}"/>
+                            </t>
+
+                            <t t-elif="code_type == 'barcode'">
+                                <t t-set="base_url"
+                                   t-value="env['ir.config_parameter'].sudo().get_param('web.base.url')"/>
+                                <t t-set="ticket"
+                                   t-value="base_url + '/my/ticket/create?product_mapping_id=' + str(o.id)"/>
+                                <span t-out="ticket"
+                                      t-options="{'widget':'barcode','symbology':'pdf417','img_style':'width:34mm;height:14mm'}"/>
+                            </t>
+                        </div>
+
+                        <!-- Product details positioned absolutely -->
+                        <div t-att-style="'position:absolute; left:' + ('36mm' if code_type == 'qr_code' else '36mm') + '; top:0; width:' + ('58mm' if code_type == 'qr_code' else '58mm') + '; height:100%; display:flex; flex-direction:column; justify-content:center; font-size:' + ('8px' if code_type == 'qr_code' else '7px') + '; line-height:1.2; overflow:hidden;font-size:11px;'">
+
+<!--                            <div style="font-weight:700; margin-bottom:1px; word-wrap:break-word;">-->
+<!--                                <span>Customer:</span>-->
+<!--                                <span t-esc="o.customer_id.name"/>-->
+<!--                            </div>-->
+
+                            <div style="font-weight:700; margin-bottom:1px; word-wrap:break-word;">
+                                <span>Product:</span>
+                                <span t-esc="o.product_id.name"/>
+                            </div>
+
+
+                            <t t-if="o.serial_number_ids">
+                                <div style="font-weight:600; word-wrap:break-word;">
+                                    <span>Serial Number:</span>
+                                    <span t-esc="','.join(o.serial_number_ids.mapped('name'))"/>
+                                </div>
+                            </t>
+
+                            <t t-if="o.status not in ['chargeable','free']">
+                                <div style="font-weight:600; word-wrap:break-word;">
+                                    <span>Start Date:</span>
+                                    <span t-esc="o.start_date"/>
+                                </div>
+                                <div style="font-weight:600; word-wrap:break-word;">
+                                    <span>End Date:</span>
+                                    <span t-esc="o.end_date"/>
+                                </div>
+                            </t>
+                            <t t-if="wizard_extra_html">
+                                <div class="text-end" style="display:block; font-size:16px;">
+                                    <t t-raw="wizard_extra_html"/>
+                                </div>
+                            </t>
+
+                        </div>
+
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+
+    <!-- Paperformat -->
+
+
+    <!-- QWeb Report Template -->
+    <template id="report_customer_asset_2x7">
+        <t t-call="web.basic_layout">
+
+            <!-- Set rows and columns -->
+            <t t-set="nRows" t-value="7"/>
+            <t t-set="nCols" t-value="2"/>
+
+            <t t-set="wizard_extra_html" t-value="context.get('wizard_extra_html', '')"/>
+            <div class="oe_structure"></div>
+
+            <!-- Expand docs by quantity -->
+            <t t-set="expanded_docs" t-value="sum([[o] * context.get('quantity', 1) for o in docs], [])"/>
+
+            <!-- Paginate expanded_docs into pages -->
+            <div t-foreach="[expanded_docs[x:x + nRows * nCols] for x in range(0, len(expanded_docs), nRows * nCols)]"
+                 t-as="page_docs"
+                 class="o_label_sheet"
+                 t-att-style="'padding: 20mm 8mm;'">
+
+                <table class="my-0 table table-sm table-borderless" style="border-collapse:collapse;">
+                    <t t-foreach="range(nRows)" t-as="row">
+                        <tr>
+                            <t t-foreach="range(nCols)" t-as="col">
+                                <t t-set="barcode_index" t-value="(row * nCols + col)"/>
+                                <t t-if="barcode_index &lt; len(page_docs)">
+                                    <t t-set="o" t-value="page_docs[barcode_index]"/>
+                                </t>
+                                <t t-else="">
+                                    <t t-set="o" t-value="page_docs[0]"/>
+                                </t>
+
+                                <td t-att-style="'%s' % ('visibility:hidden;' if barcode_index >= len(page_docs) else '')">
+                                    <div t-att-style="'position:relative; width:95mm; height:35mm; border: 1px solid %s; padding:0; box-sizing:border-box;' % (o.env.user.company_id.primary_color or 'black')">
+                                        <!-- inner 2-column table (left = QR/barcode, right = text) -->
+                                        <table style="width:100%; height:100%; border-collapse:collapse;">
+                                            <tr>
+                                                <!-- LEFT: fixed-width column for QR / barcode -->
+                                                <td style="width:34mm; padding:3mm; vertical-align:top; text-align:center;">
+                                                    <!-- system parameter (global, fetched once per label) -->
+                                                    <t t-set="code_type"
+                                                       t-value="env['ir.config_parameter'].sudo().get_param('industry_fsm.product_code', 'none')"/>
+                                                    <t t-if="code_type == 'qr_code'">
+                                                        <t t-set="base_url"
+                                                           t-value="env['ir.config_parameter'].sudo().get_param('web.base.url')"/>
+                                                        <t t-set="ticket"
+                                                           t-value="base_url + '/my/ticket/create?product_mapping_id=' + str(o.id)"/>
+                                                        <!-- QR (square) -->
+                                                        <span t-out="ticket"
+                                                              t-options="{'widget': 'barcode', 'symbology': 'QR', 'img_style': 'width:28mm; height:28mm'}"/>
+                                                    </t>
+                                                    <t t-elif="code_type == 'barcode'">
+                                                        <t t-set="base_url"
+                                                           t-value="env['ir.config_parameter'].sudo().get_param('web.base.url')"/>
+                                                        <t t-set="ticket"
+                                                           t-value="base_url + '/my/ticket/create?product_mapping_id=' + str(o.id)"/>
+                                                        <!-- linear/wide barcode -->
+                                                        <span t-out="ticket"
+                                                              t-options="{'widget': 'barcode', 'symbology': 'pdf417', 'img_style': 'width:34mm; height:12mm'}"/>
+                                                    </t>
+                                                    <t t-elif="code_type == 'none'">
+                                                        <div style="font-size:10px; color: #444;">No code</div>
+                                                    </t>
+                                                </td>
+
+                                                <!-- RIGHT: text area (product + serial + contract dates). vertically centered -->
+                                                <td style="padding:3mm; vertical-align:top; text-align:left; font-size:10px; line-height:1;">
+                                                    <span style="font-weight:700;">Product:</span>
+                                                    <span t-esc="o.product_id.name"/>
+                                                    <br/>
+
+                                                    <span style="font-weight:700;">Serial Number:</span>
+                                                    <span t-esc="','.join(o.serial_number_ids.mapped('name')) if o.serial_number_ids else ''"/>
+                                                    <br/>
+
+                                                    <t t-if="o.status not in ['chargeable','free'] and o.start_date">
+                                                        <span style="font-weight:600;">Start Date:</span>
+                                                        <span t-esc="o.start_date"
+                                                              t-options="{'widget': 'date'}"/>
+                                                        <br/>
+                                                    </t>
+
+                                                    <t t-if="o.status not in ['chargeable','free'] and o.end_date">
+                                                        <span style="font-weight:600;">End Date:</span>
+                                                        <span t-esc="o.end_date"
+                                                              t-options="{'widget': 'date'}"/>
+                                                    </t>
+                                                    <t t-if="wizard_extra_html">
+                                                        <div class="text-end"
+                                                             style="display:block; font-size:16px; margin-top:5px">
+                                                            <t t-raw="wizard_extra_html"/>
+                                                        </div>
+                                                    </t>
+                                                </td>
+                                            </tr>
+                                        </table>
+
+                                    </div>
+                                </td>
+                            </t>
+                        </tr>
+                    </t>
+                </table>
+
+                <div class="oe_structure"></div>
+            </div>
+        </t>
+    </template>
+
+
+    <template id="report_customer_asset_4x7">
+        <t t-call="web.basic_layout">
+            <t t-set='nRows' t-value='7'/>
+            <t t-set='nCols' t-value='4'/>
+
+            <t t-set="wizard_extra_html" t-value="context.get('wizard_extra_html', '')"/>
+            <div class="oe_structure"></div>
+
+            <!-- Expand docs by quantity -->
+            <t t-set="expanded_docs" t-value="sum([[o] * context.get('quantity', 1) for o in docs], [])"/>
+
+            <div t-foreach="[expanded_docs[x:x + nRows * nCols] for x in range(0, len(expanded_docs), nRows * nCols)]"
+                 t-as="page_docs"
+                 class="o_label_sheet"
+                 t-att-style="'padding: 20mm 8mm'">
+                <table class="my-0 table table-sm table-borderless">
+
+                    <t t-foreach="range(nRows)" t-as="row">
+                        <tr>
+                            <t t-foreach="range(nCols)" t-as="col">
+                                <t t-set="barcode_index" t-value="(row * nCols + col)"/>
+                                <t t-if="barcode_index &lt; len(page_docs)">
+                                    <t t-set="o" t-value="page_docs[barcode_index]"/>
+                                </t>
+                                <t t-else="">
+                                    <t t-set="o" t-value="page_docs[0]"/>
+                                </t>
+                                <td t-att-style="barcode_index &gt;= len(page_docs) and 'visibility:hidden'">
+                                    <div t-att-style="'position:relative; width:43mm; height:35mm; border: 1px solid %s; text-align:center; padding:2mm;' % (o.env.user.company_id.primary_color or 'black')">
+
+                                        <!-- Get code_type from system parameter -->
+                                        <t t-set="code_type"
+                                           t-value="env['ir.config_parameter'].sudo().get_param('industry_fsm.product_code', 'none')"/>
+
+                                        <!-- Conditional rendering based on code_type -->
+                                        <t t-if="code_type == 'qr_code'">
+                                            <!-- QR Code (base URL + product_mapping_id) -->
+                                            <t t-set="base_url"
+                                               t-value="env['ir.config_parameter'].sudo().get_param('web.base.url')"/>
+                                            <t t-set="ticket"
+                                               t-value="base_url + '/my/ticket/create?product_mapping_id=' + str(o.id)"/>
+                                            <span t-out="ticket"
+                                                  t-options="{'widget': 'barcode', 'symbology': 'QR', 'img_style': 'width:14mm; height:14mm'}"/>
+                                        </t>
+
+                                        <t t-elif="code_type == 'barcode'">
+                                            <!-- Regular Barcode using product_mapping_id -->
+                                            <t t-set="base_url"
+                                               t-value="env['ir.config_parameter'].sudo().get_param('web.base.url')"/>
+                                            <t t-set="ticket"
+                                               t-value="base_url + '/my/ticket/create?product_mapping_id=' + str(o.id)"/>
+                                            <span t-out="ticket"
+                                                  t-options="{'widget': 'barcode', 'symbology': 'pdf417', 'img_style': 'width:40mm; height:15mm'}"/>
+                                        </t>
+
+                                        <div style="font-size:10px; font-weight:bold; text-align:left; line-height:1;">
+                                            Serial No:
+                                            <span t-esc="','.join(o.serial_number_ids.mapped('name')) if o.serial_number_ids else ''"/>
+                                            <br/>
+
+                                            <t t-if="o.status not in ['chargeable','free'] and o.start_date">
+                                                Start Date:
+                                                <span t-esc="o.start_date"
+                                                      t-options="{'widget': 'date'}"/>
+                                                <br/>
+                                            </t>
+
+                                            <t t-if="o.status not in ['chargeable','free'] and o.end_date">
+                                                End Date:
+                                                <span t-esc="o.end_date"
+                                                      t-options="{'widget': 'date'}"/>
+                                                <br/>
+                                            </t>
+                                            <t t-if="wizard_extra_html">
+                                                <span style="font-size:13px; display:block; text-align:right;">
+                                                    <t t-raw="wizard_extra_html"/>
+                                                </span>
+                                            </t>
+                                        </div>
+                                    </div>
+                                </td>
+                            </t>
+                        </tr>
+                    </t>
+                </table>
+                <div class="oe_structure"></div>
+            </div>
+        </t>
+    </template>
+
+
+    <template id="report_customer_asset_4x12">
+        <t t-call="web.basic_layout">
+            <t t-set='nRows' t-value='12'/>
+            <t t-set='nCols' t-value='4'/>
+
+            <t t-set="wizard_extra_html" t-value="context.get('wizard_extra_html', '')"/>
+            <div class="oe_structure"></div>
+
+            <!-- Expand docs by quantity -->
+            <t t-set="expanded_docs" t-value="sum([[o] * context.get('quantity', 1) for o in docs], [])"/>
+
+            <div t-foreach="[expanded_docs[x:x + nRows * nCols] for x in range(0, len(expanded_docs), nRows * nCols)]"
+                 t-as="page_docs"
+                 class="o_label_sheet"
+                 t-att-style="'padding: 10mm 5mm'">
+                <table class="my-0 table table-sm table-borderless">
+
+                    <t t-foreach="range(nRows)" t-as="row">
+                        <tr>
+                            <t t-foreach="range(nCols)" t-as="col">
+                                <t t-set="barcode_index" t-value="(row * nCols + col)"/>
+                                <t t-if="barcode_index &lt; len(page_docs)">
+                                    <t t-set="o" t-value="page_docs[barcode_index]"/>
+                                </t>
+                                <t t-else="">
+                                    <t t-set="o" t-value="page_docs[0]"/>
+                                </t>
+                                <td t-att-style="barcode_index &gt;= len(page_docs) and 'visibility:hidden'">
+                                    <div t-att-style="'position:relative; width:45mm; height:20mm; border: 1px solid %s; text-align:center; padding:2mm;' % (o.env.user.company_id.primary_color or 'black')">
+
+                                        <!-- Get code_type from system parameter -->
+                                        <t t-set="code_type"
+                                           t-value="env['ir.config_parameter'].sudo().get_param('industry_fsm.product_code', 'none')"/>
+
+                                        <!-- Conditional rendering based on code_type -->
+                                        <t t-if="code_type == 'qr_code'">
+                                            <!-- QR Code (base URL + product_mapping_id) -->
+                                            <t t-set="base_url"
+                                               t-value="env['ir.config_parameter'].sudo().get_param('web.base.url')"/>
+                                            <t t-set="ticket"
+                                               t-value="base_url + '/my/ticket/create?product_mapping_id=' + str(o.id)"/>
+                                            <span t-out="ticket"
+                                                  t-options="{'widget': 'barcode', 'symbology': 'QR', 'img_style': 'width:13mm; height:13mm'}"/>
+                                        </t>
+
+                                        <t t-elif="code_type == 'barcode'">
+                                            <!-- Regular Barcode using product_mapping_id -->
+                                            <t t-set="base_url"
+                                               t-value="env['ir.config_parameter'].sudo().get_param('web.base.url')"/>
+                                            <t t-set="ticket"
+                                               t-value="base_url + '/my/ticket/create?product_mapping_id=' + str(o.id)"/>
+                                            <span t-out="ticket"
+                                                  t-options="{'widget': 'barcode', 'symbology': 'pdf417', 'img_style': 'width:38mm; height:12mm'}"/>
+                                        </t>
+
+                                        <div style="font-size:10px; font-weight:bold; text-align:left; line-height:1;">
+                                            Serial No:
+                                            <span t-esc="','.join(o.serial_number_ids.mapped('name')) if o.serial_number_ids else ''"/>
+                                        </div>
+                                    </div>
+                                </td>
+                            </t>
+                        </tr>
+                    </t>
+                </table>
+                <div class="oe_structure"></div>
+            </div>
+        </t>
+    </template>
+
+
+    <record id="paperformat_label_dymo" model="report.paperformat">
+        <field name="name">Dymo Label Sheet</field>
+        <field name="default" eval="True"/>
+        <field name="format">custom</field>
+        <field name="page_height">100</field>
+        <field name="page_width">48</field>
+        <field name="orientation">Landscape</field>
+        <field name="margin_top">2</field>
+        <field name="margin_bottom">0</field>
+        <field name="margin_left">0</field>
+        <field name="margin_right">1</field>
+        <field name="disable_shrinking" eval="True"/>
+        <field name="dpi">96</field>
+    </record>
+
+    <!-- Report action -->
+    <record id="action_report_customer_product_dymo" model="ir.actions.report">
+        <field name="name">Customer Product Dymo</field>
+        <field name="model">customer.product.mapping</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">industry_fsm.report_customer_product_label_dymo</field>
+        <field name="report_file">industry_fsm.report_customer_product_label_dymo</field>
+        <field name="print_report_name">'Dymo_%s' % (object.unique_number)</field>
+        <field name="paperformat_id" ref="industry_fsm.paperformat_label_dymo"/>
+    </record>
+
+    <!-- Report Action with custom paperformat -->
+    <record id="paperformat_label_custom" model="report.paperformat">
+        <field name="name">Label Format</field>
+        <field name="default" eval="False"/>
+        <field name="format">A4</field>
+        <field name="page_height">0</field>
+        <field name="page_width">0</field>
+        <field name="orientation">Portrait</field>
+        <field name="margin_top">0</field>
+        <field name="margin_bottom">0</field>
+        <field name="margin_left">0</field>
+        <field name="margin_right">0</field>
+        <field name="disable_shrinking" eval="True"/>
+        <field name="dpi">96</field>
+    </record>
+
+
+
+
+    <!-- Report Action -->
+    <record id="action_report_customer_asset_2x7" model="ir.actions.report">
+        <field name="name">Customer Product QR</field>
+        <field name="model">customer.product.mapping</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">industry_fsm.report_customer_asset_2x7</field>
+        <field name="report_file">industry_fsm.report_customer_asset_2x7</field>
+        <field name="print_report_name">'QR_%s' % (object.unique_number)</field>
+        <field name="paperformat_id" ref="paperformat_label_custom"/>
+    </record>
+
+    <record id="action_report_customer_asset_4x7" model="ir.actions.report">
+        <field name="name">Customer Product QR</field>
+        <field name="model">customer.product.mapping</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">industry_fsm.report_customer_asset_4x7</field>
+        <field name="report_file">industry_fsm.report_customer_asset_4x7</field>
+        <field name="print_report_name">'QR_%s' % (object.unique_number)</field>
+        <field name="paperformat_id" ref="paperformat_label_custom"/>
+    </record>
+
+    <record id="action_report_customer_asset_4x12" model="ir.actions.report">
+        <field name="name">Customer Product QR</field>
+        <field name="model">customer.product.mapping</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">industry_fsm.report_customer_asset_4x12</field>
+        <field name="report_file">industry_fsm.report_customer_asset_4x12</field>
+        <field name="print_report_name">'QR_%s' % (object.unique_number)</field>
+        <field name="paperformat_id" ref="paperformat_label_custom"/>
+    </record>
+
+</odoo>
+
+
+

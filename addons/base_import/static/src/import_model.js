@@ -108,7 +108,7 @@ export class BaseImportModel {
                 value: false,
             },
             limit: {
-                value: 2000,
+                value: 20,
             },
             sheets: {
                 value: [],

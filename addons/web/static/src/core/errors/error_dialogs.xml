@@ -41,7 +41,7 @@
       <Dialog title="this.constructor.title" size="'md'" contentClass="'o_error_dialog'">
         <div role="alert">
           <p class="text-prewrap">
-            Your Odoo session expired. The current page is about to be refreshed.
+            Your Effezzient session expired. The current page is about to be refreshed.
           </p>
         </div>
         <t t-set-slot="footer">

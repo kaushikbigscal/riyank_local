@@ -877,7 +877,7 @@ class ProjectTask(models.Model):
     @api.constrains('sale_line_id')
     def _check_sale_line_type(self):
         for task in self.sudo():
-            if task.sale_line_id:
+            if task.sale_line_id and not task.is_fsm:  # this is custom
                 if not task.sale_line_id.is_service or task.sale_line_id.is_expense:
                     raise ValidationError(_(
                         'You cannot link the order item %(order_id)s - %(product_id)s to this task because it is a re-invoiced expense.',

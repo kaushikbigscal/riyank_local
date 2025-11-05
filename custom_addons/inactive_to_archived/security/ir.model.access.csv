@@ -1,0 +1,2 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_inactive_to_archived_inactive_to_archived,inactive_to_archived.inactive_to_archived,model_inactive_to_archived_inactive_to_archived,base.group_user,1,1,1,1

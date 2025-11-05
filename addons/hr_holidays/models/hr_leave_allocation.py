@@ -20,7 +20,7 @@ MONTHS_TO_INTEGER = {"jan": 1, "feb": 2, "mar": 3, "apr": 4, "may": 5, "jun": 6,
 class HolidaysAllocation(models.Model):
     """ Allocation Requests Access specifications: similar to leave requests """
     _name = "hr.leave.allocation"
-    _description = "Time Off Allocation"
+    _description = "Leave Allocation"
     _order = "create_date desc"
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _mail_post_access = 'read'
@@ -59,7 +59,7 @@ class HolidaysAllocation(models.Model):
         tracking=True, required=True)
     date_to = fields.Date('End Date', copy=False, tracking=True)
     holiday_status_id = fields.Many2one(
-        "hr.leave.type", compute='_compute_holiday_status_id', store=True, string="Time Off Type", required=True, readonly=False,
+        "hr.leave.type", compute='_compute_holiday_status_id', store=True, string="Leave Type", required=True, readonly=False,
         domain=_domain_holiday_status_id,
         default=_default_holiday_status_id)
     employee_id = fields.Many2one(
@@ -129,7 +129,7 @@ class HolidaysAllocation(models.Model):
         compute="_compute_from_holiday_status_id", store=True, readonly=False, tracking=True,
         domain="['|', ('time_off_type_id', '=', False), ('time_off_type_id', '=', holiday_status_id)]")
     max_leaves = fields.Float(compute='_compute_leaves')
-    leaves_taken = fields.Float(compute='_compute_leaves', string='Time off Taken')
+    leaves_taken = fields.Float(compute='_compute_leaves', string='Leave Taken')
     has_accrual_plan = fields.Boolean(compute='_compute_has_accrual_plan', string='Accrual Plan Available')
 
     _sql_constraints = [
@@ -808,14 +808,14 @@ class HolidaysAllocation(models.Model):
                 continue
 
             if not is_officer and self.env.user != allocation.employee_id.leave_manager_id and not val_type == 'no':
-                raise UserError(_('Only a time off Officer/Responsible or Manager can approve or refuse time off requests.'))
+                raise UserError(_('Only a Leave Officer/Responsible or Manager can approve or refuse Leave requests.'))
 
             if is_officer or self.env.user == allocation.employee_id.leave_manager_id:
                 # use ir.rule based first access check: department, members, ... (see security.xml)
                 allocation.check_access_rule('write')
 
             if allocation.employee_id == current_employee and not is_manager and not val_type == 'no':
-                raise UserError(_('Only a time off Manager can approve its own requests.'))
+                raise UserError(_('Only a Leave Manager can approve its own requests.'))
 
     @api.onchange('allocation_type')
     def _onchange_allocation_type(self):

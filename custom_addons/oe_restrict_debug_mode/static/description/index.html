@@ -1,0 +1,158 @@
+    <!-- This module is under copyright of 'OdooElevate' -->
+
+    <!-- Overview -->
+    <section class="oe_container oe_dark">
+        <div class="oe_row oe_spaced">
+            <h2 class="oe_slogan" style="margin-bottom: -24px;"> Overview </h2>
+            <p class="oe_slogan text-lg leading-relaxed text-justify-center" style="margin-bottom: -8px;">
+                The <strong>Restrict Debug Mode Access</strong> module empowers administrators to tightly control access to Odoo's powerful Developer (Debug) Mode. This enhances security and prevents unintended system modifications by unauthorized users.
+                <br/>
+                This module is under copyright of <strong>OdooElevate</strong> and is fully compatible with Odoo 17.
+            </p>
+        </div>
+    </section>
+
+    <!-- Key Features -->
+    <section class="oe_container">
+        <div class="oe_row oe_spaced">
+            <h3 class="oe_slogan" style="margin-bottom: -32px; opacity: 2.5;">Key Features</h3>
+            <br/>
+            <div style="text-align: left; font-size: 16px; line-height: 1.8; margin-top: 10px; margin-left: 200px;">
+                <ul>
+                    <li>
+                        <strong>Group-Based Access:</strong> Control Debug Mode access by assigning users to a dedicated security group, ensuring only authorized personnel can enable it.
+                    </li>
+                    <li>
+                        <strong>Forced Page Refresh:</strong> Unauthorized attempts to access Debug Mode trigger an immediate full-screen "Access Denied" message, followed by an automatic page reload to ensure the restriction is enforced.
+                    </li>
+                    <li>
+                        <strong>Enhanced Security:</strong> Prevents non-technical users or those without proper permissions from accidentally or intentionally using Debug Mode, safeguarding your Odoo instance's integrity.
+                    </li>
+                    <li>
+                        <strong>Seamless Integration:</strong> Integrates directly with Odoo's core session management and web assets without modifying core files, ensuring compatibility and ease of updates.
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- Restriction Group -->
+    <section class="oe_container">
+        <div class="oe_row oe_spaced">
+            <h3 class="oe_slogan" style="margin-bottom: -32px; opacity: 2.5;">Restriction Group</h3>
+            <p class="oe_slogan text-lg leading-relaxed text-justify-center" style="margin-bottom: -8px;">
+                Administrators can easily manage Debug Mode access by assigning users to the 
+                "Restrict Debug Mode Access" group directly from their user settings. 
+                Simply navigate to `Settings > Users & Companies > Users`, select a user, 
+                go to the `Access Rights` tab, and check the box under `EXTRA RIGHTS`.
+            </p>
+            <div class="oe_picture">
+                <img style="width: 100%; height: 140%;" src="access_group.png" alt="Restriction Group">
+            </div>
+        </div>
+    </section>
+    <br/><br/><br/>
+
+    <!-- Debug Mode -->
+      <section class="oe_container">
+        <div class="oe_row oe_spaced">
+            <h3 class="oe_slogan" style="margin-bottom: -32px; opacity: 2.5;">Debug Mode</h3>
+            <p class="oe_slogan text-lg leading-relaxed text-justify-center" style="margin-bottom: -8px;">
+                The module specifically targets the "Debug Mode" (Developer Mode) button, typically represented by a bug icon, located in the top-right corner of the Odoo backend interface. When a user without the necessary permissions attempts to click this button, the module's restrictions are activated, preventing them from accessing advanced developer functionalities.
+            </p>
+            <div class="oe_picture">
+                <img style="width: 100%; height: 140%;" src="debug_button.png" alt="Debug Mode">
+            </div>
+        </div>
+    </section>
+    <br/><br/><br/>
+
+    <!-- Access Denied Screen -->
+    <section class="oe_container">
+        <div class="oe_row oe_spaced">
+            <h3 class="oe_slogan" style="margin-bottom: -32px; opacity: 2.5;">Access Denied Screen</h3>
+            <p class="oe_slogan text-lg leading-relaxed text-justify-center" style="margin-bottom: -8px;">
+               Upon an unauthorized attempt to activate Debug Mode, the user is presented with a clear, full-screen "ACCESS DENIED" message. This visual alert informs them that they are not permitted to use Debug Mode. The screen also includes a countdown, indicating that the page will automatically refresh after 5 seconds, ensuring the restriction is promptly re-enforced.
+            </p>
+            <div class="oe_picture">
+                <img style="width: 100%; height: 140%;" src="access_denied.png" alt="Access Denied Screen">
+            </div>
+        </div>
+    </section>
+    <br/><br/><br/>
+
+    <!-- Our Services -->
+    <section class="oe_container oe_light" style="background:white;">
+        <div class="oe_row oe_spaced">
+            <h2 class="oe_slogan" style="padding-bottom: -5px;margin-bottom: -32px;">Our Services<br> 
+                <p class="oe_mt32 text-justify" style="text-align: center; ">
+                    OdooElevate offers customized and scalable Odoo services that are specifically designed to resolve your actual business needs. Our proposition is to enhance your operations, ensuring they run more efficiently, intelligently, and swiftly, regardless of whether you're initiating a new setup or refining your current Odoo implementation.
+                </p>
+            </h2>
+        </div>
+    </section>
+
+    <br/><br/>
+
+    <div class="row justify-content-center" style="margin-top: -54px;">
+        <div class="card mx-3 my-3 shadow " style="width: 13rem; height: 15rem;">
+            <img class="card-img-top mx-auto d-block " src="customization.png" alt="Card image cap"
+                style="width: 110px; height: auto;padding-bottom:5px;padding-top:8px; ">
+            <h5 class="text-center" style="margin-bottom: 0rem; font-size: 1rem; Font-family: Candara,  sans-serif;">Customization</h5>
+            <p class="oe_mt20 text-justify" style="margin-top: 20px; font-size: 13px; text-align: center; ">
+                Tailored modules to fit your business process.
+            </p>
+        </div>
+
+        <div class="card mx-3 my-3 shadow" style="width: 13rem; height: 15rem;">
+            <img class="card-img-top mx-auto d-block " src="automation.png" alt="Card image cap"
+                style="width: 110px; height: auto;padding-bottom:5px;padding-top:  8px;">
+            <h5 class="text-center " style="margin-bottom: 0rem; font-size: 1rem; Font-family: Candara, sans-serif;">Automation</h5>
+            <p class="oe_mt20 text-justify" style="margin-top: 20px; font-size: 13px; text-align: center; ">
+                Save time with workflows that run on autopilot.
+            </p>
+        </div>
+
+        <div class="card mx-3 my-3 shadow" style="width: 13rem; height: 15rem;">
+            <img class="card-img-top mx-auto d-block " src="consulting.png" alt="Card image cap"
+                style="width: 110px; height: auto;padding-bottom:5px;padding-top: 8px;">
+            <h5 class="text-center " style="margin-bottom: 0rem; font-size: 1rem; Font-family: Candara,  sans-serif;">Consulting</h5>
+            <p class="oe_mt20 text-justify" style="margin-top: 20px; font-size: 13px; text-align: center; ">
+                Strategic guidance for your Odoo system.
+            </p>
+        </div>
+
+        <div class="card mx-3 my-3 shadow " style="width: 13rem; height: 15rem;">
+            <img class="card-img-top mx-auto d-block " src="maintenance.png" alt="Card image cap"
+                style="width: 110px; height: auto;padding-bottom:5px;padding-top: 8px;">
+            <h5 class="text-center" style="margin-bottom: 0rem; font-size: 1rem; Font-family: Candara,  sans-serif;">Maintenance</h5>
+            <p class="oe_mt20 text-justify" style="margin-top: 20px; font-size: 13px; text-align: center; ">
+                Reliable technical help, whenever you need it.
+            </p>
+        </div>
+    </div>
+
+    <section class="oe_container oe_light">
+        <div class="oe_row oe_spaced">
+            <h2 class="oe_slogan" style="padding-bottom: -5px; margin-bottom: -32px;">Contact Us<br> 
+                <p class="oe_mt32 text-justify" style="text-align: center; margin-bottom: -39px; margin-left: 50px;margin-right: 50px; ">
+                    We'd love to hear from you! For quick support or inquiries, feel free to reach out to us directly on WhatsApp or visit our website. Our team is ready to assist you!
+                </p>
+            </h2>
+        </div>
+    </section>
+    
+    <br/><br/><br/><br/>
+    <div class="row justify-content-center" style="margin-top: -54px;">
+        <div class="card mx-3 my-3 shadow " style="width: 13rem; height: 12rem;">
+            <img class="card-img-top mx-auto d-block " src="call.png" alt="Card image cap"
+                style="width: 110px; height: auto;padding-bottom:5px;padding-top:8px; ">
+            <p class="text-center" style="Font-family: Candara,  sans-serif;">+92 310 5130679</p>
+        </div>
+
+        <div class="card mx-3 my-3 shadow" style="width: 13rem; height: 12rem;">
+            <img class="card-img-top mx-auto d-block " src="logo.png" alt="Card image cap"
+                style="width: 110px; height: auto;padding-bottom:5px;padding-top:  8px;">
+            <p class="text-center " style="font-size: 13px; Font-family: Candara, sans-serif;">odooelevate.odoo.com</p>
+        </div>
+    </div>

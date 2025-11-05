@@ -3,6 +3,7 @@
 
 from odoo import api, fields, models, tools
 
+
 class Partner(models.Model):
     _inherit = ['res.partner']
 
@@ -47,9 +48,9 @@ class Partner(models.Model):
     def _onchange_city_id(self):
         if self.city_id:
             self.city = self.city_id.name
-            self.zip = self.city_id.zipcode
+            # self.zip = self.city_id.zipcode
             self.state_id = self.city_id.state_id
         elif self._origin:
             self.city = False
-            self.zip = False
+            # self.zip = False
             self.state_id = False

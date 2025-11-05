@@ -28,6 +28,7 @@ TimeOffCalendarRenderer.components = {
 
 export class TimeOffDashboardCalendarRenderer extends TimeOffCalendarRenderer {
     get showDashboard() {
-        return !this.env.isSmall;
+/**       return !this.env.isSmall; */
+          return true;
     }
 }

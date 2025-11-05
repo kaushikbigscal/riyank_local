@@ -1,0 +1,73 @@
+/* Desktop: Remove sticky and custom width */
+.o_form_sheet_bg .o_form_statusbar {
+    width: auto !important;
+    position: static !important;
+    z-index: auto !important;
+    background: transparent !important;
+    padding: 8px 12px;
+}
+
+.o_form_view .oe_title {
+    padding: 0px;
+}
+
+.alert-info {
+    margin-top: 40px;
+}
+
+/* Mobile devices (max-width: 768px) */
+@media (max-width: 768px) {
+    .o_control_panel {
+        position: sticky !important;
+        top: 0 !important;
+        z-index: 999 !important;
+        background: white !important;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        padding: 12px 16px !important;
+        margin-bottom: 0px !important;
+        overflow: visible !important;
+    }
+
+     .o_form_sheet_bg {
+        overflow: visible !important;
+        margin-top: 0px !important; /* Adjust based on header height*/
+    }
+    .o-dropdown--menu.dropdown-menu.d-block.p-2.pb-3 {
+        left: 50% !important;
+        transform: translateX(-50%) !important;
+        right: auto !important;
+    }
+}
+/** @odoo-module **/
+/* fsm_mobile_styles.css - Increased field font sizes and spacing adjustments */
+
+@media screen and (max-width: 768px) {
+    /* ====== Base Font Sizes ====== */
+    .o_form_view .o_group .o_field_widget {
+        font-size: 14.5px !important;
+    }
+    .o_form_view.o_xxs_form_view .o_group .o_form_label {
+        font-size: 15px !important;
+    }
+    .o_form_view .o_inner_group {
+        gap: 1px 16px;
+        margin-bottom: 8px;
+    }
+    /* ====== Field Spacing ====== */
+    .o_form_view .o_group .o_field_widget {
+        margin-bottom: 0 !important;
+        padding-bottom: 0 !important;
+    }
+}
+
+@media screen and (min-width: 769px) {
+    /* ====== Field Spacing (Web Only) ====== */
+    .o_form_view .o_group .o_field_widget {
+        margin-bottom: 0 !important;
+        padding-bottom: 0 !important;
+    }
+}
+
+
+
+

@@ -177,6 +177,11 @@ export class ControlPanel extends Component {
         this.actionService.switchView(viewType);
     }
 
+    refreshPage() {
+    	// This ensures the page reloads within the Odoo framework
+        window.location.reload();
+    }
+
     /**
      * @private
      * @param {MouseEvent} ev

@@ -51,7 +51,7 @@ export class TimeOffCalendarController extends CalendarController {
 
         this.displayDialog(FormViewDialog, {
             resModel: "hr.leave",
-            title: _t("New Time Off"),
+            title: _t("New Leave"),
             viewId: this.model.formViewId,
             onRecordSaved: () => {
                 this.model.load();
@@ -97,7 +97,7 @@ export class TimeOffCalendarController extends CalendarController {
                     resModel: this.model.resModel,
                     resId: record.id || false,
                     context,
-                    title: _t("Time Off Request"),
+                    title: _t("Leave Request"),
                     viewId: this.model.formViewId,
                     onRecordSaved: onDialogClosed,
                     onRecordDeleted: (record) => this._deleteRecord(record.resId, record.data.can_cancel),

@@ -5,13 +5,13 @@
         <field name="name">hr.holidays.filter</field>
         <field name="model">hr.leave.report</field>
         <field name="arch" type="xml">
-            <search string="Search Time Off">
+            <search string="Search Leave">
                 <field name="employee_id"/>
                 <field name="name"/>
                 <filter domain="[('state','in',('confirm','validate1'))]" string="To Approve" name="approve"/>
                 <filter string="Approved Requests" domain="[('state', '=', 'validate')]" name="validated"/>
                 <separator/>
-                <filter string="Time off" domain="[('leave_type', '=', 'request')]" name="leave_type_timeoff"/>
+                <filter string="Leave" domain="[('leave_type', '=', 'request')]" name="leave_type_timeoff"/>
                 <filter string="Allocations" domain="[('leave_type', '=', 'allocation')]" name="leave_type_allocations"/>
                 <separator/>
                 <filter string="My Department" name="department" domain="[('department_id.manager_id.user_id', '=', uid)]" help="My Department"/>
@@ -52,7 +52,7 @@
         <field name="name">report.hr.holidays.report.leave_all.graph</field>
         <field name="model">hr.leave.report</field>
         <field name="arch" type="xml">
-            <graph string="Time off Summary" sample="1">
+            <graph string="Leave Summary" sample="1">
                 <field name="employee_id"/>
                 <field name="number_of_days" string="Duration (Days)" type="measure"/>
             </graph>
@@ -63,7 +63,7 @@
         <field name="name">report.hr.holidays.report.leave_all.pivot</field>
         <field name="model">hr.leave.report</field>
         <field name="arch" type="xml">
-            <pivot string="Time off Summary" sample="1">
+            <pivot string="Leave Summary" sample="1">
                 <field name="employee_id"/>
                 <field name="number_of_days" type="measure"/>
             </pivot>
@@ -71,7 +71,7 @@
     </record>
 
     <record id="act_hr_employee_holiday_type" model="ir.actions.act_window">
-        <field name="name">Time Off Analysis</field>
+        <field name="name">Leave Analysis</field>
         <field name="res_model">hr.leave.report</field>
         <field name="view_mode">graph,tree,pivot</field>
         <field name="search_view_id" ref="view_hr_holidays_filter_report"/>

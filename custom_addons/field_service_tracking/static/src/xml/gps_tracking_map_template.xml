@@ -1,0 +1,247 @@
+<odoo>
+    <t t-name="field_service_tracking.tracking_route_template">
+        <div class="o_gps_tracking_container">
+
+            <!-- Filter Section -->
+            <div class="d-flex flex-wrap gap-3 align-items-end mb-3">
+                <t t-if="state.isAdmin">
+                    <div class="d-flex flex-column">
+                        <label class="small fw-bold mb-1">Select Employee</label>
+                        <select class="form-select" name="employeeId" t-on-change="onChangeFilter">
+                            <option value="">-- Select Employee --</option>
+                            <t t-foreach="state.employees" t-as="emp" t-key="emp.id">
+                                <option t-att-value="emp.id" t-att-selected="emp.id == state.employeeId">
+                                    <t t-esc="emp.name"/>
+                                </option>
+                            </t>
+                        </select>
+                    </div>
+                </t>
+                <div class="d-flex flex-column">
+                    <label class="small fw-bold mb-1">Select Date</label>
+                    <input type="date" name="date" class="form-select" t-att-value="state.date"
+                           t-on-change="onChangeFilter"/>
+                </div>
+            </div>
+
+
+            <!-- Employee Info Card -->
+
+            <t t-if="state.info">
+                <div class="card mb-3 shadow-sm">
+                    <div class="card-body d-flex align-items-center">
+                        <!-- Avatar -->
+                        <img t-if="state.info.image_128"
+                             t-att-src="state.info.image_128"
+                             class="rounded-circle me-3"
+                             width="60" height="60"/>
+
+                        <!-- Info Block -->
+                        <div class="flex-grow-1">
+                            <h5 class="mb-1 fw-semibold">
+                                <t t-esc="state.info.name"/>
+                            </h5>
+                            <div class="row text-muted small">
+                                <div class="col-auto">
+                                    📍
+                                    <strong>Locations:</strong>
+                                    <t t-esc="state.info.total_points"/>
+                                </div>
+
+                                <t t-if="state.info.distance and state.info.duration">
+                                    <div class="col-auto">
+                                        🚶
+                                        <strong>Distance:</strong>
+                                        <t t-esc="state.info.distance"/>
+                                    </div>
+                                    <div class="col-auto">
+                                        ⏱
+                                        <strong>Expected Duration:</strong>
+                                        <t t-esc="state.info.duration"/>
+                                    </div>
+                                    <t t-if="state.info.traveled_duration">
+                                        <div class="col-auto">
+                                            🕒
+                                            <strong>Traveled Duration:</strong>
+                                            <t t-esc="state.info.traveled_duration"/>
+                                        </div>
+                                    </t>
+                                    <t t-if="state.info.speed_kmh">
+                                        <div class="col-auto">
+                                            🚗
+                                            <strong>Avg Speed:</strong>
+                                            <span t-att-class="state.info.speed_is_unusual ? 'text-danger fw-bold' : ''">
+                                                <t t-esc="state.info.speed_kmh"/> km/h
+                                            </span>
+                                            <t t-if="state.info.any_suspicious">
+                                                <span class="badge bg-danger ms-2" title="Suspicious GPS points detected!">
+                                                    Suspicious
+                                                </span>
+                                            </t>
+                                        </div>
+                                    </t>
+                                </t>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </t>
+
+            <!-- GPS Map Container -->
+            <div class="o_gps_map_container card mt-3">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fa fa-map text-success"></i>
+                        GPS Tracking Map
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div t-ref="map" id="gps_map" class="o_gps_map"></div>
+                </div>
+            </div>
+
+            <!-- Manual Control Panel -->
+            <div class="o_gps_controls_panel card mt-3">
+                <div class="card-header">
+                    <h6 class="mb-0">
+                        <i class="fa fa-cogs text-secondary"></i>
+                        Manual Controls
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="btn-toolbar" role="toolbar">
+                        <div class="btn-group mr-2" role="group">
+                            <button
+                                    type="button"
+                                    class="btn btn-success"
+                                    id="manual_start_btn"
+                                    onclick="odoo.gpsTracker.startGPSTracking()">
+                                <i class="fa fa-play"></i>
+                                Start Manual Tracking
+                            </button>
+                            <button
+                                    type="button"
+                                    class="btn btn-danger"
+                                    id="manual_stop_btn"
+                                    onclick="odoo.gpsTracker.stopGPSTracking()">
+                                <i class="fa fa-stop"></i>
+                                Stop Tracking
+                            </button>
+                        </div>
+                    </div>
+                    <div class="mt-2">
+                        <small class="text-muted">
+                            <i class="fa fa-exclamation-triangle"></i>
+                            Manual controls are for testing purposes. Normal operation uses automatic attendance
+                            integration.
+                        </small>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Integration Information -->
+            <div class="o_gps_integration_info card mt-3">
+                <div class="card-header">
+                    <h6 class="mb-0">
+                        <i class="fa fa-info text-info"></i>
+                        How GPS Integration Works
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6>Automatic Features:</h6>
+                            <ul class="list-unstyled">
+                                <li>
+                                    <i class="fa fa-check text-success"></i>
+                                    Starts on attendance check-in
+                                </li>
+                                <li>
+                                    <i class="fa fa-check text-success"></i>
+                                    Stops on attendance check-out
+                                </li>
+                                <li>
+                                    <i class="fa fa-check text-success"></i>
+                                    Records location every 10 seconds
+                                </li>
+                                <li>
+                                    <i class="fa fa-check text-success"></i>
+                                    Works offline with local storage
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="col-md-6">
+                            <h6>Data Storage:</h6>
+                            <ul class="list-unstyled">
+                                <li>
+                                    <i class="fa fa-database text-info"></i>
+                                    Linked to attendance records
+                                </li>
+                                <li>
+                                    <i class="fa fa-cloud text-info"></i>
+                                    Syncs automatically when online
+                                </li>
+                                <li>
+                                    <i class="fa fa-map-marker text-info"></i>
+                                    Accurate GPS coordinates
+                                </li>
+                                <li>
+                                    <i class="fa fa-clock text-info"></i>
+                                    Timestamped location data
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <style>
+            .o_gps_tracking_container {
+            padding: 10px;
+            max-width: 1200px;
+            margin: 0 auto;
+            }
+
+            .o_gps_map {
+            width: 100%;
+            height: 550px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            }
+
+            .status-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            padding: 5px 0;
+            }
+
+            .status-item label {
+            font-weight: 600;
+            margin-bottom: 0;
+            }
+
+            .card-header {
+            background-color: #f8f9fa;
+            border-bottom: 1px solid #dee2e6;
+            }
+
+            .btn-toolbar .btn-group {
+            margin-right: 10px;
+            }
+
+            .list-unstyled li {
+            margin-bottom: 5px;
+            padding: 2px 0;
+            }
+
+            .list-unstyled li i {
+            margin-right: 8px;
+            width: 16px;
+            }
+        </style>
+    </t>
+</odoo>
+

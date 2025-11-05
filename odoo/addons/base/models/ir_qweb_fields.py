@@ -5,7 +5,8 @@ from datetime import time
 import logging
 import re
 from io import BytesIO
-
+import pdf417gen
+import io
 import babel
 import babel.dates
 from markupsafe import Markup, escape
@@ -735,21 +736,36 @@ class BarcodeConverter(models.AbstractModel):
     def value_to_html(self, value, options=None):
         if not value:
             return ''
-        barcode_symbology = options.get('symbology', 'Code128')
-        barcode = self.env['ir.actions.report'].barcode(
-            barcode_symbology,
-            value,
-            **{key: value for key, value in options.items() if key in ['width', 'height', 'humanreadable', 'quiet', 'mask']})
 
+        options = options or {}
+        barcode_symbology = options.get('symbology', 'Code128')
+
+        # 🔹 Our new PDF417 support
+        if barcode_symbology.lower() == "pdf417":
+            codes = pdf417gen.encode(value, columns=6, security_level=2)
+            image = pdf417gen.render_image(codes)  # PIL Image
+            buffer = io.BytesIO()
+            image.save(buffer, format="PNG")
+            barcode = buffer.getvalue()
+        else:
+            # 🔹 Original Odoo logic
+            barcode = self.env['ir.actions.report'].barcode(
+                barcode_symbology,
+                value,
+                **{key: value for key, value in options.items()
+                   if key in ['width', 'height', 'humanreadable', 'quiet', 'mask']}
+            )
+
+        # 🔹 Same image element logic
         img_element = html.Element('img')
         for k, v in options.items():
             if k.startswith('img_') and k[4:] in safe_attrs:
                 img_element.set(k[4:], v)
         if not img_element.get('alt'):
-            img_element.set('alt', _('Barcode %s', value))
+            img_element.set('alt', _('Barcode %s') % value)
         img_element.set('src', 'data:image/png;base64,%s' % base64.b64encode(barcode).decode())
-        return Markup(html.tostring(img_element, encoding='unicode'))
 
+        return Markup(html.tostring(img_element, encoding='unicode'))
 
 class Contact(models.AbstractModel):
     _name = 'ir.qweb.field.contact'

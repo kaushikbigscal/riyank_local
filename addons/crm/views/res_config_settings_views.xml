@@ -43,7 +43,7 @@
                                     class="btn-primary"/>
                             </div>
                         </setting>
-                        <setting title="This can be used to automatically assign leads to sales persons based on rules" documentation="/applications/sales/crm/track_leads/lead_scoring.html#assign-leads">
+                        <setting title="This can be used to automatically assign leads to sales persons based on rules">
                             <field name="crm_use_auto_assignment"/>
                             <div class="text-muted">
                                 <span>Periodically assign leads based on rules</span><br />
@@ -84,7 +84,7 @@
                             </div>
                         </setting>
 
-                        <setting id="crm_iap_mine_settings" string="Lead Mining" documentation="/applications/sales/crm/acquire_leads/lead_mining.html" help="Generate new leads based on their country, industry, size, etc.">
+                        <setting id="crm_iap_mine_settings" string="Lead Mining" help="Generate new leads based on their country, industry, size, etc.">
                             <field name="module_crm_iap_mine"/>
                         </setting>
 

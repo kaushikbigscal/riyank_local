@@ -541,13 +541,13 @@
             <field name="parent_id" ref="website.main_menu"/>
             <field name="sequence" type="int">10</field>
         </record>
-        <record id="menu_contactus" model="website.menu">
+<!--        <record id="menu_contactus" model="website.menu">
             <field name="name">Contact us</field>
             <field name="url">/contactus</field>
             <field name="page_id" ref="website.contactus_page"/>
             <field name="parent_id" ref="website.main_menu"/>
             <field name="sequence" type="int">60</field>
-        </record>
+        </record> -->
 
         <!-- Default Website -->
         <record id="default_website" model="website">

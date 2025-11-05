@@ -290,3 +290,29 @@ class StockLot(models.Model):
 
             delivery_by_lot[lot.id] = list(delivery_ids)
         return delivery_by_lot
+
+    def _get_warranty_info(self):
+        """Get warranty information from related sale order lines"""
+        self.ensure_one()
+
+        move_lines = self.env['stock.move.line'].search([
+            ('lot_id', '=', self.id),
+            ('move_id.sale_line_id', '!=', False)
+        ], limit=1)
+
+        if move_lines and move_lines.move_id.sale_line_id:
+            sale_line = move_lines.move_id.sale_line_id
+            order = sale_line.order_id
+
+            return {
+                'warranty_start_date': order.warranty_start_date if 'warranty_start_date' in order._fields else "",
+                'line_warranty_end_date': sale_line.line_warranty_end_date if 'line_warranty_end_date' in sale_line._fields else "",
+                'warranty_period': sale_line.warranty_period if 'warranty_period' in sale_line._fields else 0,
+            }
+
+        return {
+            'warranty_start_date': "",
+            'line_warranty_end_date': "",
+            'warranty_period': 0,
+        }
+

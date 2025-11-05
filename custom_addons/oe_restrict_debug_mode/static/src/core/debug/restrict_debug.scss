@@ -1,0 +1,39 @@
+
+#oe_full_screen_restrict_overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.95);
+    color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Roboto', sans-serif;
+    text-align: center;
+    z-index: 99999;
+    padding: 20px;
+    box-sizing: border-box;
+    pointer-events: all;
+}
+
+#oe_full_screen_restrict_overlay h1 {
+    font-size: 4em;
+    margin-bottom: 20px;
+    color: #ff6347;
+    text-shadow: 2px 2px 5px rgba(0,0,0,0.5);
+}
+
+#oe_full_screen_restrict_overlay p {
+    font-size: 1.5em;
+    margin-top: 10px;
+    margin-bottom: 30px;
+}
+
+#oe_full_screen_restrict_overlay .countdown {
+    font-size: 2em;
+    font-weight: bold;
+    color: #ffd700;
+}

@@ -98,7 +98,7 @@ export class ImportAction extends Component {
     // Activate the batch configuration panel only if the file length > 100. (In order to let the user choose
     // the batch size even for medium size file. Could be useful to reduce the batch size for complex models).
     get isBatched() {
-        return this.state.fileLength > 100;
+        return this.state.fileLength > 21;
     }
 
     async onOptionChanged(name, value, fieldName = null) {

@@ -49,6 +49,31 @@ class HrEmployee(models.Model):
     total_overtime = fields.Float(
         compute='_compute_total_overtime', compute_sudo=True)
 
+
+    all_subordinate_ids = fields.Many2many(
+        'hr.employee',
+        compute='_compute_all_subordinate_ids',
+        string='All Subordinates'
+    )
+
+    @api.depends('child_ids')
+    def _compute_all_subordinate_ids(self):
+        for employee in self:
+            employee.all_subordinate_ids = self._get_recursive_subordinates(employee)
+
+    def _get_recursive_subordinates(self, employee, visited=None):
+        if visited is None:
+            visited = set()
+        if employee.id in visited:
+            return self.env['hr.employee']  # return empty recordset to stop recursion
+
+        visited.add(employee.id)
+        subordinates = employee.child_ids
+        for child in employee.child_ids:
+            subordinates |= self._get_recursive_subordinates(child, visited)
+        return subordinates
+
+
     @api.model_create_multi
     def create(self, vals_list):
         officer_group = self.env.ref('hr_attendance.group_hr_attendance_officer', raise_if_not_found=False)
@@ -183,7 +208,7 @@ class HrEmployee(models.Model):
                 })
         else:
             raise exceptions.UserError(_(
-                'Cannot perform check out on %(empl_name)s, could not find corresponding check in. '
+                'Cannot perform day out on %(empl_name)s, could not find corresponding day in. '
                 'Your attendances have probably been modified manually by human resources.',
                 empl_name=self.sudo().name))
         return attendance

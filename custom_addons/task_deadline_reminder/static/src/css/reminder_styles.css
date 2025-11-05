@@ -1,0 +1,251 @@
+.notification-tab-active {
+  background-color: #e9ecef !important;
+  color: #495057 !important;
+  border-color: #adb5bd !important;
+  font-weight: bold !important;
+  position: relative;
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.1) !important;
+}
+
+.notification-tab-inactive {
+  background-color: #f8f9fa !important;
+  color: #6c757d !important;
+  border-color: #dee2e6 !important;
+  font-weight: normal !important;
+  position: relative;
+}
+
+.notification-tab-active:hover {
+  background-color: #dee2e6 !important;
+  color: #495057 !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15) !important;
+}
+
+.notification-tab-inactive:hover {
+  background-color: #e9ecef !important;
+  color: #495057 !important;
+  border-color: #adb5bd !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1) !important;
+}
+
+/* Ensure button group styling */
+.notification-btn-group .btn {
+  transition: all 0.2s ease !important;
+  margin: 0 1px !important;
+}
+
+.mark-as-read-btn {
+  position: relative;
+  display: inline-block;
+  padding: 8px 12px;
+  background-color: #007bff;
+  color: white;
+  border-radius: 4px;
+  border: none;
+  cursor: pointer;
+}
+
+.mark-as-read-btn:hover::after {
+  content: '✔';
+  position: absolute;
+  right: -20px;
+  top: 0;
+  color: green;
+  font-size: 18px;
+}
+
+.o_notification_systray .dropdown-item.hovered {
+  background-color: #f1f1f1;  /* Highlight the item on hover */
+}
+
+.o_notification_systray .dropdown-item .btn-link {
+  display: none;
+}
+
+.o_notification_systray .dropdown-item.hovered .btn-link {
+  display: inline-block;  /* Show the button on hover */
+}
+
+.inline_deadline_fields {
+  display: flex;
+  align-items: center;
+  gap: 8px; /* space between fields */
+}
+
+.inline_deadline_fields .o_field_date,
+.inline_deadline_fields .o_field_float_time {
+  flex: none;
+  width: auto;
+}
+
+/* FIXED: More specific selectors for text wrapping */
+.o_notification_systray .flex-grow-1 {
+    /* Ensure the container has proper width constraints */
+    min-width: 0;
+    max-width: 100%;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+}
+
+.o_notification_systray .flex-grow-1 strong {
+    /* Force long titles to break */
+    word-break: break-all;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    white-space: normal;
+    display: block;
+    max-width: 100%;
+}
+
+.o_notification_systray .flex-grow-1 p {
+    /* Ensure message text wraps properly */
+    word-break: break-word;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    white-space: normal;
+    max-width: 100%;
+}
+
+.o_notification_systray .flex-grow-1 .text-muted {
+    /* Fix project name and other text elements */
+    word-break: break-word;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    max-width: 100%;
+}
+
+/* FIXED: More specific container rules */
+.o_notification_systray .reminder-container {
+    max-width: 100%;
+    overflow: hidden;
+}
+
+.o_notification_systray .dropdown-item .d-flex {
+    /* FIXED: Only apply to notification items, not all d-flex */
+    max-width: 100%;
+    overflow: hidden;
+}
+
+/* Additional safety for very long words - only in notifications */
+.o_notification_systray .flex-grow-1 * {
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
+/* Fix for tick mark button visibility */
+.o_notification_systray .dropdown-item .ms-2 {
+    /* Ensure the button container has enough space */
+    min-width: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.o_notification_systray .dropdown-item .btn-link {
+    /* Ensure the button itself is properly sized */
+    min-width: 32px;
+    min-height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+}
+
+.o_notification_systray .dropdown-item .btn-link:hover {
+    background-color: rgba(0, 123, 255, 0.1);
+    color: #007bff;
+}
+
+.o_notification_systray .dropdown-item .btn-link i {
+    font-size: 14px;
+    line-height: 1;
+}
+
+/* Desktop dropdown item layout fix */
+.o_notification_systray .dropdown-item.d-flex {
+    align-items: flex-start;
+    padding: 8px 12px;
+    min-height: 60px;
+}
+
+.o_notification_systray .dropdown-item .flex-grow-1 {
+    flex: 1;
+    min-width: 0;
+    margin-right: 8px;
+}
+
+/* Mobile specific fixes */
+.o_notification_mobile_overlay .reminder-action {
+    min-width: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.o_notification_mobile_overlay .reminder-action .btn-link {
+    min-width: 32px;
+    min-height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+}
+
+.o_notification_mobile_overlay .reminder-action .btn-link:hover {
+    background-color: rgba(0, 123, 255, 0.1);
+    color: #007bff;
+}
+
+.o_notification_mobile_overlay .reminder-item {
+    align-items: flex-start;
+    min-height: 70px;
+}
+
+.o_notification_mobile_overlay .reminder-item .flex-grow-1 {
+    flex: 1;
+    min-width: 0;
+    margin-right: 8px;
+}
+
+/* NEW: Message and date display alignment */
+.o_notification_systray .flex-grow-1 p .d-inline-flex {
+    /* Make the message and date container fill width and align properly */
+    width: 100%;
+    display: flex !important;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: nowrap;
+}
+
+.o_notification_systray .flex-grow-1 p .d-inline-flex strong {
+    /* Message text should take available space but not break the layout */
+    flex: 1;
+    min-width: 0;
+    margin-right: 10px;
+    word-break: break-word;
+    overflow-wrap: break-word;
+    white-space: normal;
+    display: block;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+.o_notification_systray .flex-grow-1 p .d-inline-flex span[style*="margin-left: 5px"] {
+    /* Date display should stay on the right */
+    flex-shrink: 0;
+    white-space: nowrap;
+    margin-left: 5px !important;
+}
+
+/* Ensure relative time stays on separate line */
+.o_notification_systray .flex-grow-1 p span[style*="display:block"] {
+    display: block !important;
+    margin-top: 4px;
+    margin-left: 0px !important;
+}

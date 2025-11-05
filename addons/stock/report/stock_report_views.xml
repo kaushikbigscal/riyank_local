@@ -82,6 +82,8 @@
             <field name="binding_model_id" ref="model_stock_lot"/>
             <field name="binding_type">report</field>
         </record>
+
+
         <record id="action_report_picking_type_label" model="ir.actions.report">
             <field name="name">Operation type (PDF)</field>
             <field name="model">stock.picking.type</field>
@@ -154,5 +156,57 @@
             <field name="paperformat_id" ref="product.paperformat_label_sheet_dymo"/>
             <field name="binding_type">report</field>
         </record>
+
+        <record id="paperformat_label_dymo_sheet" model="report.paperformat">
+            <field name="name">Dymo Label Sheet</field>
+            <field name="default" eval="True"/>
+            <field name="format">custom</field>
+            <field name="page_height">100</field>
+            <field name="page_width">48</field>
+            <field name="orientation">Landscape</field>
+            <field name="margin_top">2</field>
+            <field name="margin_bottom">0</field>
+            <field name="margin_left">0</field>
+            <field name="margin_right">1</field>
+            <field name="disable_shrinking" eval="True"/>
+            <field name="dpi">96</field>
+        </record>
+
+        <record id="action_report_lot_label_dymo" model="ir.actions.report">
+            <field name="name">Lot/Serial Number (Dymo)</field>
+            <field name="model">stock.lot</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">stock.report_lot_label_dymo</field>
+            <field name="report_file">stock.report_lot_label_dymo</field>
+            <field name="paperformat_id" ref="paperformat_label_dymo_sheet"/>
+            <field name="print_report_name">'Lot-Serial - %s' % object.name</field>
+            <field name="binding_model_id" ref="model_stock_lot"/>
+            <field name="binding_type">report</field>
+        </record>
+
+        <record id="action_report_lot_label_4x7" model="ir.actions.report">
+            <field name="name">Lot/Serial Number (4x7)</field>
+            <field name="model">stock.lot</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">stock.report_lot_label_4x7</field>
+            <field name="report_file">stock.report_lot_label_4x7</field>
+            <field name="paperformat_id" ref="product.paperformat_label_sheet"/>
+            <field name="print_report_name">'Lot-Serial - %s' % object.name</field>
+            <field name="binding_model_id" ref="model_stock_lot"/>
+            <field name="binding_type">report</field>
+        </record>
+
+        <record id="action_report_lot_label_4x12" model="ir.actions.report">
+            <field name="name">Lot/Serial Number (4x12)</field>
+            <field name="model">stock.lot</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">stock.report_lot_label_4x12</field>
+            <field name="report_file">stock.report_lot_label_4x12</field>
+            <field name="paperformat_id" ref="product.paperformat_label_sheet"/>
+            <field name="print_report_name">'Lot-Serial - %s' % object.name</field>
+            <field name="binding_model_id" ref="model_stock_lot"/>
+            <field name="binding_type">report</field>
+        </record>
+
     </data>
 </odoo>

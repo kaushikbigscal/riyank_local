@@ -49,7 +49,7 @@
             'default_mass_keep_log': True,
             'default_res_ids': active_ids
         }</field>
-        <field name="binding_model_id" ref="base.model_res_partner"/>
+        <field name="binding_model_id" eval="False"/>
         <field name="binding_view_types">list</field>
     </record>
     <record id="res_partner_act_window_sms_composer_single" model="ir.actions.act_window">
@@ -61,7 +61,7 @@
             'default_composition_mode': 'comment',
             'default_res_id': active_id,
         }</field>
-        <field name="binding_model_id" ref="base.model_res_partner"/>
+        <field name="binding_model_id" eval="False"/>
         <field name="binding_view_types">form</field>
     </record>
 

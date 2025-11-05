@@ -107,7 +107,8 @@ export class AttendeeCalendarModel extends CalendarModel {
                     record.attendeeId = attendee;
                     // Colors are linked to the partner_id but in this case we want it linked
                     // to attendeeId
-                    record.colorIndex = attendee;
+//                    record.colorIndex = attendee;
+                    record.colorIndex = record.rawRecord.rule_color || attendee;
                     if (attendeeInfo) {
                         record.attendeeStatus = attendeeInfo.status;
                         record.isAlone = attendeeInfo.is_alone;

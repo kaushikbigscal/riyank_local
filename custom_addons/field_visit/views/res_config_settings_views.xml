@@ -1,0 +1,72 @@
+<!--<odoo>-->
+<!--    <record id="res_config_settings_view_form" model="ir.ui.view">-->
+<!--        <field name="name">res.config.settings.view.form.inherit.tour.plan</field>-->
+<!--        <field name="model">res.config.settings</field>-->
+<!--        <field name="priority" eval="50"/>-->
+<!--        <field name="inherit_id" ref="base.res_config_settings_view_form"/>-->
+<!--        <field name="arch" type="xml">-->
+<!--            <xpath expr="//form" position="inside">-->
+<!--                <app data-string="field_visit_config" string="Field Visit" name="field_visit" data-key="field_visit">-->
+<!--                      <block title="Field Visit Management" id="tour_management">-->
+<!--                            <setting id="recurring_field_visit_setting" help="Set the default minimum duration in minutes for End work">-->
+<!--                                <field name="Minimum_Duration_end_work"/>-->
+<!--                            </setting>-->
+<!--                    </block>-->
+<!--                </app>-->
+<!--            </xpath>-->
+<!--        </field>-->
+<!--    </record>-->
+
+<!--    <record id="field_visit_config_settings_action" model="ir.actions.act_window">-->
+<!--        <field name="name">Settings menu</field>-->
+<!--        <field name="res_model">res.config.settings</field>-->
+<!--        <field name="view_mode">form</field>-->
+<!--        <field name="target">inline</field>-->
+<!--                    <field name="context">{'module' : 'field_visit', 'bin_size': False}</field>-->
+<!--    </record>-->
+<!--     <menuitem-->
+<!--                name="Settings"-->
+<!--                id="tour_config_settings_menu_action"-->
+<!--                action="field_visit_config_settings_action"-->
+<!--                parent="menu_field_visit_config"-->
+<!--                groups="base.group_system"-->
+<!--                sequence="1"-->
+<!--            />-->
+<!--</odoo>-->
+
+
+<odoo>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.tour.plan</field>
+        <field name="model">res.config.settings</field>
+        <field name="priority" eval="50"/>
+        <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form" position="inside">
+                <app data-string="field_visit" string="Field Visit" name="field_visit" data-key="field_visit">
+                      <block title="Field Visit Management" id="tour_management">
+                            <setting id="recurring_field_visit_setting" help="Set the default minimum duration in minutes for End work">
+                                <field name="Minimum_Duration_end_work"/>
+                            </setting>
+                    </block>
+                </app>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="field_visit_config_settings_action" model="ir.actions.act_window">
+        <field name="name">Settings menu</field>
+        <field name="res_model">res.config.settings</field>
+        <field name="view_mode">form</field>
+        <field name="target">inline</field>
+        <field name="context">{'module' : 'field_visit'}</field>
+    </record>
+     <menuitem
+                name="Settings"
+                id="field_config_settings_menu_action"
+                action="field_visit_config_settings_action"
+                parent="menu_field_visit_config"
+                groups="base.group_system"
+                sequence="1"
+            />
+</odoo>

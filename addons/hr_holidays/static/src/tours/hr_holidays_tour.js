@@ -17,7 +17,7 @@ registry.category("web_tour.tours").add('hr_holidays_tour', {
     stepUtils.showAppsMenuItem(),
     {
         trigger: '.o_app[data-menu-xmlid="hr_holidays.menu_hr_holidays_root"]',
-        content: _t("Let's discover the Time Off application"),
+        content: _t("Let's discover the Leave application"),
         position: 'bottom',
     },
     {
@@ -27,7 +27,7 @@ registry.category("web_tour.tours").add('hr_holidays_tour', {
     },
     {
         trigger: 'div[name="holiday_status_id"] input',
-        content: _t("Let's try to create a Sick Time Off, select it in the list"),
+        content: _t("Let's try to create a Sick Leave, select it in the list"),
         run: `text ${leaveType.slice(0, leaveType.length - 1)}`,
     },
     {
@@ -67,7 +67,7 @@ registry.category("web_tour.tours").add('hr_holidays_tour', {
     },
     {
         trigger: 'a[data-menu-xmlid="hr_holidays.menu_open_department_leave_approve"]',
-        content: _t("Select Time Off"),
+        content: _t("Select Leave"),
         position: 'right'
     },
     {

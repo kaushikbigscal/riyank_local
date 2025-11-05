@@ -10,7 +10,9 @@ from odoo.exceptions import ValidationError
 from odoo.osv import expression
 from odoo.tools import float_compare, groupby
 from odoo.tools.misc import unique
+import logging
 
+_logger = logging.getLogger(__name__)
 
 class ProductProduct(models.Model):
     _name = "product.product"
@@ -103,6 +105,23 @@ class ProductProduct(models.Model):
     image_128 = fields.Image("Image 128", compute='_compute_image_128')
     can_image_1024_be_zoomed = fields.Boolean("Can Image 1024 be zoomed", compute='_compute_can_image_1024_be_zoomed')
     write_date = fields.Datetime(compute='_compute_write_date', store=True)
+
+    barcode_qr_value = fields.Char(
+        string="QR/Barcode Value",
+        compute="_compute_barcode_qr_value",
+        store=False
+    )
+
+    def _compute_barcode_qr_value(self):
+        base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+        for product in self:
+            product.barcode_qr_value = "%s/my/ticket/create?product_id=%d" % (
+                base_url,
+                product.id
+            )
+            _logger.info("Generated QR code value for product %s (ID %d): %s",
+                         product.name, product.id, product.barcode_qr_value)
+ 
 
     @api.depends('image_variant_1920', 'image_variant_1024')
     def _compute_can_image_variant_1024_be_zoomed(self):

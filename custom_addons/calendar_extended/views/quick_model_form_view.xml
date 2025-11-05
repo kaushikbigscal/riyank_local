@@ -1,0 +1,133 @@
+<odoo>
+
+    <record id="view_task_calendar_form" model="ir.ui.view">
+        <field name="name">task.calendar.form</field>
+        <field name="model">project.task</field>
+        <field name="arch" type="xml">
+            <form string="Task">
+                <sheet>
+                    <field name="can_start_timer" invisible="1"/>
+                    <field name="company_id" invisible="1"/>
+                    <field name="allow_billable" invisible="1"/>
+                    <field name="can_stop_timer" invisible="1"/>
+                    <div class="fsm-sticky-buttons d-flex flex-wrap justify-content-center justify-content-md-start gap-2 mb-3">
+                        <button name="action_start_task_timer" type="object" string="Start Work"
+                                icon="fa-play-circle text-success" class="btn btn-secondary w-45 text-truncate"
+                                invisible="not can_start_timer"/>
+                        <button name="action_stop_task_timer" type="object" string="Stop Work"
+                                icon="fa-stop-circle text-warning" class="btn btn-secondary w-45 text-truncate"
+                                invisible="not can_stop_timer"/>
+                    </div>
+                    <sheet>
+                        <div class="o_row mb-3">
+                            <field name="priority" widget="priority_switch"/>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="name" required="false" readonly="1"/>
+                                <field name="date_deadline" widget="daterange" string="Deadline" readonly="1"/>
+                                <field name="partner_id" options="{'no_open': True}" widget="res_partner_many2one"
+                                       context="{'show_address_if_fsm': 1, 'res_partner_search_mode': 'customer'}"
+                                       readonly="1" invisible="not allow_billable" />
+                            </group>
+                            <group>
+                                <field name="user_ids" widget="many2many_avatar_user" readonly="1"/>
+                                <field name="project_id" readonly="1"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </sheet>
+                <footer>
+                    <button name="project.action_view_my_task" string="Edit"
+                            class="btn btn-secondary flex-grow-1 flex-md-grow-0 w-45 text-truncate" type="action"/>
+                    <button string="Cancel" special="cancel"
+                            class="btn-secondary flex-grow-1 flex-md-grow-0 w-45 text-truncate"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- Pipeline Calendar Form -->
+    <record id="view_pipeline_calendar_form" model="ir.ui.view">
+        <field name="name">crm.lead.pipeline.calendar.form</field>
+        <field name="model">crm.lead</field>
+        <field name="arch" type="xml">
+            <form string="Pipeline Opportunity">
+                <sheet>
+                    <field name="can_start_timer" invisible="1"/>
+                    <field name="company_id" invisible="1"/>
+                    <field name="can_stop_timer" invisible="1"/>
+                    <div class="fsm-sticky-buttons d-flex flex-wrap justify-content-center justify-content-md-start gap-2 mb-3">
+                        <button name="action_start_lead_timer" type="object" string="Start Work"
+                                icon="fa-play-circle text-success" class="btn btn-secondary w-45 text-truncate"
+                                invisible="not can_start_timer"/>
+                        <button name="action_stop_lead_timer" type="object" string="Stop Work"
+                                icon="fa-stop-circle text-warning" class="btn btn-secondary w-45 text-truncate"
+                                invisible="not can_stop_timer"/>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="name" readonly="1"/>
+                            <field name="expected_revenue" readonly="1"/>
+                            <field name="date_deadline" readonly="1"/>
+                        </group>
+                        <group>
+                            <field name="stage_id" readonly="1"/>
+                            <field name="user_id" readonly="1"/>
+                            <field name="team_id" readonly="1"/>
+                        </group>
+                    </group>
+                </sheet>
+                <footer>
+                    <button string="Edit" type="object" name="open_full_lead_form_view"
+                            class="btn btn-secondary flex-grow-1 flex-md-grow-0 w-45 text-truncate"/>
+                    <button string="Cancel" special="cancel"
+                            class="btn btn-secondary flex-grow-1 flex-md-grow-0 w-45 text-truncate"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- Lead Calendar Form -->
+    <record id="view_lead_calendar_form" model="ir.ui.view">
+        <field name="name">crm.lead.lead.calendar.form</field>
+        <field name="model">crm.lead</field>
+        <field name="arch" type="xml">
+            <form string="Lead">
+                <sheet>
+                    <field name="can_start_timer" invisible="1"/>
+                    <field name="company_id" invisible="1"/>
+                    <field name="can_stop_timer" invisible="1"/>
+                    <div class="fsm-sticky-buttons d-flex flex-wrap justify-content-center justify-content-md-start gap-2 mb-3">
+                        <button name="action_start_lead_timer" type="object" string="Start Work"
+                                icon="fa-play-circle text-success" class="btn btn-secondary w-45 text-truncate"
+                                invisible="not can_start_timer"/>
+                        <button name="action_stop_lead_timer" type="object" string="Stop Work"
+                                icon="fa-stop-circle text-warning" class="btn btn-secondary w-45 text-truncate"
+                                invisible="not can_stop_timer"/>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="company_id" invisible="1"/>
+                            <field name="name" readonly="1"/>
+                            <field name="date_deadline" readonly="1"/>
+                            <field name="partner_id"
+                                   options="{'no_open': True}"
+                                   widget="res_partner_many2one" readonly="1"/>
+                        </group>
+                        <group>
+                            <field name="user_id" readonly="1"/>
+                            <field name="team_id" readonly="1"/>
+                        </group>
+                    </group>
+                </sheet>
+                <footer>
+                    <button string="Edit" type="object" name="open_full_lead_form_view"
+                            class="btn btn-secondary flex-grow-1 flex-md-grow-0 w-45 text-truncate"/>
+                    <button string="Cancel" special="cancel"
+                            class="btn btn-secondary flex-grow-1 flex-md-grow-0 w-45 text-truncate"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_partner_form_browser_location" model="ir.ui.view">
+        <field name="name">res.partner.form.browser.location</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <!-- Add button in the header (statusbar area) -->
+            <xpath expr="//div[@class='oe_title mb24']" position="after">
+                    <button name="action_get_browser_location"
+                            type="object"
+                            string="Pick Current Location"
+                            class="btn btn-link p-0"
+                            icon="fa-map-marker"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>
+
+
+        <!--<?xml version="1.0" encoding="utf-8"?>-->
+        <!--<odoo>-->
+        <!--    <record id="view_partner_form_browser_location" model="ir.ui.view">-->
+        <!--        <field name="name">res.partner.form.browser.location</field>-->
+        <!--        <field name="model">res.partner</field>-->
+        <!--        <field name="inherit_id" ref="base.view_partner_form"/>-->
+        <!--        <field name="arch" type="xml">-->
+        <!--            &lt;!&ndash; Add button next to the existing geo_localize button &ndash;&gt;-->
+        <!--            <xpath expr="//sheet//group" position="inside">-->
+        <!--                <group>-->
+        <!--                    <widget name="browser_location_button"/>-->
+        <!--                </group>-->
+        <!--                -->
+        <!--            </xpath>-->
+
+
+        <!--        </field>-->
+        <!--    </record>-->
+        <!--</odoo>-->

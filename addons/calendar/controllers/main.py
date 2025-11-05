@@ -9,6 +9,10 @@ from odoo.tools.misc import get_lang
 
 class CalendarController(http.Controller):
 
+    @http.route('/calendar/dashboard', type='json', auth='user')
+    def dashboard(self):
+        return request.env['calendar.event'].retrieve_dashboard()
+
     # YTI Note: Keep id and kwargs only for retrocompatibility purpose
     @http.route('/calendar/meeting/accept', type='http', auth="calendar")
     def accept_meeting(self, token, id, **kwargs):

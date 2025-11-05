@@ -1,0 +1,77 @@
+<odoo>
+    <!-- Action -->
+    <record id="action_route_management" model="ir.actions.act_window">
+        <field name="name">Route Management</field>
+        <field name="res_model">route.management</field>
+        <field name="view_mode">tree,form</field>
+        <field name="target">current</field>
+    </record>
+
+
+    <record id="view_route_management_tree" model="ir.ui.view">
+        <field name="name">route.management.tree</field>
+        <field name="model">route.management</field>
+        <field name="arch" type="xml">
+            <tree string="Routes" create="true" delete="true">
+                <field name="name"/>
+                <field name="state_id" widget="many2many_tags"/>
+                <field name="city_id" widget="many2many_tags"/>
+                <field name="zip_code" widget="many2many_tags"/>
+                <field name="customer_count_display" string="Customers"/>
+                <!--                <field name="status"/>-->
+            </tree>
+        </field>
+    </record>
+    <!-- Form View -->
+    <record id="view_route_management_form" model="ir.ui.view">
+        <field name="name">route.management.form</field>
+        <field name="model">route.management</field>
+        <field name="arch" type="xml">
+            <form string="Create New Route">
+                <sheet>
+                    <group>
+                        <field name="name" placeholder="Enter route name..."/>
+                    </group>
+
+                    <!-- Filters -->
+                    <group string="Customer Selection" colspan="4">
+                        <group col="3" colspan="4">
+                            <group>
+                                <field name="state_id" widget="many2many_tags" placeholder="Select States..."
+                                       options="{'no_create': True}"/>
+                            </group>
+                            <group>
+                                <field name="city_id" widget="many2many_tags" placeholder="Select Cities..."
+                                       options="{'no_create': True}"/>
+                            </group>
+                            <group>
+                                <field name="zip_code" widget="many2many_tags" placeholder="Select Areas..."
+                                       options="{'no_create': True}"/>
+                            </group>
+                        </group>
+                    </group>
+
+
+                    <!-- Customer Selection -->
+                    <group string="Available Customers" colspan="4">
+                        <field name="partner_id"
+                               widget="many2many_tags"
+                               options="{'always_reload': True}"
+                               context="{
+                                           'filter_state_id': state_id,
+                                           'filter_city_id': city_id,
+                                           'filter_zip_ids': zip_code,
+
+                                       }"/>
+                    </group>
+
+                    <!-- Assigned To & Status -->
+                    <!--                    <group>-->
+                    <!--                        <field name="assigned_to_ids" widget="many2many_tags"/>-->
+                    <!--                        <field name="status"/>-->
+                    <!--                    </group>-->
+                </sheet>
+            </form>
+        </field>
+    </record>
+</odoo>

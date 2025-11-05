@@ -5,7 +5,7 @@
         <field name="model">hr.leave.report.calendar</field>
         <field name="arch" type="xml">
             <calendar
-                string="Time Off"
+                string="Leave"
                 date_start="start_datetime"
                 date_stop="stop_datetime"
                 mode="month"
@@ -25,7 +25,7 @@
         <field name="name">hr.leave.report.calendar.view.form</field>
         <field name="model">hr.leave.report.calendar</field>
         <field name="arch" type="xml">
-            <form string="Time Off">
+            <form string="Leave">
                 <group>
                     <field name="name"/>
                     <field name="start_datetime"/>
@@ -62,7 +62,7 @@
     </record>
 
     <record id="action_hr_holidays_dashboard" model="ir.actions.act_window">
-        <field name="name">All Time Off</field>
+        <field name="name">All Leaves</field>
         <field name="res_model">hr.leave.report.calendar</field>
         <field name="view_mode">calendar</field>
         <field name="search_view_id" ref="hr_leave_report_calendar_view_search"/>

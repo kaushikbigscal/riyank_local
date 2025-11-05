@@ -5,12 +5,77 @@
             <attribute name="t-attf-class" add="#{request.env['res.lang']._lang_get_direction(request.env.lang) == 'rtl' and 'o_rtl' or ''}" separator=" "/>
             <attribute name="t-attf-class" add="#{'o_portal' if is_portal else ''}" separator=" "/>
         </xpath>
+<!--        <xpath expr="//div[@id='wrapwrap']/header/img" position="replace">-->
+<!--            <t t-cache="res_company">-->
+<!--                <nav class="navbar navbar-expand navbar-light bg-light">-->
+<!--                    <div class="container">-->
+<!--                        <a href="/" class="navbar-brand logo">-->
+<!--                            <img t-att-src="'/logo.png?company=%s' % res_company.id" t-att-alt="'Logo of %s' % res_company.name" t-att-title="res_company.name"/>-->
+<!--                        </a>-->
+<!--                        <ul id="top_menu" class="nav navbar-nav ms-auto">-->
+<!--                            <t t-call="portal.placeholder_user_sign_in">-->
+<!--                                <t t-set="_item_class" t-value="'nav-item'"/>-->
+<!--                                <t t-set="_link_class" t-value="'nav-link'"/>-->
+<!--                            </t>-->
+<!--                            <t t-call="portal.user_dropdown">-->
+<!--                                <t t-set="_user_name" t-value="true"/>-->
+<!--                                <t t-set="_item_class" t-value="'nav-item dropdown'"/>-->
+<!--                                <t t-set="_link_class" t-value="'nav-link'"/>-->
+<!--                                <t t-set="_dropdown_menu_class" t-value="'dropdown-menu-end'"/>-->
+<!--                            </t>-->
+<!--                        </ul>-->
+<!--                    </div>-->
+<!--                </nav>-->
+<!--            </t>-->
+<!--        </xpath>-->
+<!--        <xpath expr="//div[@id='wrapwrap']/header/img" position="replace">-->
+<!--            <t t-cache="res_company">-->
+<!--                <nav class="navbar navbar-expand-lg navbar-light bg-light position-relative z-3" style="z-index: 1050;">-->
+<!--                    <div class="container">-->
+<!--                        &lt;!&ndash; Logo & Company Name &ndash;&gt;-->
+<!--                        <a href="/" class="navbar-brand d-flex align-items-center gap-2">-->
+<!--                            <img t-att-src="'/logo.png?company=%s' % res_company.id"-->
+<!--                                 t-att-alt="'Logo of %s' % res_company.name"-->
+<!--                                 t-att-title="res_company.name"-->
+<!--                                 style="max-height: 40px;"/>-->
+<!--                            <span class="small d-none d-sm-inline text-muted" style="font-size: 0.875rem;">-->
+<!--                                <t t-esc="res_company.name"/>-->
+<!--                            </span>-->
+<!--                        </a>-->
+
+<!--                        &lt;!&ndash; Menu Items &ndash;&gt;-->
+<!--                        <div class="collapse navbar-collapse" id="navbarMainMenu">-->
+<!--                            <ul id="top_menu" class="navbar-nav ms-auto">-->
+<!--                                <t t-call="portal.placeholder_user_sign_in">-->
+<!--                                    <t t-set="_item_class" t-value="'nav-item'"/>-->
+<!--                                    <t t-set="_link_class" t-value="'nav-link'"/>-->
+<!--                                </t>-->
+<!--                                <t t-call="portal.user_dropdown">-->
+<!--                                    <t t-set="_user_name" t-value="true"/>-->
+<!--                                    <t t-set="_item_class" t-value="'nav-item dropdown'"/>-->
+<!--                                    <t t-set="_link_class" t-value="'nav-link dropdown-toggle'"/>-->
+<!--                                    <t t-set="_dropdown_menu_class"-->
+<!--                                       t-value="'dropdown-menu dropdown-menu-end show-on-hover'"/>-->
+<!--                                </t>-->
+<!--                            </ul>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </nav>-->
+<!--            </t>-->
+<!--        </xpath>-->
+
         <xpath expr="//div[@id='wrapwrap']/header/img" position="replace">
             <t t-cache="res_company">
                 <nav class="navbar navbar-expand navbar-light bg-light">
                     <div class="container">
-                        <a href="/" class="navbar-brand logo">
-                            <img t-att-src="'/logo.png?company=%s' % res_company.id" t-att-alt="'Logo of %s' % res_company.name" t-att-title="res_company.name"/>
+                        <a href="/" class="navbar-brand d-flex align-items-center gap-2">
+                            <img t-att-src="'/logo.png?company=%s' % res_company.id"
+                                 t-att-alt="'Logo of %s' % res_company.name"
+                                 t-att-title="res_company.name"
+                                 style="max-height: 40px;"/>
+                            <span class="small d-inline text-muted" style="font-size: 0.875rem;">
+                                <t t-esc="res_company.name"/>
+                            </span>
                         </a>
                         <ul id="top_menu" class="nav navbar-nav ms-auto">
                             <t t-call="portal.placeholder_user_sign_in">
@@ -28,6 +93,7 @@
                 </nav>
             </t>
         </xpath>
+
         <xpath expr="//div[@id='wrapwrap']/main/t[@t-out='0']" position="before">
             <div t-if="o_portal_fullwidth_alert" class="container mt-3">
                 <div class="alert alert-info alert-dismissible fade show d-print-none css_editable_mode_hidden">
@@ -157,37 +223,37 @@
         <t t-call="portal.frontend_layout">
             <t t-set="is_portal" t-value="True"/>
 
-            <div t-if="not no_breadcrumbs and not my_details and not breadcrumbs_searchbar" class="o_portal container mt-3">
+            <div t-if="not no_breadcrumbs and not my_details and not breadcrumbs_searchbar" class="o_portal container">
                 <div class="d-flex justify-content-between align-items-center">
                     <t t-call="portal.portal_breadcrumbs"/>
                     <t t-if="prev_record or next_record" t-call='portal.record_pager'/>
                 </div>
             </div>
             <div id="wrap" class='o_portal_wrap'>
-                <div class="container pt-3">
+                <div class="container">
                     <t t-if="my_details">
                         <div class="wrapper col-12 d-flex flex-wrap justify-content-between align-items-center">
-                            <h3 class="my-3">My account</h3>
-                            <button class="btn py-0 d-flex align-items-center gap-2 d-lg-none ms-auto"
-                            data-bs-toggle="offcanvas"
-                            data-bs-target="#accountOffCanvas">
-                                <img class="o_avatar rounded"
-                                t-att-src="image_data_uri(user_id.partner_id.avatar_1024)" alt="Contact"/>
-                            </button>
+<!--                            <h3 class="my-3">My account</h3>-->
+<!--                            <button class="btn py-0 d-flex align-items-center gap-2 d-lg-none ms-auto"-->
+<!--                            data-bs-toggle="offcanvas"-->
+<!--                            data-bs-target="#accountOffCanvas">-->
+<!--                                <img class="o_avatar rounded"-->
+<!--                                t-att-src="image_data_uri(user_id.partner_id.avatar_1024)" alt="Contact"/>-->
+<!--                            </button>-->
                         </div>
-                        <div class="row justify-content-between">
-                            <div t-attf-class="o_portal_content col-12 col-lg-8 mb-5">
-                                <t t-out="0"/>
-                            </div>
-                            <div class="d-none d-lg-flex justify-content-end col-lg-4">
-                                <t t-call="portal.side_content"/>
-                            </div>
-                            <div class="offcanvas offcanvas-start d-lg-none" id="accountOffCanvas">
-                                <t t-call="portal.side_content">
-                                    <t t-set="isOffcanvas" t-value="true"/>
-                                </t>
-                            </div>
-                        </div>
+<!--                        <div class="row justify-content-between">-->
+<!--                            <div t-attf-class="o_portal_content col-12 col-lg-8 mb-5">-->
+<!--                                <t t-out="0"/>-->
+<!--                            </div>-->
+<!--&lt;!&ndash;                            <div class="d-none d-lg-flex justify-content-end col-lg-4">&ndash;&gt;-->
+<!--&lt;!&ndash;                                <t t-call="portal.side_content"/>&ndash;&gt;-->
+<!--&lt;!&ndash;                            </div>&ndash;&gt;-->
+<!--                            <div class="offcanvas offcanvas-start d-lg-none" id="accountOffCanvas">-->
+<!--                                <t t-call="portal.side_content">-->
+<!--                                    <t t-set="isOffcanvas" t-value="true"/>-->
+<!--                                </t>-->
+<!--                            </div>-->
+<!--                        </div>-->
                     </t>
                     <t t-else="">
                         <t t-out="0"/>
@@ -281,9 +347,9 @@
                     <t t-out="title"/>
                 </div>
                 <t t-if="entries" t-out="entries"/>
-                <div class="d-none d-lg-block mt-5 small text-center text-muted">
-                    Powered by <a target="_blank" href="http://www.odoo.com?utm_source=db&amp;utm_medium=portal" title="odoo"><img src="/web/static/img/logo.png" alt="Odoo Logo" height="15"/></a>
-                </div>
+<!--                <div class="d-none d-lg-block mt-5 small text-center text-muted">-->
+<!--                    Powered by <a target="_blank" href="http://www.odoo.com?utm_source=db&amp;utm_medium=portal" title="odoo"><img src="/web/static/img/logo.png" alt="Odoo Logo" height="15"/></a>-->
+<!--                </div>-->
             </div>
         </div>
     </template>
@@ -309,6 +375,107 @@
         :param title : bavbar title
         :param classes : navbar classes
     -->
+<!--<template id="portal_searchbar" name="Portal Search Bar">-->
+<!--    <nav t-attf-class="navbar navbar-expand-lg flex-wrap mb-4 p-0 o_portal_navbar {{classes if classes else ''}}">-->
+<!--        <t t-if="breadcrumbs_searchbar">-->
+<!--            <t t-call="portal.portal_breadcrumbs"/>-->
+<!--        </t>-->
+<!--        <span t-else="" class="navbar-brand mb-0 h1 me-auto" t-esc="title or 'No title'"/>-->
+
+<!--        <button class="navbar-toggler" type="button" data-bs-toggle="collapse"-->
+<!--                data-bs-target="#o_portal_navbar_content" aria-controls="o_portal_navbar_content"-->
+<!--                aria-expanded="false" aria-label="Toggle filters">-->
+<!--            <span class="fa fa-fw fa-bars"/>-->
+<!--        </button>-->
+
+<!--        <div class="collapse navbar-collapse flex-wrap-reverse justify-content-end gap-3" id="o_portal_navbar_content">-->
+
+<!--            &lt;!&ndash; Combined Filter + Group By &ndash;&gt;-->
+<!--            <div t-if="searchbar_combined" class="d-flex align-items-center gap-2 ms-lg-2">-->
+<!--                <span class="small navbar-text">Filter &amp; Group:</span>-->
+<!--                <div class="btn-group">-->
+<!--                    <button id="portal_searchbar_combined" data-bs-toggle="dropdown"-->
+<!--                            class="btn btn-secondary dropdown-toggle"-->
+<!--                            style="max-width: 220px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">-->
+<!--                        <t t-esc="searchbar_combined.get('f_' + filterby, {}).get('label', 'All')"/>-->
+<!--                        <t t-if="groupby">-->
+<!--                            /-->
+<!--                            <t t-esc="searchbar_combined.get('g_' + groupby, {}).get('label')"/>-->
+<!--                        </t>-->
+<!--                    </button>-->
+<!--                    <div class="dropdown-menu dropdown-menu-end" aria-labelledby="portal_searchbar_combined">-->
+<!--                        <h6 class="dropdown-header">Filters</h6>-->
+<!--                        <t t-foreach="searchbar_combined.items()" t-as="option">-->
+<!--                            <t t-if="option[0].startswith('f_')">-->
+<!--                                <a t-att-href="default_url + '?' + keep_query('*', filterby=option[1]['filterby'], groupby='')"-->
+<!--                                   t-attf-class="dropdown-item#{filterby == option[1]['filterby'] and ' active' or ''}">-->
+<!--                                    <span t-esc="option[1]['label']"/>-->
+<!--                                </a>-->
+<!--                            </t>-->
+<!--                        </t>-->
+
+<!--                        <div class="dropdown-divider"/>-->
+<!--                        <h6 class="dropdown-header">Group By</h6>-->
+<!--                        <t t-foreach="searchbar_combined.items()" t-as="option">-->
+<!--                            <t t-if="option[0].startswith('g_')">-->
+<!--                                <a t-att-href="default_url + '?' + keep_query('*', groupby=option[1]['groupby'], filterby='')"-->
+<!--                                   t-attf-class="dropdown-item#{groupby == option[1]['groupby'] and ' active' or ''}">-->
+<!--                                    <span t-esc="option[1]['label']"/>-->
+<!--                                </a>-->
+<!--                            </t>-->
+<!--                        </t>-->
+
+<!--                        <div class="dropdown-divider"/>-->
+<!--                        <a t-att-href="default_url" class="dropdown-item">-->
+<!--                            <span>Clear Filter &amp; Group</span>-->
+<!--                        </a>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+
+<!--            &lt;!&ndash; Sort By &ndash;&gt;-->
+<!--            <div t-if="searchbar_sortings" class="d-flex align-items-center gap-2 ms-lg-2">-->
+<!--                <span class="small navbar-text">Sort By:</span>-->
+<!--                <div class="btn-group">-->
+<!--                    <button id="portal_searchbar_sortby" data-bs-toggle="dropdown"-->
+<!--                            class="btn btn-secondary dropdown-toggle"-->
+<!--                            style="max-width: 150px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">-->
+<!--                        <t t-esc="searchbar_sortings[sortby].get('label', 'Newest')"/>-->
+<!--                    </button>-->
+<!--                    <div class="dropdown-menu dropdown-menu-end" aria-labelledby="portal_searchbar_sortby">-->
+<!--                        <t t-foreach="searchbar_sortings" t-as="option">-->
+<!--                            <a t-att-href="request.httprequest.path + '?' + keep_query('*', sortby=option)"-->
+<!--                               t-attf-class="dropdown-item#{sortby == option and ' active' or ''}">-->
+<!--                                <span t-esc="searchbar_sortings[option].get('label')"/>-->
+<!--                            </a>-->
+<!--                        </t>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+
+<!--            &lt;!&ndash; Search Input &ndash;&gt;-->
+<!--            <form t-if="searchbar_inputs" class="o_portal_search_panel col-md-5 col-xl-4 ms-lg-2 mt-2 mt-md-0">-->
+<!--                <div class="input-group w-100">-->
+<!--                    <button type="button" class="btn btn-secondary border-end dropdown-toggle" data-bs-toggle="dropdown"/>-->
+<!--                    <div class="dropdown-menu dropdown-menu-end" role="menu">-->
+<!--                        <t t-foreach='searchbar_inputs' t-as='input_value'>-->
+<!--                            <a t-att-href="'#' + input_value['input']"-->
+<!--                               t-attf-class="dropdown-item#{search_in == input_value['input'] and ' active' or ''}">-->
+<!--                                <span t-out="input_value['label']"/>-->
+<!--                            </a>-->
+<!--                        </t>-->
+<!--                    </div>-->
+<!--                    <input type="text" class="form-control" placeholder="Search"-->
+<!--                           t-att-value="search" name="search"/>-->
+<!--                    <button class="btn btn-secondary o_wait_lazy_js" type="submit">-->
+<!--                        <span class="oi oi-search"/>-->
+<!--                    </button>-->
+<!--                </div>-->
+<!--            </form>-->
+
+<!--        </div>-->
+<!--    </nav>-->
+<!--</template>-->
     <template id="portal_searchbar" name="Portal Search Bar">
         <nav t-attf-class="navbar navbar-expand-lg flex-wrap mb-4 p-0 o_portal_navbar {{classes if classes else ''}}">
             <!--  Navbar breadcrumb or title  -->
@@ -478,14 +645,21 @@
             <label class="col-form-label" for="street">Street</label>
             <input type="text" name="street" t-attf-class="form-control #{error.get('street') and 'is-invalid' or ''}" t-att-value="street or partner.street"/>
         </div>
-        <div t-attf-class="mb-3 #{error.get('city') and 'o_has_error' or ''} col-xl-6">
-            <label class="col-form-label" for="city">City</label>
-            <input type="text" name="city" t-attf-class="form-control #{error.get('city') and 'is-invalid' or ''}" t-att-value="city or partner.city" />
-        </div>
         <div t-attf-class="mb-3 #{error.get('zip') and 'o_has_error' or ''} col-xl-6">
             <label class="col-form-label label-optional" for="zipcode">Zip / Postal Code</label>
-            <input type="text" name="zipcode" t-attf-class="form-control #{error.get('zip') and 'is-invalid' or ''}" t-att-value="zipcode or partner.zip" />
+            <input type="text" name="zipcode" t-attf-class="form-control #{error.get('zip') and 'is-invalid' or ''}"
+                   t-att-value="zipcode or partner.zip"/>
         </div>
+
+        <!--        <div t-attf-class="mb-3 #{error.get('city') and 'o_has_error' or ''} col-xl-6">-->
+<!--            <label class="col-form-label" for="city">City</label>-->
+<!--            <input type="text" name="city" t-attf-class="form-control #{error.get('city') and 'is-invalid' or ''}" t-att-value="city or partner.city" />-->
+<!--        </div>-->
+
+<!--        <div t-attf-class="mb-3 #{error.get('zip') and 'o_has_error' or ''} col-xl-6">-->
+<!--            <label class="col-form-label label-optional" for="zipcode">Zip / Postal Code</label>-->
+<!--            <input type="text" name="zipcode" t-attf-class="form-control #{error.get('zip') and 'is-invalid' or ''}" t-att-value="zipcode or partner.zip" />-->
+<!--        </div>-->
         <div t-attf-class="mb-3 #{error.get('country_id') and 'o_has_error' or ''} col-xl-6">
             <label class="col-form-label" for="country_id">Country</label>
             <select name="country_id" t-attf-class="form-select #{error.get('country_id') and 'is-invalid' or ''}" t-att-disabled="None if partner_can_edit_vat else '1'">
@@ -505,6 +679,20 @@
                 <t t-foreach="states or []" t-as="state">
                     <option t-att-value="state.id" style="display:none;" t-att-data-country_id="state.country_id.id" t-att-selected="state.id == int(state_id) if state_id else state.id == partner.state_id.id">
                         <t t-esc="state.name" />
+                    </option>
+                </t>
+            </select>
+        </div>
+        <div t-attf-class="mb-3 #{error.get('city') and 'o_has_error' or ''} col-xl-6">
+            <label class="col-form-label label-optional" for="city">City</label>
+            <select name="city" t-attf-class="form-select #{error.get('city') and 'is-invalid' or ''}">
+                <option value="">Select a city...</option>
+                <t t-foreach="cities or []" t-as="city_rec">
+                    <option t-att-value="city_rec.id"
+                            style="display:none;" t-att-data-state_id="city_rec.state_id.id"
+                            t-att-selected="int(city or 0) == city_rec.id if city else city_rec.id == partner.city_id.id">
+                        <t t-esc="city_rec.name"/>
+                        (<t t-esc="city_rec.state_id.name"/>)
                     </option>
                 </t>
             </select>
@@ -630,71 +818,71 @@
                     <button type="submit" class="btn btn-secondary o_portal_new_api_key">New API Key</button>
                 </div>
             </section>
-            <section name="portal_deactivate_account" groups="base.group_portal">
-                <h4>Delete Account</h4>
-                <t t-set="deactivate_error" t-value="get_error(errors, 'deactivate')"/>
-                <button class="btn btn-secondary" data-bs-toggle="modal"
-                    data-bs-target="#portal_deactivate_account_modal">
-                    Delete Account
-                </button>
-                <div t-attf-class="modal #{'show d-block' if open_deactivate_modal else ''}"
-                    id="portal_deactivate_account_modal" tabindex="-1" role="dialog">
-                    <div class="modal-dialog" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header bg-danger">
-                                <h5 class="modal-title">Are you sure you want to do this?</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                            </div>
-                            <form action="/my/deactivate_account" method="post" class="modal-body"
-                                id="portal_deactivate_account_form">
-                                <div>
-                                    <div class="alert alert-danger"
-                                        t-esc="get_error(errors, 'deactivate.other')"/>
-                                    <p class="text-muted">
-                                        Disable your account, preventing any further login.<br/>
-                                        <b>
-                                            <i class="fa fa-exclamation-triangle text-danger"></i>
-                                            This action cannot be undone.
-                                        </b>
-                                    </p>
-                                    <hr/>
-                                    <p>1. Enter your password to confirm you own this account</p>
-                                    <input name="password" type="password" required="1"
-                                        t-attf-class="form-control #{'is-invalid' if deactivate_error == 'password' else ''}"
-                                        placeholder="Password"/>
-                                    <div t-if="deactivate_error == 'password'" class="invalid-feedback">
-                                        Wrong password.
-                                    </div>
-                                    <hr/>
-                                    <p>
-                                        2. Confirm you want to delete your account by
-                                        copying down your login (<t t-esc="env.user.login"/>).
-                                    </p>
-                                    <input name="validation" type="text" required="1"
-                                        t-attf-class="form-control #{'is-invalid' if deactivate_error == 'validation' else ''}"/>
-                                    <div t-if="deactivate_error == 'validation'" class="invalid-feedback">
-                                        You should enter "<t t-esc="env.user.login"/>" to validate your action.
-                                    </div>
-                                    <div class="d-flex flex-row align-items-center">
-                                        <input type="checkbox" name="request_blacklist" id="request_blacklist" checked="1"/>
-                                        <label for="request_blacklist" class="ms-2 mw-100 fw-normal mt-3">
-                                            Put my email and phone in a block list to make sure I'm never contacted again
-                                        </label>
-                                    </div>
-                                </div>
-                                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
-                            </form>
-                            <div class="modal-footer justify-content-start">
-                                <input type="submit" class="btn btn-danger" form="portal_deactivate_account_form"
-                                    value="Delete Account"/>
-                                <button type="button" class="btn" data-bs-dismiss="modal">
-                                    Cancel
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
+<!--            <section name="portal_deactivate_account" groups="base.group_portal">-->
+<!--                <h4>Delete Account</h4>-->
+<!--                <t t-set="deactivate_error" t-value="get_error(errors, 'deactivate')"/>-->
+<!--                <button class="btn btn-secondary" data-bs-toggle="modal"-->
+<!--                    data-bs-target="#portal_deactivate_account_modal">-->
+<!--                    Delete Account-->
+<!--                </button>-->
+<!--                <div t-attf-class="modal #{'show d-block' if open_deactivate_modal else ''}"-->
+<!--                    id="portal_deactivate_account_modal" tabindex="-1" role="dialog">-->
+<!--                    <div class="modal-dialog" role="document">-->
+<!--                        <div class="modal-content">-->
+<!--                            <div class="modal-header bg-danger">-->
+<!--                                <h5 class="modal-title">Are you sure you want to do this?</h5>-->
+<!--                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>-->
+<!--                            </div>-->
+<!--                            <form action="/my/deactivate_account" method="post" class="modal-body"-->
+<!--                                id="portal_deactivate_account_form">-->
+<!--                                <div>-->
+<!--                                    <div class="alert alert-danger"-->
+<!--                                        t-esc="get_error(errors, 'deactivate.other')"/>-->
+<!--                                    <p class="text-muted">-->
+<!--                                        Disable your account, preventing any further login.<br/>-->
+<!--                                        <b>-->
+<!--                                            <i class="fa fa-exclamation-triangle text-danger"></i>-->
+<!--                                            This action cannot be undone.-->
+<!--                                        </b>-->
+<!--                                    </p>-->
+<!--                                    <hr/>-->
+<!--                                    <p>1. Enter your password to confirm you own this account</p>-->
+<!--                                    <input name="password" type="password" required="1"-->
+<!--                                        t-attf-class="form-control #{'is-invalid' if deactivate_error == 'password' else ''}"-->
+<!--                                        placeholder="Password"/>-->
+<!--                                    <div t-if="deactivate_error == 'password'" class="invalid-feedback">-->
+<!--                                        Wrong password.-->
+<!--                                    </div>-->
+<!--                                    <hr/>-->
+<!--                                    <p>-->
+<!--                                        2. Confirm you want to delete your account by-->
+<!--                                        copying down your login (<t t-esc="env.user.login"/>).-->
+<!--                                    </p>-->
+<!--                                    <input name="validation" type="text" required="1"-->
+<!--                                        t-attf-class="form-control #{'is-invalid' if deactivate_error == 'validation' else ''}"/>-->
+<!--                                    <div t-if="deactivate_error == 'validation'" class="invalid-feedback">-->
+<!--                                        You should enter "<t t-esc="env.user.login"/>" to validate your action.-->
+<!--                                    </div>-->
+<!--                                    <div class="d-flex flex-row align-items-center">-->
+<!--                                        <input type="checkbox" name="request_blacklist" id="request_blacklist" checked="1"/>-->
+<!--                                        <label for="request_blacklist" class="ms-2 mw-100 fw-normal mt-3">-->
+<!--                                            Put my email and phone in a block list to make sure I'm never contacted again-->
+<!--                                        </label>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>-->
+<!--                            </form>-->
+<!--                            <div class="modal-footer justify-content-start">-->
+<!--                                <input type="submit" class="btn btn-danger" form="portal_deactivate_account_form"-->
+<!--                                    value="Delete Account"/>-->
+<!--                                <button type="button" class="btn" data-bs-dismiss="modal">-->
+<!--                                    Cancel-->
+<!--                                </button>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </section>-->
         </div></t>
     </template>
 
@@ -727,10 +915,11 @@
 
     <template id="my_account_link" name="Link to frontend portal" inherit_id="portal.user_dropdown">
         <xpath expr="//*[@id='o_logout_divider']" position="before">
-            <a href="/my/home" role="menuitem" class="dropdown-item ps-3">
+            <a id="my_account_link" href="/my/home" role="menuitem" class="dropdown-item ps-3">
                 <i class="fa fa-fw fa-id-card-o me-1 small text-primary"/> My Account
             </a>
         </xpath>
+<!--            <xpath expr="//*[@id='o_logout_divider']" position="replace"/>-->
     </template>
 
     <!--
@@ -806,17 +995,19 @@
             <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"/>
         </div>
         <div t-attf-class="{{'offcanvas-body' if isOffcanvas else 'mt-3'}}">
-            <div class="d-flex justify-content-start align-items-center gap-3 mb-4">
-                <img class="o_portal_contact_img rounded o_object_fit_cover" t-att-src="image_data_uri(user_id.partner_id.avatar_128)" alt="Contact" width="50"/>
-                <div class="d-flex flex-column justify-content-center">
-                    <h5 class="mb-0" t-out="user_id.name"/>
-                    <p class="mb-0 text-muted" t-out="user_id.company_name"/>
-                </div>
-            </div>
-            <div class="o_portal_my_details">
-                <div t-field="user_id.partner_id" t-options='{"widget": "contact", "fields": ["email", "phone", "address"]}'/>
-            </div>
-            <a role="button" href="/my/account" class="btn btn-link p-0 mt-3"><i class="fa fa-pencil"/> Edit information</a>
+<!--        <div class="border rounded-3 p-5 mb-3">-->
+<!--            <div class="d-flex justify-content-start align-items-center gap-3 mb-4">-->
+<!--                <img class="o_portal_contact_img rounded o_object_fit_cover" t-att-src="image_data_uri(user_id.partner_id.avatar_128)" alt="Contact" width="50"/>-->
+<!--                <div class="d-flex flex-column justify-content-center">-->
+<!--                    <h5 class="mb-0" t-out="user_id.name"/>-->
+<!--                    <p class="mb-0 text-muted" t-out="user_id.company_name"/>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--            <div class="o_portal_my_details">-->
+<!--                <div t-field="user_id.partner_id" t-options='{"widget": "contact", "fields": ["email", "phone", "address"]}'/>-->
+<!--            </div>-->
+<!--            <a role="button" href="/my/account" class="btn btn-link p-0 mt-3"><i class="fa fa-pencil"/> Edit information</a>-->
+<!--        </div>-->
             <hr t-if="sales_user"/>
             <div class="o_my_contact" t-if="sales_user">
                 <t t-call="portal.portal_contact"/>

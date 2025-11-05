@@ -4,6 +4,8 @@
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
+import logging
+_logger = logging.getLogger(__name__)
 
 
 class ProductLabelLayout(models.TransientModel):
@@ -23,6 +25,22 @@ class ProductLabelLayout(models.TransientModel):
     rows = fields.Integer(compute='_compute_dimensions')
     columns = fields.Integer(compute='_compute_dimensions')
     pricelist_id = fields.Many2one('product.pricelist', string="Pricelist")
+
+    code_type = fields.Selection([
+        ('barcode', 'Barcode'),
+        ('qr_code', 'QR Code'),
+        ('none', 'None')
+    ], default='barcode', string="Code Type", required=True)
+
+    @api.model
+    def default_get(self, fields):
+        res = super().default_get(fields)
+        product_code = self.env['ir.config_parameter'].sudo().get_param(
+            'industry_fsm.product_code', 'none'
+        )
+        res['code_type'] = product_code
+        return res
+ 
 
     @api.depends('print_format')
     def _compute_dimensions(self):
@@ -64,7 +82,11 @@ class ProductLabelLayout(models.TransientModel):
             'quantity_by_product': {p: self.custom_quantity for p in products},
             'layout_wizard': self.id,
             'price_included': 'xprice' in self.print_format,
+            'code_type': self.code_type,
+ 
         }
+        _logger.info("Label Layout Data Prepared: %s", data)
+ 
         return xml_id, data
 
     def process(self):

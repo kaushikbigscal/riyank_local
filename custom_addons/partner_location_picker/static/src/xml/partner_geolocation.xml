@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="partner_location_picker.BrowserLocationButton" owl="1">
+        <button class="btn btn-primary" t-on-click="onGetBrowserLocation" title="Get location from browser">
+            <i class="fa fa-location-arrow"/> Compute Location
+        </button>
+    </t>
+</templates>

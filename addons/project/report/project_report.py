@@ -119,6 +119,7 @@ class ReportProjectTaskUser(models.Model):
                 t.milestone_id,
                 pm.id,
                 td.depends_on_id
+		
         """
 
     def _from(self):

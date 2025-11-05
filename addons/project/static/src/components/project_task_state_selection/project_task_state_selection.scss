@@ -55,4 +55,13 @@
     .o_status_changes_requested {
         color: $warning;
     }
+
+    .o_waiting_for_customer{
+        color: #5bc0de
+    }
+
+    .o_not_started { 
+	color: #3d3c3c;
+    }
+
 }

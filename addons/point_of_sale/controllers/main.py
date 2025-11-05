@@ -257,3 +257,23 @@ class PosController(PortalAccount):
         # Allowing default values for moves is important for some localizations that would need specific fields to be set on the invoice, such as Mexico.
         pos_order.with_context(with_context).action_pos_order_invoice()
         return request.redirect('/my/invoices/%s?access_token=%s' % (pos_order.account_move.id, pos_order.account_move._portal_ensure_token()))
+
+    @http.route('/pos/create_customer', type='json', auth='user')
+    def create_customer(self, partner):
+        try:
+            new_partner = request.env['res.partner'].create({
+                'name': partner.get('name'),
+                'mobile': partner.get('mobile'),
+            })
+
+            return {
+                'success': True,
+                'partnerId': new_partner.id,
+                'name': new_partner.name,
+                'mobile': new_partner.mobile,
+            }
+        except Exception as e:
+            return {
+                'success': False,
+                'message': str(e)
+            }

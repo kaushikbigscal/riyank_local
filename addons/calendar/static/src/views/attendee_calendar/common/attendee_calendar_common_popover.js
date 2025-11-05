@@ -71,12 +71,21 @@ export class AttendeeCalendarCommonPopover extends CalendarCommonPopover {
     
     async onClickOpenRecord() {
         const action = await this.orm.call(
-            'calendar.event', 
-            'action_open_calendar_event', 
+            'calendar.event',
+            'action_open_calendar_event',
             [this.props.record.id]
         );
-        this.actionService.doAction(action); 
+        if (action) {
+        action.target = 'current';
+
+        const model = this.props.record.rawRecord;
+        console.log("Model", model)
+        this.actionService.doAction(action);
+
+
     }
+}
+
 
     /**
      * @override

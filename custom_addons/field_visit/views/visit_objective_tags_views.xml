@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record model="ir.ui.view" id="field_visit_objective_search_view">
+        <field name="name">field_visit_objective_search_view</field>
+        <field name="model">visit.objective</field>
+        <field name="arch" type="xml">
+            <search string="Issue Version">
+                <field name="name"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="field_visit_objective_tree_view" model="ir.ui.view">
+        <field name="name">field.visit.objective.tree</field>
+        <field name="model">visit.objective</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="color" widget="color_picker"/>
+
+            </tree>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="field_visit_objective_form_view">
+        <field name="name">field_visit_objective_form_view</field>
+        <field name="model">visit.objective</field>
+        <field name="arch" type="xml">
+            <form string="Visit Objective">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="color" widget="color_picker"/>
+                    </group>
+                    <notebook>
+                        <page string="Sub Objectives">
+                            <field name="sub_objective_ids">
+                                <tree editable="bottom">
+                                    <field name="name"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!--    <record model="ir.ui.view" id="field_visit_objective_tree_view">-->
+    <!--        <field name="name">field_visit_objective_tree_view</field>-->
+    <!--        <field name="model">visit.objective</field>-->
+    <!--        <field name="arch" type="xml">-->
+    <!--            <tree string="Visit Objective" editable="top" sample="1" multi_edit="1" default_order="name">-->
+    <!--                <field name="name"/>-->
+    <!--                <field name="color" widget="color_picker" optional="show"/>-->
+    <!--            </tree>-->
+    <!--        </field>-->
+    <!--    </record>-->
+
+    <record id="field_visit_objective_action" model="ir.actions.act_window">
+        <field name="name">Visit Objective</field>
+        <field name="res_model">visit.objective</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No objective found. Let's create one!
+            </p>
+            <p>
+                Use objective to categorize your visit.
+            </p>
+        </field>
+    </record>
+
+    <menuitem
+            name="Visit Objective"
+            parent="menu_field_visit_config"
+            id="visit_objective_menu_view"
+            action="field_visit_objective_action"
+            groups="field_visit.group_field_visit_manager,field_visit.group_field_visit_user,field_visit.group_field_visit_managers"
+            sequence="4"
+    />
+</odoo>
